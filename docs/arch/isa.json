@@ -1,0 +1,62 @@
+
+{
+    "addi" :  {
+        "actions":[
+            {"rd" : "rs1 + s12"},
+            {"PC" : "PC + 4" }
+        ]
+    },
+    "slti" :  {
+        "actions":[
+            {"rd" : "rs1 < s12"},
+            {"PC" : "PC + 4" }
+        ]
+    },
+    "andi" :  {
+        "actions":[
+            {"rd" : "rs1 & s12"},
+            {"PC" : "PC + 4" }
+        ]
+    },
+    "ori" :  {
+        "actions":[
+            {"rd" : "rs1 | s12"},
+            {"PC" : "PC + 4" }
+        ]
+    },
+    "xori" :  {
+        "actions":[
+            {"rd" : "rs1 ^ s12"},
+            {"PC" : "PC + 4" }
+        ]
+    },
+    "lui" : {
+        "actions": [
+            {"t1" : "u20 << 12"},
+            {"rd" : "PC & 0xFFFFF000"},
+            {"PC" : "PC + 4"}
+        ]
+    },
+    "auipc" : {
+        "actions": [
+            {"t1" : "u20 << 12"},
+            {"t2" : "PC & 0xFFFFF000"},
+            {"rd" : "t1 + t2"},
+            {"PC" : "PC + 4"}
+        ]
+    },
+    "beq" : {
+        "actions" : [
+            {"t1" : "rs1 == rs2"},
+            {"t2" : "PC + 4"},
+            {"t3" : "PC + s12"},
+            {"PC" : "t1 ? t3 : t2"}
+        ]
+    },
+    "jal" : {
+        "actions" : [
+            {"PC" : "rs1 + s12"},
+            {"rd" : "PC + 4" }
+        ]
+    }
+}

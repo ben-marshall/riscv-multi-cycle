@@ -1,0 +1,11 @@
+# Site information
+title: RISCV Single Cycle
+description: > 
+    A simple single cycle, in order implementation of the RV32UI subset of the
+    RISCV instruction set architecture.
+
+baseurl: "/riscv" 
+github_username:  ben-marshall
+
+# Build settings
+markdown: kramdown

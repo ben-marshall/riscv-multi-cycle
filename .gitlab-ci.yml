@@ -1,0 +1,13 @@
+image: ruby:2.3
+
+pages:
+  stage: deploy
+  script:
+  - gem install jekyll
+  - make -C ./docs jekyll-build
+  - mv ./docs/html ./public
+  artifacts:
+    paths:
+    - public
+  only:
+  - master

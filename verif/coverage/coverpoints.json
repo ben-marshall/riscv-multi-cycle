@@ -1,0 +1,471 @@
+
+{
+    "covergroups":
+    {
+        "interrupts":
+        {
+            "Machine Timer Interrupt":
+            {
+                "signal" : "rvs_core_tb/i_dut/i_scu/raise_interrupt_mti",
+                "width"  : 1,
+                "bins"   : [{"value" : 1}]
+            },
+            "Machine External Interrupt":
+            {
+                "signal" : "rvs_core_tb/i_dut/i_scu/raise_interrupt_mei",
+                "width"  : 1,
+                "bins"   : [{"value" : 1}]
+            },
+            "Machine Software Interrupt":
+            {
+                "signal" : "rvs_core_tb/i_dut/i_scu/raise_interrupt_msi",
+                "width"  : 1,
+                "bins"   : [{"value" : 1}]
+            }
+        },
+        "traps":
+        {
+            "Instruction address misalign": {
+                "signal" : "rvs_core_tb/i_dut/i_scu/trap_iaddr_misalign ",
+                "width"  : 1,
+                "bins"   : [{"value" : 1}]
+            },
+            "Illegal instruction": {
+                "signal" : "rvs_core_tb/i_dut/i_scu/trap_illegal_instr  ",
+                "width"  : 1,
+                "bins"   : [{"value" : 1}]
+            },
+            "Load address misalign":{
+                "signal" : "rvs_core_tb/i_dut/i_scu/trap_laddr_misalign ",
+                "width"  : 1,
+                "bins"   : [{"value" : 1}]
+            },
+            "Store address misalign":{
+                "signal" : "rvs_core_tb/i_dut/i_scu/trap_saddr_misalign ",
+                "width"  : 1,
+                "bins"   : [{"value" : 1}]
+            },
+            "Instruction address fault":{
+                "signal" : "rvs_core_tb/i_dut/i_scu/trap_iaddr_fault",
+                "width"  : 1,
+                "bins"   : [{"value" : 1}]
+            },
+            "Breakpoint":{
+                "signal" : "rvs_core_tb/i_dut/i_scu/trap_breakpoint ",
+                "width"  : 1,
+                "bins"   : [{"value" : 1}]
+            },
+            "Load address fault":{
+                "signal" : "rvs_core_tb/i_dut/i_scu/trap_laddr_fault",
+                "width"  : 1,
+                "bins"   : [{"value" : 1}]
+            },
+            "Store address fault":{
+                "signal" : "rvs_core_tb/i_dut/i_scu/trap_saddr_fault",
+                "width"  : 1,
+                "bins"   : [{"value" : 1}]
+            }
+        },
+        "registers":
+        {
+            "REG RS1":
+            {
+                "signal": "rvs_core_tb/i_dut/i_fdu/decoder/rs1",
+                "width" : 5
+            },
+            "REG RS2":
+            {
+                "signal": "rvs_core_tb/i_dut/i_fdu/decoder/rs2",
+                "width" : 5
+            },
+            "REG RD":
+            {
+                "signal": "rvs_core_tb/i_dut/i_fdu/decoder/dest",
+                "width" : 5
+            }
+        },
+        "instructions" :
+        {
+            "ADD":
+            {
+                "signal": "rvs_core_tb/i_dut/i_fdu/decoder/gen_add",
+                "width" : 1,
+                "bins"  : [
+                    {"value" : 1}
+                ]
+            },
+            "ADDI"   :
+            {
+                "signal": "rvs_core_tb/i_dut/i_fdu/decoder/gen_addi",
+                "width" : 1,
+                "bins"  :[
+                    {"value" : 1}
+                 ]
+            },
+            "AND"    :
+            {
+                "signal": "rvs_core_tb/i_dut/i_fdu/decoder/gen_and",
+                "width" : 1,
+                "bins"  :[
+                    {"value" : 1}
+                 ]
+            },
+            "ANDI"   :
+            {
+                "signal": "rvs_core_tb/i_dut/i_fdu/decoder/gen_andi",
+                "width" : 1,
+                "bins"  :[
+                    {"value" : 1}
+                 ]
+            },
+            "AUIPC"  :
+            {
+                "signal": "rvs_core_tb/i_dut/i_fdu/decoder/gen_auipc",
+                "width" : 1,
+                "bins"  :[
+                    {"value" : 1}
+                 ]
+            },
+            "BEQ"    :
+            {
+                "signal": "rvs_core_tb/i_dut/i_fdu/decoder/gen_beq",
+                "width" : 1,
+                "bins"  :[
+                    {"value" : 1}
+                 ]
+            },
+            "BGE"    :
+            {
+                "signal": "rvs_core_tb/i_dut/i_fdu/decoder/gen_bge",
+                "width" : 1,
+                "bins"  :[
+                    {"value" : 1}
+                 ]
+            },
+            "BGEU"   :
+            {
+                "signal": "rvs_core_tb/i_dut/i_fdu/decoder/gen_bgeu",
+                "width" : 1,
+                "bins"  :[
+                    {"value" : 1}
+                 ]
+            },
+            "BLT"    :
+            {
+                "signal": "rvs_core_tb/i_dut/i_fdu/decoder/gen_blt",
+                "width" : 1,
+                "bins"  :[
+                    {"value" : 1}
+                 ]
+            },
+            "BLTU"   :
+            {
+                "signal": "rvs_core_tb/i_dut/i_fdu/decoder/gen_bltu",
+                "width" : 1,
+                "bins"  :[
+                    {"value" : 1}
+                 ]
+            },
+            "BNE"    :
+            {
+                "signal": "rvs_core_tb/i_dut/i_fdu/decoder/gen_bne",
+                "width" : 1,
+                "bins"  :[
+                    {"value" : 1}
+                 ]
+            },
+            "CSRRC"  :
+            {
+                "signal": "rvs_core_tb/i_dut/i_fdu/decoder/gen_csrrc",
+                "width" : 1,
+                "bins"  :[
+                    {"value" : 1}
+                 ]
+            },
+            "CSRRCI" :
+            {
+                "signal": "rvs_core_tb/i_dut/i_fdu/decoder/gen_csrrci",
+                "width" : 1,
+                "bins"  :[
+                    {"value" : 1}
+                 ]
+            },
+            "CSRRS"  :
+            {
+                "signal": "rvs_core_tb/i_dut/i_fdu/decoder/gen_csrrs",
+                "width" : 1,
+                "bins"  :[
+                    {"value" : 1}
+                 ]
+            },
+            "CSRRSI" :
+            {
+                "signal": "rvs_core_tb/i_dut/i_fdu/decoder/gen_csrrsi",
+                "width" : 1,
+                "bins"  :[
+                    {"value" : 1}
+                 ]
+            },
+            "CSRRW"  :
+            {
+                "signal": "rvs_core_tb/i_dut/i_fdu/decoder/gen_csrrw",
+                "width" : 1,
+                "bins"  :[
+                    {"value" : 1}
+                 ]
+            },
+            "CSRRWI" :
+            {
+                "signal": "rvs_core_tb/i_dut/i_fdu/decoder/gen_csrrwi",
+                "width" : 1,
+                "bins"  :[
+                    {"value" : 1}
+                 ]
+            },
+            "ECALL"  :
+            {
+                "signal": "rvs_core_tb/i_dut/i_fdu/decoder/gen_ecall",
+                "width" : 1,
+                "bins"  :[
+                    {"value" : 1}
+                 ]
+            },
+            "ERET"   :
+            {
+                "signal": "rvs_core_tb/i_dut/i_fdu/decoder/gen_eret",
+                "width" : 1,
+                "bins"  :[
+                    {"value" : 1}
+                 ]
+            },
+            "FENCE"  :
+            {
+                "signal": "rvs_core_tb/i_dut/i_fdu/decoder/gen_fence",
+                "width" : 1,
+                "bins"  :[
+                    {"value" : 1}
+                 ]
+            },
+            "JAL"    :
+            {
+                "signal": "rvs_core_tb/i_dut/i_fdu/decoder/gen_jal",
+                "width" : 1,
+                "bins"  :[
+                    {"value" : 1}
+                 ]
+            },
+            "JALR"   :
+            {
+                "signal": "rvs_core_tb/i_dut/i_fdu/decoder/gen_jalr",
+                "width" : 1,
+                "bins"  :[
+                    {"value" : 1}
+                 ]
+            },
+            "LB"     :
+            {
+                "signal": "rvs_core_tb/i_dut/i_fdu/decoder/gen_lb",
+                "width" : 1,
+                "bins"  :[
+                    {"value" : 1}
+                 ]
+            },
+            "LBU"    :
+            {
+                "signal": "rvs_core_tb/i_dut/i_fdu/decoder/gen_lbu",
+                "width" : 1,
+                "bins"  :[
+                    {"value" : 1}
+                 ]
+            },
+            "LH"     :
+            {
+                "signal": "rvs_core_tb/i_dut/i_fdu/decoder/gen_lh",
+                "width" : 1,
+                "bins"  :[
+                    {"value" : 1}
+                 ]
+            },
+            "LHU"    :
+            {
+                "signal": "rvs_core_tb/i_dut/i_fdu/decoder/gen_lhu",
+                "width" : 1,
+                "bins"  :[
+                    {"value" : 1}
+                 ]
+            },
+            "LUI"    :
+            {
+                "signal": "rvs_core_tb/i_dut/i_fdu/decoder/gen_lui",
+                "width" : 1,
+                "bins"  :[
+                    {"value" : 1}
+                 ]
+            },
+            "LW"     :
+            {
+                "signal": "rvs_core_tb/i_dut/i_fdu/decoder/gen_lw",
+                "width" : 1,
+                "bins"  :[
+                    {"value" : 1}
+                 ]
+            },
+            "OR"     :
+            {
+                "signal": "rvs_core_tb/i_dut/i_fdu/decoder/gen_or",
+                "width" : 1,
+                "bins"  :[
+                    {"value" : 1}
+                 ]
+            },
+            "ORI"    :
+            {
+                "signal": "rvs_core_tb/i_dut/i_fdu/decoder/gen_ori",
+                "width" : 1,
+                "bins"  :[
+                    {"value" : 1}
+                 ]
+            },
+            "SB"     :
+            {
+                "signal": "rvs_core_tb/i_dut/i_fdu/decoder/gen_sb",
+                "width" : 1,
+                "bins"  :[
+                    {"value" : 1}
+                 ]
+            },
+            "SH"     :
+            {
+                "signal": "rvs_core_tb/i_dut/i_fdu/decoder/gen_sh",
+                "width" : 1,
+                "bins"  :[
+                    {"value" : 1}
+                 ]
+            },
+            "SLL"    :
+            {
+                "signal": "rvs_core_tb/i_dut/i_fdu/decoder/gen_sll",
+                "width" : 1,
+                "bins"  :[
+                    {"value" : 1}
+                 ]
+            },
+            "SLLI"   :
+            {
+                "signal": "rvs_core_tb/i_dut/i_fdu/decoder/gen_slli",
+                "width" : 1,
+                "bins"  :[
+                    {"value" : 1}
+                 ]
+            },
+            "SLT"    :
+            {
+                "signal": "rvs_core_tb/i_dut/i_fdu/decoder/gen_slt",
+                "width" : 1,
+                "bins"  :[
+                    {"value" : 1}
+                 ]
+            },
+            "SLTI"   :
+            {
+                "signal": "rvs_core_tb/i_dut/i_fdu/decoder/gen_slti",
+                "width" : 1,
+                "bins"  :[
+                    {"value" : 1}
+                 ]
+            },
+            "SLTIU"  :
+            {
+                "signal": "rvs_core_tb/i_dut/i_fdu/decoder/gen_sltiu",
+                "width" : 1,
+                "bins"  :[
+                    {"value" : 1}
+                 ]
+            },
+            "SLTU"   :
+            {
+                "signal": "rvs_core_tb/i_dut/i_fdu/decoder/gen_sltu",
+                "width" : 1,
+                "bins"  :[
+                    {"value" : 1}
+                 ]
+            },
+            "SRA"    :
+            {
+                "signal": "rvs_core_tb/i_dut/i_fdu/decoder/gen_sra",
+                "width" : 1,
+                "bins"  :[
+                    {"value" : 1}
+                 ]
+            },
+            "SRAI"   :
+            {
+                "signal": "rvs_core_tb/i_dut/i_fdu/decoder/gen_srai",
+                "width" : 1,
+                "bins"  :[
+                    {"value" : 1}
+                 ]
+            },
+            "SRL"    :
+            {
+                "signal": "rvs_core_tb/i_dut/i_fdu/decoder/gen_srl",
+                "width" : 1,
+                "bins"  :[
+                    {"value" : 1}
+                 ]
+            },
+            "SRLI"   :
+            {
+                "signal": "rvs_core_tb/i_dut/i_fdu/decoder/gen_srli",
+                "width" : 1,
+                "bins"  :[
+                    {"value" : 1}
+                 ]
+            },
+            "SUB"    :
+            {
+                "signal": "rvs_core_tb/i_dut/i_fdu/decoder/gen_sub",
+                "width" : 1,
+                "bins"  :[
+                    {"value" : 1}
+                 ]
+            },
+            "SW"     :
+            {
+                "signal": "rvs_core_tb/i_dut/i_fdu/decoder/gen_sw",
+                "width" : 1,
+                "bins"  :[
+                    {"value" : 1}
+                 ]
+            },
+            "XOR"    :
+            {
+                "signal": "rvs_core_tb/i_dut/i_fdu/decoder/gen_xor",
+                "width" : 1,
+                "bins"  :[
+                    {"value" : 1}
+                 ]
+            },
+            "XORI"   :
+            {
+                "signal": "rvs_core_tb/i_dut/i_fdu/decoder/gen_xori",
+                "width" : 1,
+                "bins"  :[
+                    {"value" : 1}
+                 ]
+            }
+        }
+    },
+    "crosscoverage":[
+        {
+            "name" : "Instructions With Registers",
+            "sets" : ["registers.*",
+                      "instructions.*"]
+        },
+        {
+            "name" : "instructions with interrupt",
+            "sets" : ["interrupts.*",
+                      "instructions.*"]
+        }
+    ]
+}

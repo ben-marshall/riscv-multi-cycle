@@ -1,0 +1,13 @@
+
+directed-tests/*.out
+directed-tests/*.dis
+directed-tests/*.hex
+
+random-tests/*.S
+random-tests/*.out
+random-tests/*.dis
+random-tests/*.hex
+random-tests/*.log
+random-tests/*.in
+
+isa-tests/

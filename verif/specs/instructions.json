@@ -1,0 +1,478 @@
+
+{
+"instructions": [
+    {
+        "memonic"   : "addi",
+        "arguments" : [
+            {
+                "name"  : "rt",
+                "type"  : "register"
+            },
+            {
+                "name"  : "rs",
+                "type"  : "register"
+            },
+            {
+                "name"  : "imm",
+                "type"  : "immediate",
+                "length": 11,
+                "min"   : 1
+            }
+        ]
+    },
+    {
+        "memonic"   : "xori",
+        "arguments" : [
+            {
+                "name"  : "rt",
+                "type"  : "register"
+            },
+            {
+                "name"  : "rs",
+                "type"  : "register"
+            },
+            {
+                "name"  : "imm",
+                "type"  : "immediate",
+                "length": 11,
+                "min"   : 1
+            }
+        ]
+    },
+    {
+        "memonic"   : "ori",
+        "arguments" : [
+            {
+                "name"  : "rt",
+                "type"  : "register"
+            },
+            {
+                "name"  : "rs",
+                "type"  : "register"
+            },
+            {
+                "name"  : "imm",
+                "type"  : "immediate",
+                "length": 11,
+                "min"   : 1
+            }
+        ]
+    },
+    {
+        "memonic"   : "slti",
+        "arguments" : [
+            {
+                "name"  : "rt",
+                "type"  : "register"
+            },
+            {
+                "name"  : "rs",
+                "type"  : "register"
+            },
+            {
+                "name"  : "imm",
+                "type"  : "immediate",
+                "length": 11,
+                "min"   : 1
+            }
+        ]
+    },
+    {
+        "memonic"   : "andi",
+        "arguments" : [
+            {
+                "name"  : "rt",
+                "type"  : "register"
+            },
+            {
+                "name"  : "rs",
+                "type"  : "register"
+            },
+            {
+                "name"  : "imm",
+                "type"  : "immediate",
+                "length": 11,
+                "min"   : 1
+            }
+        ]
+    },
+    {
+        "memonic"   : "srai",
+        "arguments" : [
+            {
+                "name"  : "rt",
+                "type"  : "register"
+            },
+            {
+                "name"  : "rs",
+                "type"  : "register"
+            },
+            {
+                "name"  : "imm",
+                "type"  : "immediate",
+                "length": 5
+            }
+        ]
+    },
+    {
+        "memonic"   : "srli",
+        "arguments" : [
+            {
+                "name"  : "rt",
+                "type"  : "register"
+            },
+            {
+                "name"  : "rs",
+                "type"  : "register"
+            },
+            {
+                "name"  : "imm",
+                "type"  : "immediate",
+                "length": 5
+            }
+        ]
+    },
+    {
+        "memonic"   : "slli",
+        "arguments" : [
+            {
+                "name"  : "rt",
+                "type"  : "register"
+            },
+            {
+                "name"  : "rs",
+                "type"  : "register"
+            },
+            {
+                "name"  : "imm",
+                "type"  : "immediate",
+                "length": 5
+            }
+        ]
+    },
+    {
+        "memonic"   : "add",
+        "arguments" : [
+            {
+                "name"  : "rt",
+                "type"  : "register"
+            },
+            {
+                "name"  : "rs",
+                "type"  : "register"
+            },
+            {
+                "name"  : "rd",
+                "type"  : "register"
+            }
+        ]
+    },
+    {
+        "memonic"   : "sub",
+        "arguments" : [
+            {
+                "name"  : "rt",
+                "type"  : "register"
+            },
+            {
+                "name"  : "rs",
+                "type"  : "register"
+            },
+            {
+                "name"  : "rd",
+                "type"  : "register"
+            }
+        ]
+    },
+    {
+        "memonic"   : "and",
+        "arguments" : [
+            {
+                "name"  : "rt",
+                "type"  : "register"
+            },
+            {
+                "name"  : "rs",
+                "type"  : "register"
+            },
+            {
+                "name"  : "rd",
+                "type"  : "register"
+            }
+        ]
+    },
+    {
+        "memonic"   : "or",
+        "arguments" : [
+            {
+                "name"  : "rt",
+                "type"  : "register"
+            },
+            {
+                "name"  : "rs",
+                "type"  : "register"
+            },
+            {
+                "name"  : "rd",
+                "type"  : "register"
+            }
+        ]
+    },
+    {
+        "memonic"   : "xor",
+        "arguments" : [
+            {
+                "name"  : "rt",
+                "type"  : "register"
+            },
+            {
+                "name"  : "rs",
+                "type"  : "register"
+            },
+            {
+                "name"  : "rd",
+                "type"  : "register"
+            }
+        ]
+    },
+    {
+        "memonic"   : "slt",
+        "arguments" : [
+            {
+                "name"  : "rt",
+                "type"  : "register"
+            },
+            {
+                "name"  : "rs",
+                "type"  : "register"
+            },
+            {
+                "name"  : "rd",
+                "type"  : "register"
+            }
+        ]
+    },
+    {
+        "memonic"   : "sltu",
+        "arguments" : [
+            {
+                "name"  : "rt",
+                "type"  : "register"
+            },
+            {
+                "name"  : "rs",
+                "type"  : "register"
+            },
+            {
+                "name"  : "rd",
+                "type"  : "register"
+            }
+        ]
+    },
+    {
+        "memonic"   : "sll",
+        "arguments" : [
+            {
+                "name"  : "rt",
+                "type"  : "register"
+            },
+            {
+                "name"  : "rs",
+                "type"  : "register"
+            },
+            {
+                "name"  : "rd",
+                "type"  : "register"
+            }
+        ]
+    },
+    {
+        "memonic"   : "srl",
+        "arguments" : [
+            {
+                "name"  : "rt",
+                "type"  : "register"
+            },
+            {
+                "name"  : "rs",
+                "type"  : "register"
+            },
+            {
+                "name"  : "rd",
+                "type"  : "register"
+            }
+        ]
+    },
+    {
+        "memonic"   : "sra",
+        "arguments" : [
+            {
+                "name"  : "rt",
+                "type"  : "register"
+            },
+            {
+                "name"  : "rs",
+                "type"  : "register"
+            },
+            {
+                "name"  : "rd",
+                "type"  : "register"
+            }
+        ]
+    }
+],
+"failing":[
+    {
+        "memonic"   : "lw",
+        "mem-arg-format": 1,
+        "arguments" : [
+            {
+                "name"  : "rt",
+                "type"  : "register"
+            },
+            {
+                "name"  : "rs",
+                "type"  : "register"
+            },
+            {
+                "name"  : "imm",
+                "type"  : "immediate",
+                "length": 11
+            }
+        ]
+    },
+    {
+        "memonic"   : "lh",
+        "mem-arg-format": 1,
+        "arguments" : [
+            {
+                "name"  : "rt",
+                "type"  : "register"
+            },
+            {
+                "name"  : "rs",
+                "type"  : "register"
+            },
+            {
+                "name"  : "imm",
+                "type"  : "immediate",
+                "length": 11
+            }
+        ]
+    },
+    {
+        "memonic"   : "lhu",
+        "mem-arg-format": 1,
+        "arguments" : [
+            {
+                "name"  : "rt",
+                "type"  : "register"
+            },
+            {
+                "name"  : "rs",
+                "type"  : "register"
+            },
+            {
+                "name"  : "imm",
+                "type"  : "immediate",
+                "length": 11
+            }
+        ]
+    },
+    {
+        "memonic"   : "lb",
+        "mem-arg-format": 1,
+        "arguments" : [
+            {
+                "name"  : "rt",
+                "type"  : "register"
+            },
+            {
+                "name"  : "rs",
+                "type"  : "register"
+            },
+            {
+                "name"  : "imm",
+                "type"  : "immediate",
+                "length": 11
+            }
+        ]
+    },
+    {
+        "memonic"   : "lbu",
+        "mem-arg-format": 1,
+        "arguments" : [
+            {
+                "name"  : "rt",
+                "type"  : "register"
+            },
+            {
+                "name"  : "rs",
+                "type"  : "register"
+            },
+            {
+                "name"  : "imm",
+                "type"  : "immediate",
+                "length": 11
+            }
+        ]
+    },
+    {
+        "memonic"   : "sw",
+        "mem-arg-format": 1,
+        "arguments" : [
+            {
+                "name"  : "rt",
+                "type"  : "register"
+            },
+            {
+                "name"  : "rs",
+                "type"  : "register"
+            },
+            {
+                "name"  : "imm",
+                "type"  : "immediate",
+                "length": 11
+            }
+        ]
+    },
+    {
+        "memonic"   : "sh",
+        "mem-arg-format": 1,
+        "arguments" : [
+            {
+                "name"  : "rt",
+                "type"  : "register"
+            },
+            {
+                "name"  : "rs",
+                "type"  : "register"
+            },
+            {
+                "name"  : "imm",
+                "type"  : "immediate",
+                "length": 11
+            }
+        ]
+    },
+    {
+        "memonic"   : "sb",
+        "mem-arg-format": 1,
+        "arguments" : [
+            {
+                "name"  : "rt",
+                "type"  : "register"
+            },
+            {
+                "name"  : "rs",
+                "type"  : "register"
+            },
+            {
+                "name"  : "imm",
+                "type"  : "immediate",
+                "length": 11
+            }
+        ]
+    }
+]
+}
