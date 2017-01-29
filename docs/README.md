@@ -4,8 +4,7 @@ title: Documentation | RISCV Multi Cycle
 ---
 
 
-Documentation
-=============
+# RISCV Multi-cycle CPU implementation
 
 This is the top level for the project documentation. It is broken into three
 main sections:
