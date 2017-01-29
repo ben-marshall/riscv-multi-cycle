@@ -31,7 +31,6 @@ the required data path for a particular instruction.
 - `F_AS` - Adder/Subtracter
 - `F_LAS` - Logical/Arithmetic Shifter
 - `F_BIT` - Bitwise (and/or/xor)
-- `F_EQ` - Equality comparator
 
 ## Data Sources
 
