@@ -1,10 +1,10 @@
 # Site information
-title: RISCV Single Cycle
+title: RISCV Multi Cycle
 description: > 
-    A simple single cycle, in order implementation of the RV32UI subset of the
-    RISCV instruction set architecture.
+    A simple multi-cycle, area optimised implementation of the RISCV
+    instruction set architecture.
 
-baseurl: "/riscv" 
+baseurl: "/riscv-multi-cycle" 
 github_username:  ben-marshall
 
 # Build settings

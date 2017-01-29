@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Architecture | RISCV Single Cycle
+title: Architecture | RISCV Multi Cycle
 ---
 
 This page details all ISA specific information which the core implements.

@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Flow | RISCV Single Cycle
+title: Flow | RISCV Multi Cycle
 ---
 
 Describes the build, simulation and synthesis tool flows.

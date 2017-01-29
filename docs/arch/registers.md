@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Register Aliases | RISCV Single Cycle
+title: Register Aliases | RISCV Multi Cycle
 ---
 
 This page Details the general purpose registers of the RISCV architecture.

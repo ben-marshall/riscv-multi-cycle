@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Instruction Actions | RISCV Single Cycle
+title: Instruction Actions | RISCV Multi Cycle
 ---
 
 This page shows concisely the side effects of every instruction in the RV32UI
