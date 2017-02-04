@@ -22,13 +22,16 @@ input  wire [31:0] rhs,      // Value on right-hand side of the operator
 
 input  wire [2:0]  op,       // What operation to perform?
 
-output wire [31:0] result    // The result of the addition / subtraction
+output wire        valid,    // Asserts that the result is complete.
+output wire [31:0] result    // The result
 );
 
 //
 // Isolate inputs when the module is not enabled.
 wire [31:0] i_lhs = lhs & {32{op != `RVM_BITWISE_NOP}};
 wire [31:0] i_rhs = rhs & {32{op != `RVM_BITWISE_NOP}};
+
+assign valid = op != `RVM_BITWISE_NOP;
 
 //
 // Compute the result

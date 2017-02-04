@@ -28,8 +28,8 @@ described on the [Instruction Actions](execution-listing.html) page.
 These are blocks which implement atomic functions which are comined to create
 the required data path for a particular instruction.
 
-- `F_AS` - Adder/Subtracter
-- `F_LAS` - Logical/Arithmetic Shifter
+- `F_ADD` - Adder/Subtracter
+- `F_SHF` - Logical/Arithmetic Shifter
 - `F_BIT` - Bitwise (and/or/xor)
 
 ## Data Sources
