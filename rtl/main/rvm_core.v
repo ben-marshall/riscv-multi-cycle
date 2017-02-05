@@ -30,14 +30,48 @@ wire [31:0] f_bit_lhs   ; // Left hand side of the bitwise operand.
 wire [31:0] f_bit_rhs   ; // Right hand side of the bitwise operand.
 wire [ 1:0] f_bit_op    ; // Bitwise operation to perform.
 wire        f_bit_valid ; // Bitwise has finished computing.
-wire [32:0] f_bit_result; // Result of the bitwise operation.
+wire [31:0] f_bit_result; // Result of the bitwise operation.
 
 wire [31:0] f_shf_lhs   ; // Left hand side of the shift operand.
 wire [31:0] f_shf_rhs   ; // Right hand side of the shift operand.
 wire [ 1:0] f_shf_op    ; // Shift operation to perform.
 wire        f_shf_valid ; // Shift has finished computing.
-wire [32:0] f_shf_result; // Result of the shift operation.
+wire [31:0] f_shf_result; // Result of the shift operation.
 
+//
+// Register file interface signals
+//
+
+wire        s_rs1_en     ; // RS1 Port Enable.
+wire [4 :0] s_rs1_addr   ; // RS1 Address.
+wire [31:0] s_rs1_rdata  ; // RS1 Read Data.
+
+wire        s_rs2_en     ; // RS1 Port Enable.
+wire [4 :0] s_rs2_addr   ; // RS1 Address.
+wire [31:0] s_rs2_rdata  ; // RS1 Read Data.
+
+wire        d_rd_wen     ; // RD Write Enable.
+wire [4 :0] d_rd_addr    ; // RD Address.
+wire [31:0] d_rd_wdata   ; // RD Write Data.
+
+//-----------------------------------------------------------------------------
+// General Purpose and Control Status Register sets.
+//
+
+rvm_gprs i_rvm_gprs (
+.clk       (clk        ), // The core level clock for sequential logic.
+.clk_req   (clk_req    ), // Whether the gprs need a clock this cycle.
+.resetn    (resetn     ), // Active low asynchronous reset signal.
+.rs1_en    (s_rs1_en   ), // RS1 Port Enable.
+.rs1_addr  (s_rs1_addr ), // RS1 Address.
+.rs1_rdata (s_rs1_rdata), // RS1 Read Data.
+.rs2_en    (s_rs2_en   ), // RS1 Port Enable.
+.rs2_addr  (s_rs2_addr ), // RS1 Address.
+.rs2_rdata (s_rs2_rdata), // RS1 Read Data.
+.rd_wen    (d_rd_wen   ), // RD Write Enable.
+.rd_addr   (d_rd_addr  ), // RD Address.
+.rd_wdata  (d_rd_wdata )  // RD Write Data.
+);
 
 //-----------------------------------------------------------------------------
 // Functional unit instances.
