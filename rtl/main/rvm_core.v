@@ -11,8 +11,17 @@
 `include "rvm_constants.v"
 
 module rvm_core(
-input           wire clk,                   // System level clock.
-input           wire resetn                 // Asynchronous active low reset.
+input  wire         clk,                // System level clock.
+input  wire         resetn,             // Asynchronous active low reset.
+
+output wire [31:0]  mem_addr,           // Memory address lines
+input  wire [31:0]  mem_rdata,          // Memory read data
+output wire [31:0]  mem_wdata,          // Memory write data
+output wire         mem_c_en,           // Memory chip enable
+output wire [ 3:0]  mem_b_en,           // Memory byte enable
+input  wire         mem_error,          // Memory error indicator
+input  wire         mem_stall           // Memory stall indicator
+
 );
 
 
@@ -38,7 +47,7 @@ wire [ 1:0] f_shf_op    ; // Shift operation to perform.
 wire        f_shf_valid ; // Shift has finished computing.
 wire [31:0] f_shf_result; // Result of the shift operation.
 
-//
+//-----------------------------------------------------------------------------
 // Register file interface signals
 //
 
@@ -54,14 +63,36 @@ wire        d_rd_wen     ; // RD Write Enable.
 wire [4 :0] d_rd_addr    ; // RD Address.
 wire [31:0] d_rd_wdata   ; // RD Write Data.
 
-//
+//-----------------------------------------------------------------------------
 // Program counter interface signals.
 //
 
-input  wire [1:0]    d_pc_w_en;   // Set the PC to the value on wdata.
-input  wire [31:0]   d_pc_wdata;  // Data to write to the PC register.
-output reg  [31:0]   s_pc;        // The current program counter value.
+wire [1:0]    d_pc_w_en;   // Set the PC to the value on wdata.
+wire [31:0]   d_pc_wdata;  // Data to write to the PC register.
+reg  [31:0]   s_pc;        // The current program counter value.
 
+//-----------------------------------------------------------------------------
+// Fetch decode unit
+//
+
+wire [31:0]   s_imm;
+wire [ 5:0]   ctrl_instr;
+wire          ctrl_illegal_instr;
+wire          ctrl_fdu_mem_valid;
+
+
+rvm_fdu i_rvm_fdu(
+.clk          (clk               ), // System level clock.
+.resetn       (resetn            ), // Asynchronous active low reset.
+.mem_rdata    (mem_rdata         ), // The fetched memory word.
+.mem_valid    (ctrl_fdu_mem_valid), // Whether the fetched data is valid.
+.illegal_instr(ctrl_illegal_instr), // No valid instruction decoded.
+.rs1          (s_rs1_addr        ), // Source register 1.
+.rs2          (s_rs2_addr        ), // Source register 2.
+.dest         (s_rd_addr         ), // Destination register.
+.imm          (s_imm             ), // Decoded immediate.
+.instr        (ctrl_instr        )  // The instruction we have decoded.
+);
 
 //-----------------------------------------------------------------------------
 // General Purpose and Control Status Register sets.
