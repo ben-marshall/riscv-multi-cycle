@@ -54,13 +54,29 @@ wire        d_rd_wen     ; // RD Write Enable.
 wire [4 :0] d_rd_addr    ; // RD Address.
 wire [31:0] d_rd_wdata   ; // RD Write Data.
 
+//
+// Program counter interface signals.
+//
+
+input  wire [1:0]    d_pc_w_en;   // Set the PC to the value on wdata.
+input  wire [31:0]   d_pc_wdata;  // Data to write to the PC register.
+output reg  [31:0]   s_pc;        // The current program counter value.
+
+
 //-----------------------------------------------------------------------------
 // General Purpose and Control Status Register sets.
 //
 
+rvm_pcu i_rvm_pcu (
+.clk     (clk       ), // System clock
+.resetn  (resetn    ), // Asynchronous active low reset.
+.pc_w_en (d_pc_w_en ), // Set the PC to the value on wdata.
+.pc_wdata(d_pc_wdata), // Data to write to the PC register.
+.pc      (s_pc      )  // The current program counter value.
+);
+
 rvm_gprs i_rvm_gprs (
 .clk       (clk        ), // The core level clock for sequential logic.
-.clk_req   (clk_req    ), // Whether the gprs need a clock this cycle.
 .resetn    (resetn     ), // Active low asynchronous reset signal.
 .rs1_en    (s_rs1_en   ), // RS1 Port Enable.
 .rs1_addr  (s_rs1_addr ), // RS1 Address.
