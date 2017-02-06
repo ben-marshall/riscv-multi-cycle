@@ -67,9 +67,9 @@ wire [31:0] d_rd_wdata   ; // RD Write Data.
 // Program counter interface signals.
 //
 
-wire [1:0]    d_pc_w_en;   // Set the PC to the value on wdata.
-wire [31:0]   d_pc_wdata;  // Data to write to the PC register.
-reg  [31:0]   s_pc;        // The current program counter value.
+wire [1:0]  d_pc_w_en;   // Set the PC to the value on wdata.
+wire [31:0] d_pc_wdata;  // Data to write to the PC register.
+wire [31:0] s_pc;        // The current program counter value.
 
 //-----------------------------------------------------------------------------
 // Fetch decode unit
