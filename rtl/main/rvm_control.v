@@ -64,5 +64,104 @@ input  wire        mem_stall     // Memory stall indicator
 
 );
 
+localparam FSM_STATE_W = 8
+
+//
+// State encodings for the control FSM
+
+localparam FSM_POST_RESET   = 0;
+localparam FSM_FETCH_INSTR  = 1;
+localparam FSM_DECODE_INSTR = 2;
+localparam FSM_INC_PC_BY_4  = 3;
+
+//
+// Current and next state of the control FSM.
+reg [FSM_STATE_W-1:0] ctrl_state;
+reg [FSM_STATE_W-1:0] n_ctrl_state;
+
+//
+// Wait in the current state for something.
+reg fsm_wait;
+
+//-----------------------------------------------------------------------------
+// Register file interface signals
+//
+
+//              TBD
+
+
+//-----------------------------------------------------------------------------
+// Program counter interface signals.
+//
+
+//              TBD
+
+
+//-----------------------------------------------------------------------------
+// Interface signals for the functional units.
+// 
+
+//              TBD
+
+
+
+//-----------------------------------------------------------------------------
+// Memory interface signals
+// 
+
+//              TBD
+
+
+
+//-----------------------------------------------------------------------------
+
+//
+// process: p_ctrl_next_state
+//
+//      Responsible for computing the next state of the core given the
+//      current state.
+//
+always @(*) begin : p_ctrl_next_state
+    n_ctrl_state = ctrl_state;
+    fsm_wait     = 1'b0;
+
+    case (ctrl_state)
+
+        FSM_POST_RESET: begin
+            n_ctrl_state <= FSM_FETCH_INSTR;
+        end
+
+        FSM_FETCH_INSTR: begin
+            n_ctrl_state <= FSM_DECODE_INSTR;
+        end
+
+        FSM_DECODE_INSTR: begin
+            n_ctrl_state <= FSM_INC_PC_BY_4;
+            fsm_wait      = mem_stall;
+        end
+
+        FSM_INC_PC_BY_4: begin
+            n_ctrl_state <= FSM_DECODE_INSTR;
+        end
+
+        default: begin
+            n_ctrl_state <= FSM_POST_RESET;
+        end
+    endcase
+end
+
+
+//
+// process: p_ctrl_progress_state
+//
+//      Responsible for moving to the next state
+//
+always @(posedge clk, negedge resetn) : begin p_ctrl_progress_state
+    if(!resetn) begin
+        ctrl_state <= FSM_POST_RESET;
+    end else if(!fsm_wait) begin
+        ctrl_state <= n_ctrl_state;
+    end
+end
 
 endmodule
