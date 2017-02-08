@@ -9,7 +9,7 @@
 source_riscv_tests()
 {
     TEST_SUBSET=rv32ui-p-
-    TEST_HEX_FILES=$RISCV/riscv-tests/build/isa
+    TEST_HEX_FILES=$RISCV/riscv64-unknown-elf/share/riscv-tests
     TEST_FOLDER=$RVM_HOME/verif/isa-tests/hex
     DIS_FOLDER=$RVM_HOME/verif/isa-tests/dis
 

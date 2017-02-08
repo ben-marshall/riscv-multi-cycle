@@ -2,7 +2,7 @@
 source /etc/environment
 
 export RVM_HOME=`pwd`
-export RISCV=$RVM_HOME/../riscv-tools
+export RISCV=/opt/riscv
 
 export PATH=$PATH:$RISCV/bin
 
