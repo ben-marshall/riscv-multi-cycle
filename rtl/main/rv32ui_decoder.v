@@ -210,11 +210,11 @@ assign rs2 = enc[24:20]; // & {`REG_ADDR_W{itype_r |           itype_s | itype_s
 assign dest= enc[11:7 ]; // & {`REG_ADDR_W{itype_r | itype_i | itype_u | itype_uj}};
 
 // Extract and isolate the immediate value from the encoded instruction.
-assign imm = {`WORD_W{itype_i }} & {{21{enc[31]}},enc[31:20]               } |
-             {`WORD_W{itype_s }} & {{21{enc[31]}},enc[31:25],enc[11:7]     } |
-             {`WORD_W{itype_sb}} & {{20{enc[31]}},enc[31:25],enc[11:8],1'b0} |
-             {`WORD_W{itype_u }} & {enc[31:12] , 12'b0                     } |
-             {`WORD_W{itype_uj}} & {{12{enc[31]}}, enc[19:12], enc[20],enc[30:21],1'b0};
+assign imm = {32{itype_i }} & {{21{enc[31]}},enc[31:20]               } |
+             {32{itype_s }} & {{21{enc[31]}},enc[31:25],enc[11:7]     } |
+             {32{itype_sb}} & {{20{enc[31]}},enc[31:25],enc[11:8],1'b0} |
+             {32{itype_u }} & {enc[31:12] , 12'b0                     } |
+             {32{itype_uj}} & {{12{enc[31]}}, enc[19:12], enc[20],enc[30:21],1'b0};
 
 //
 // Decoder outputs to decide which instruction to execute.

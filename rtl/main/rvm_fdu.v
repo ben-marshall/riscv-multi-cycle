@@ -26,19 +26,6 @@ output wire [ 5:0] instr          // The instruction we have decoded.
 );
 
 //
-// Generated decoder interface signals.
-//
-
-wire [31:0] inputword    ; // The word to decode.
-
-wire        illegal_instr; // No valid instruction decoded.
-
-wire [ 4:0] rs1          ; // Source register 1.
-wire [ 4:0] rs2          ; // Source register 2.
-wire [ 4:0] dest         ; // Destination register.
-wire [31:0] imm          ; // Decoded immediate.
-
-//
 // Storage for the fetched word we are decoding.
 //
 

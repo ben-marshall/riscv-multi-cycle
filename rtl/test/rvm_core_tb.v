@@ -8,7 +8,7 @@
 //
 
 `timescale 1ns/1ns
-`include "rvs_constants.v"
+`include "rvm_constants.v"
 
 module rvm_core_tb();
 
@@ -102,7 +102,7 @@ always @(posedge clk) begin
             //$display("\t%d\t: 0x%h", i, i_dut.i_register_file.registers[i]);
         end
 
-        $display("Program Counter:     %h", i_dut.pc);
+        $display("Program Counter:     %h", i_dut.s_pc);
         $display("Processor Cycles:    %d", cycle_count);
 
         if(test_pass) begin
@@ -130,9 +130,8 @@ wire [31:0] mem_rdata; // Instruction memory read data.
 wire [31:0] mem_addr ; // Instruction memory address.
 
 // The core instance.
-rvs_core i_dut(
+rvm_core i_dut(
 .clk        (clk        ), // The core level clock for sequential logic.
-.clk_req    (clk_req    ), // Whether the core needs a clock this cycle.
 .resetn     (resetn     ), // Active low asynchronous reset signal.
 .mem_addr   (mem_addr   ), // Memory address lines
 .mem_rdata  (mem_rdata  ), // Memory read data

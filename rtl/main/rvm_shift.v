@@ -30,8 +30,8 @@ output wire [32:0] result    // The result
 
 //
 // Isolate inputs to the adder when the module is not enabled.
-signed wire [31:0] i_lhs = lhs & {32{op != `RVM_SHIFT_NOP}};
-signed wire [31:0] i_rhs = rhs & {32{op != `RVM_SHIFT_NOP}};
+wire signed  [31:0] i_lhs = lhs & {32{op != `RVM_SHIFT_NOP}};
+wire signed  [31:0] i_rhs = rhs & {32{op != `RVM_SHIFT_NOP}};
 
 assign valid = op != `RVM_SHIFT_NOP;
 

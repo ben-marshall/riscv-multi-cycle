@@ -1,4 +1,4 @@
-+incdir+$(RVM_HOME)/rtl/
++incdir+$(RVM_HOME)/rtl/main/
 $(RVM_HOME)/rtl/test/rvm_core_rand_tb.v
 $(RVM_HOME)/rtl/test/sram.v
 $(RVM_HOME)/rtl/main/rv32ui_decoder.v

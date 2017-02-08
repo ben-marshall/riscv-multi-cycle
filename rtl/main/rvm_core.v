@@ -124,7 +124,7 @@ rvm_gprs i_rvm_gprs (
 // Functional unit instances.
 //
 
-rvm_shift i_rvm_add_0(
+rvm_adder i_rvm_add_0(
 .lhs   (f_add_lhs   ), // Value on left-hand side of operator
 .rhs   (f_add_rhs   ), // Value on right-hand side of operator
 .op    (f_add_op    ), // What to do?
@@ -132,7 +132,7 @@ rvm_shift i_rvm_add_0(
 .result(f_add_result)  // The result of the addition / subtraction
 );
 
-rvm_shift i_rvm_bitwise_0(
+rvm_bitwise i_rvm_bitwise_0(
 .lhs   (f_bit_lhs   ), // Value on left-hand side of operator
 .rhs   (f_bit_rhs   ), // Value on right-hand side of operator
 .op    (f_bit_op    ), // What to do?

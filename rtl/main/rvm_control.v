@@ -64,7 +64,7 @@ input  wire        mem_stall     // Memory stall indicator
 
 );
 
-localparam FSM_STATE_W = 8
+localparam FSM_STATE_W = 8;
 
 //
 // State encodings for the control FSM
@@ -169,7 +169,7 @@ end
 //
 //      Responsible for moving to the next state
 //
-always @(posedge clk, negedge resetn) : begin p_ctrl_progress_state
+always @(posedge clk, negedge resetn) begin : p_ctrl_progress_state
     if(!resetn) begin
         ctrl_state <= FSM_POST_RESET;
     end else if(!fsm_wait) begin
