@@ -71,17 +71,17 @@ always @(posedge clk) begin
     timeout       = 0;
     fail_hit      = 0;
 
-    if(mem_i_addr == halt_addr) begin
+    if(mem_addr == halt_addr) begin
         test_finished = 1;
         test_pass     = 0;
         timeout       = 0;
     
-    end else if(mem_i_addr == pass_addr) begin
+    end else if(mem_addr == pass_addr) begin
         test_finished = 1;
         test_pass     = 1;
         timeout       = 0;
     
-    end else if(mem_i_addr == fail_addr) begin
+    end else if(mem_addr == fail_addr) begin
         test_finished = 1;
         test_pass     = 0;
         fail_hit      = 1;
@@ -121,32 +121,39 @@ always @(posedge clk) begin
 end
 
 // Memory bus signals
-wire [3 :0] mem_i_ben  ; // Instruction memory byte enable.
-wire        mem_i_wen  ; // Instruction memory write enable.
-wire        mem_i_err  ; // Instruction memory error.
-wire        mem_i_stall; // Instruction memory stall.
-wire [31:0] mem_i_wdata; // Instruction memory write data.
-wire [31:0] mem_i_rdata; // Instruction memory read data.
-wire [31:0] mem_i_addr ; // Instruction memory address.
+wire [3 :0] mem_ben  ; // Instruction memory byte enable.
+wire        mem_wen  ; // Instruction memory write enable.
+wire        mem_err  ; // Instruction memory error.
+wire        mem_stall; // Instruction memory stall.
+wire [31:0] mem_wdata; // Instruction memory write data.
+wire [31:0] mem_rdata; // Instruction memory read data.
+wire [31:0] mem_addr ; // Instruction memory address.
 
 // The core instance.
 rvs_core i_dut(
 .clk        (clk        ), // The core level clock for sequential logic.
 .clk_req    (clk_req    ), // Whether the core needs a clock this cycle.
 .resetn     (resetn     ), // Active low asynchronous reset signal.
+.mem_addr   (mem_addr   ), // Memory address lines
+.mem_rdata  (mem_rdata  ), // Memory read data
+.mem_wdata  (mem_wdata  ), // Memory write data
+.mem_c_en   (mem_c_en   ), // Memory chip enable
+.mem_b_en   (mem_b_en   ), // Memory byte enable
+.mem_error  (mem_error  ), // Memory error indicator
+.mem_stall  (mem_stall  )  // Memory stall indicator
 );
 
 sram i_memory(
-.memfile(imem_file  ) ,
-.gclk   (clk        ) ,  // Global clock signal
-.resetn (resetn     ) ,  // Asynchronous active low reset.
-.addr   (mem_i_addr ) ,  // Address lines
-.rdata  (mem_i_rdata) ,  // Read data lines
-.wdata  (mem_i_wdata) ,  // Write data lines
-.b_en   (mem_i_ben ) ,  // Chip Enable
-.w_en   (mem_i_wen  ) ,  // write enable
-.stall  (mem_i_stall) ,  // Stall signal
-.error  (mem_i_err  )    // error signal
+.memfile(imem_file) ,
+.gclk   (clk      ) ,  // Global clock signal
+.resetn (resetn   ) ,  // Asynchronous active low reset.
+.addr   (mem_addr ) ,  // Address lines
+.rdata  (mem_rdata) ,  // Read data lines
+.wdata  (mem_wdata) ,  // Write data lines
+.b_en   (mem_ben  ) ,  // Chip Enable
+.w_en   (mem_wen  ) ,  // write enable
+.stall  (mem_stall) ,  // Stall signal
+.error  (mem_err  )    // error signal
 );
 
 endmodule

@@ -37,7 +37,7 @@ $(VCC_OUTPUT) : $(VCC_SCRIPT)
 
 run-test: $(VCC_OUTPUT)
 	echo "Running simulator hex file: $(TEST_HEX)"
-	$(VVP) $(VVP_FLAGS) $(VCC_OUTPUT) +IMEM=$(TEST_HEX) +DMEM=$(TEST_HEX) \
+	$(VVP) $(VVP_FLAGS) $(VCC_OUTPUT) +IMEM=$(TEST_HEX) \
         +HALT_ADDR=$(HALT_ADDR) +MAX_CYCLE_COUNT=$(TIMEOUT) \
         +PASS_ADDR=$(PASS_ADDR) +FAIL_ADDR=$(FAIL_ADDR)
 

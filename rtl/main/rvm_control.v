@@ -109,7 +109,20 @@ reg fsm_wait;
 // Memory interface signals
 // 
 
-//              TBD
+// Memory address lines
+assign mem_addr  = 
+    n_ctrl_state == FSM_DECODE_INSTR ||
+    ctrl_state   == FSM_DECODE_INSTR && mem_stall ? s_pc : f_add_result;
+
+// Memory write data
+assign mem_wdata = 32'b0  ;
+
+// Memory chip enable.
+assign mem_c_en  =  n_ctrl_state == FSM_DECODE_INSTR ||
+                    ctrl_state   == FSM_DECODE_INSTR && mem_stall;
+
+// Memory byte enable
+assign mem_b_en  =  4'b1111;
 
 
 
