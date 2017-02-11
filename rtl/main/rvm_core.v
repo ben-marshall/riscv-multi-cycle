@@ -75,10 +75,14 @@ wire [31:0] s_pc;        // The current program counter value.
 // Fetch decode unit
 //
 
-wire [31:0]   s_imm;
-wire [ 5:0]   ctrl_instr;
-wire          ctrl_illegal_instr;
-wire          ctrl_fdu_mem_valid;
+wire        ctrl_illegal_instr;
+wire        ctrl_fdu_mem_valid;
+
+wire [ 4:0] i_rs1_addr  ; // Instruction RS1 Address.
+wire [ 4:0] i_rs2_addr  ; // Instruction RS2 Address.
+wire [ 4:0] i_rd_addr   ; // Instruction RD address.
+wire [31:0] i_immediate ; // Instruction immediate.
+wire [ 5:0] i_instr     ; // The instruction identifier code.
 
 
 rvm_fdu i_rvm_fdu(
@@ -87,11 +91,11 @@ rvm_fdu i_rvm_fdu(
 .mem_rdata    (mem_rdata         ), // The fetched memory word.
 .mem_valid    (ctrl_fdu_mem_valid), // Whether the fetched data is valid.
 .illegal_instr(ctrl_illegal_instr), // No valid instruction decoded.
-.rs1          (s_rs1_addr        ), // Source register 1.
-.rs2          (s_rs2_addr        ), // Source register 2.
-.dest         (s_rd_addr         ), // Destination register.
-.imm          (s_imm             ), // Decoded immediate.
-.instr        (ctrl_instr        )  // The instruction we have decoded.
+.rs1          (i_rs1_addr        ), // Source register 1.
+.rs2          (i_rs2_addr        ), // Source register 2.
+.dest         (i_rd_addr         ), // Destination register.
+.imm          (i_imm             ), // Decoded immediate.
+.instr        (i_instr           )  // The instruction we have decoded.
 );
 
 //-----------------------------------------------------------------------------
@@ -124,7 +128,7 @@ rvm_gprs i_rvm_gprs (
 // Functional unit instances.
 //
 
-rvm_adder i_rvm_add_0(
+rvm_adder i_rvm_add(
 .lhs   (f_add_lhs   ), // Value on left-hand side of operator
 .rhs   (f_add_rhs   ), // Value on right-hand side of operator
 .op    (f_add_op    ), // What to do?
@@ -132,7 +136,7 @@ rvm_adder i_rvm_add_0(
 .result(f_add_result)  // The result of the addition / subtraction
 );
 
-rvm_bitwise i_rvm_bitwise_0(
+rvm_bitwise i_rvm_bitwise(
 .lhs   (f_bit_lhs   ), // Value on left-hand side of operator
 .rhs   (f_bit_rhs   ), // Value on right-hand side of operator
 .op    (f_bit_op    ), // What to do?
@@ -140,12 +144,61 @@ rvm_bitwise i_rvm_bitwise_0(
 .result(f_bit_result)  // The result of the bitwise op
 );
 
-rvm_shift i_rvm_shift_0(
+rvm_shift i_rvm_shift(
 .lhs   (f_shf_lhs   ), // Value on left-hand side of shift operator
 .rhs   (f_shf_rhs   ), // Value on right-hand side of shift operator
 .op    (f_shf_op    ), // What to do?
 .valid (f_shf_valid ), // Asserts that the result is complete.
 .result(f_shf_result)  // The result of the shift
+);
+
+
+//-----------------------------------------------------------------------------
+// Core control instance.
+//
+
+rvm_control i_rvm_control(
+.clk          (clk         ), // System level clock.
+.resetn       (resetn      ), // Asynchronous active low reset.
+.f_add_lhs    (f_add_lhs   ), // Left hand side of the adder operand.
+.f_add_rhs    (f_add_rhs   ), // Right hand side of the adder operand.
+.f_add_op     (f_add_op    ), // Adder operation to perform.
+.f_add_valid  (f_add_valid ), // Adder has finished computing.
+.f_add_result (f_add_result), // Result of the adder operation.
+.f_bit_lhs    (f_bit_lhs   ), // Left hand side of the bitwise operand.
+.f_bit_rhs    (f_bit_rhs   ), // Right hand side of the bitwise operand.
+.f_bit_op     (f_bit_op    ), // Bitwise operation to perform.
+.f_bit_valid  (f_bit_valid ), // Bitwise has finished computing.
+.f_bit_result (f_bit_result), // Result of the bitwise operation.
+.f_shf_lhs    (f_shf_lhs   ), // Left hand side of the shift operand.
+.f_shf_rhs    (f_shf_rhs   ), // Right hand side of the shift operand.
+.f_shf_op     (f_shf_op    ), // Shift operation to perform.
+.f_shf_valid  (f_shf_valid ), // Shift has finished computing.
+.f_shf_result (f_shf_result), // Result of the shift operation.
+.i_rs1_addr   (i_rs1_addr  ), // Instruction RS1 Address.
+.i_rs2_addr   (i_rs2_addr  ), // Instruction RS2 Address.
+.i_rd_addr    (i_rd_addr   ), // Instruction RD address.
+.i_immediate  (i_imm       ), // Instruction immediate.
+.i_instr      (i_instr     ), // The instruction identifier code.
+.s_rs1_en     (s_rs1_en    ), // Register file RS1 Port Enable.
+.s_rs1_addr   (s_rs1_addr  ), // Register file RS1 Address.
+.s_rs1_rdata  (s_rs1_rdata ), // Register file RS1 Read Data.
+.s_rs2_en     (s_rs2_en    ), // Register file RS1 Port Enable.
+.s_rs2_addr   (s_rs2_addr  ), // Register file RS1 Address.
+.s_rs2_rdata  (s_rs2_rdata ), // Register file RS1 Read Data.
+.d_rd_wen     (d_rd_wen    ), // Register file RD Write Enable.
+.d_rd_addr    (d_rd_addr   ), // Register file RD Address.
+.d_rd_wdata   (d_rd_wdata  ), // Register file RD Write Data.
+.d_pc_w_en    (d_pc_w_en   ), // Set the PC to the value on wdata.
+.d_pc_wdata   (d_pc_wdata  ), // Data to write to the PC register.
+.s_pc         (s_pc        ), // The current program counter value.
+.mem_addr     (mem_addr    ), // Memory address lines
+.mem_rdata    (mem_rdata   ), // Memory read data
+.mem_wdata    (mem_wdata   ), // Memory write data
+.mem_c_en     (mem_c_en    ), // Memory chip enable
+.mem_b_en     (mem_b_en    ), // Memory byte enable
+.mem_error    (mem_error   ), // Memory error indicator
+.mem_stall    (mem_stall   )  // Memory stall indicator
 );
 
 endmodule

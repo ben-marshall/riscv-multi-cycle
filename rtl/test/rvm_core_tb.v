@@ -98,8 +98,7 @@ always @(posedge clk) begin
         
         $display("Register file values after %d cycles:", cycle_count);
         for (i = 0; i < 32; i = i + 1) begin
-            $display("\t RF not implemented yet");
-            //$display("\t%d\t: 0x%h", i, i_dut.i_register_file.registers[i]);
+            $display("\t%d\t: 0x%h", i, i_dut.i_rvm_gprs.registers[i]);
         end
 
         $display("Program Counter:     %h", i_dut.s_pc);

@@ -1,0 +1,168 @@
+[*]
+[*] GTKWave Analyzer v3.3.66 (w)1999-2015 BSI
+[*] Sat Feb 11 10:46:11 2017
+[*]
+[dumpfile] "/home/ben/projects/riscv/multi-cycle/work/waves.vcd"
+[dumpfile_mtime] "Sat Feb 11 10:44:46 2017"
+[dumpfile_size] 503688
+[savefile] "/home/ben/projects/riscv/multi-cycle/sim/waves.gtkw"
+[timestart] 0
+[size] 1920 1056
+[pos] -1 -1
+*-5.543875 39 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] rvm_core_tb.
+[treeopen] rvm_core_tb.i_dut.i_rvm_fdu.
+[treeopen] rvm_core_tb.i_dut.i_rvm_gprs.
+[sst_width] 225
+[signals_width] 268
+[sst_expanded] 1
+[sst_vpaned_height] 320
+@28
+rvm_core_tb.i_dut.clk
+rvm_core_tb.i_dut.resetn
+rvm_core_tb.i_dut.ctrl_fdu_mem_valid
+rvm_core_tb.i_dut.ctrl_illegal_instr
+@c00200
+-GPRs
+@22
+rvm_core_tb.i_dut.i_rvm_gprs.gpr_00[31:0]
+rvm_core_tb.i_dut.i_rvm_gprs.gpr_01[31:0]
+rvm_core_tb.i_dut.i_rvm_gprs.gpr_02[31:0]
+rvm_core_tb.i_dut.i_rvm_gprs.gpr_03[31:0]
+rvm_core_tb.i_dut.i_rvm_gprs.gpr_04[31:0]
+rvm_core_tb.i_dut.i_rvm_gprs.gpr_05[31:0]
+rvm_core_tb.i_dut.i_rvm_gprs.gpr_06[31:0]
+rvm_core_tb.i_dut.i_rvm_gprs.gpr_07[31:0]
+rvm_core_tb.i_dut.i_rvm_gprs.gpr_08[31:0]
+rvm_core_tb.i_dut.i_rvm_gprs.gpr_09[31:0]
+rvm_core_tb.i_dut.i_rvm_gprs.gpr_10[31:0]
+rvm_core_tb.i_dut.i_rvm_gprs.gpr_11[31:0]
+rvm_core_tb.i_dut.i_rvm_gprs.gpr_12[31:0]
+rvm_core_tb.i_dut.i_rvm_gprs.gpr_13[31:0]
+rvm_core_tb.i_dut.i_rvm_gprs.gpr_14[31:0]
+rvm_core_tb.i_dut.i_rvm_gprs.gpr_15[31:0]
+rvm_core_tb.i_dut.i_rvm_gprs.gpr_16[31:0]
+rvm_core_tb.i_dut.i_rvm_gprs.gpr_17[31:0]
+rvm_core_tb.i_dut.i_rvm_gprs.gpr_18[31:0]
+rvm_core_tb.i_dut.i_rvm_gprs.gpr_19[31:0]
+rvm_core_tb.i_dut.i_rvm_gprs.gpr_20[31:0]
+rvm_core_tb.i_dut.i_rvm_gprs.gpr_21[31:0]
+rvm_core_tb.i_dut.i_rvm_gprs.gpr_22[31:0]
+rvm_core_tb.i_dut.i_rvm_gprs.gpr_23[31:0]
+rvm_core_tb.i_dut.i_rvm_gprs.gpr_24[31:0]
+rvm_core_tb.i_dut.i_rvm_gprs.gpr_25[31:0]
+rvm_core_tb.i_dut.i_rvm_gprs.gpr_26[31:0]
+rvm_core_tb.i_dut.i_rvm_gprs.gpr_27[31:0]
+rvm_core_tb.i_dut.i_rvm_gprs.gpr_28[31:0]
+rvm_core_tb.i_dut.i_rvm_gprs.gpr_29[31:0]
+rvm_core_tb.i_dut.i_rvm_gprs.gpr_30[31:0]
+rvm_core_tb.i_dut.i_rvm_gprs.gpr_31[31:0]
+@1401200
+-GPRs
+@800200
+-Data destinations
+@28
+rvm_core_tb.i_dut.d_pc_w_en[1:0]
+@22
+rvm_core_tb.i_dut.d_pc_wdata[31:0]
+rvm_core_tb.i_dut.d_rd_addr[4:0]
+rvm_core_tb.i_dut.d_rd_wdata[31:0]
+@28
+rvm_core_tb.i_dut.d_rd_wen
+@1000200
+-Data destinations
+@c00200
+-Functional Units
+@800200
+-Adder
+@22
+rvm_core_tb.i_dut.f_add_lhs[31:0]
+@28
+rvm_core_tb.i_dut.f_add_op[1:0]
+@22
+rvm_core_tb.i_dut.f_add_result[32:0]
+rvm_core_tb.i_dut.f_add_rhs[31:0]
+@28
+rvm_core_tb.i_dut.f_add_valid
+@1000200
+-Adder
+@800200
+-Bitwise
+@22
+rvm_core_tb.i_dut.f_bit_lhs[31:0]
+@28
+rvm_core_tb.i_dut.f_bit_op[1:0]
+@22
+rvm_core_tb.i_dut.f_bit_result[31:0]
+rvm_core_tb.i_dut.f_bit_rhs[31:0]
+@28
+rvm_core_tb.i_dut.f_bit_valid
+@1000200
+-Bitwise
+@800200
+-Shifter
+@22
+rvm_core_tb.i_dut.f_shf_lhs[31:0]
+@28
+rvm_core_tb.i_dut.f_shf_op[1:0]
+@22
+rvm_core_tb.i_dut.f_shf_result[31:0]
+rvm_core_tb.i_dut.f_shf_rhs[31:0]
+@28
+rvm_core_tb.i_dut.f_shf_valid
+@1000200
+-Shifter
+@1401200
+-Functional Units
+@800200
+-Memory IF
+@22
+rvm_core_tb.i_dut.mem_addr[31:0]
+rvm_core_tb.i_dut.mem_b_en[3:0]
+@28
+rvm_core_tb.i_dut.mem_c_en
+rvm_core_tb.i_dut.mem_error
+@22
+rvm_core_tb.i_dut.mem_rdata[31:0]
+@28
+rvm_core_tb.i_dut.mem_stall
+@22
+rvm_core_tb.i_dut.mem_wdata[31:0]
+@1000200
+-Memory IF
+@800200
+-Data Sources
+@22
+rvm_core_tb.i_dut.s_pc[31:0]
+rvm_core_tb.i_dut.s_rs1_addr[4:0]
+@28
+rvm_core_tb.i_dut.s_rs1_en
+@22
+rvm_core_tb.i_dut.s_rs1_rdata[31:0]
+rvm_core_tb.i_dut.s_rs2_addr[4:0]
+@28
+rvm_core_tb.i_dut.s_rs2_en
+@22
+rvm_core_tb.i_dut.s_rs2_rdata[31:0]
+@1000200
+-Data Sources
+@800200
+-Control
+@28
+i_rvm_control.clk
+@22
+i_rvm_control.ctrl_state[7:0]
+i_rvm_control.i_immediate[31:0]
+i_rvm_control.i_instr[5:0]
+i_rvm_control.i_rd_addr[4:0]
+i_rvm_control.i_rs1_addr[4:0]
+i_rvm_control.i_rs2_addr[4:0]
+i_rvm_control.n_ctrl_state[7:0]
+@29
+i_rvm_control.resetn
+@22
+i_rvm_control.s_pc[31:0]
+@1000200
+-Control
+[pattern_trace] 1
+[pattern_trace] 0

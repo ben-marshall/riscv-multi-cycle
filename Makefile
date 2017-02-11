@@ -11,7 +11,7 @@ VCC_FLAGS=-v -g2005 -t $(VCC_TARGET) -o $(VCC_OUTPUT)
 
 COVGROUPS=$(RVM_HOME)/verif/coverage/coverpoints.json
 
-TEST_HEX=$(RVM_HOME)/verif/isa-tests/hex/rv32ui-p-add.hex
+TEST_HEX=$(RVM_HOME)/verif/riscv-tests/hex/rv32ui-p-add.hex
 HALT_ADDR=0x0000074c
 PASS_ADDR=0x00000740
 FAIL_ADDR=0x0000072c

@@ -8,7 +8,7 @@
 //
 //
 
-`define RVM_PC_POST_RESET 32'h0001_0000
+`define RVM_PC_POST_RESET 32'h0000_0000
 
 `define RVM_BITWISE_NOP   2'b00
 `define RVM_BITWISE_OR    2'b01
