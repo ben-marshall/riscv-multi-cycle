@@ -27,7 +27,7 @@ input  wire        f_bit_valid , // Bitwise has finished computing.
 input  wire [31:0] f_bit_result, // Result of the bitwise operation.
 
 output wire [31:0] f_shf_lhs   , // Left hand side of the shift operand.
-output wire [31:0] f_shf_rhs   , // Right hand side of the shift operand.
+output wire [ 4:0] f_shf_rhs   , // Right hand side of the shift operand.
 output wire [ 1:0] f_shf_op    , // Shift operation to perform.
 input  wire        f_shf_valid , // Shift has finished computing.
 input  wire [31:0] f_shf_result, // Result of the shift operation.
@@ -148,24 +148,99 @@ assign ctrl_fdu_mem_valid = ctrl_state == FSM_FETCH_INSTR;
 // Register file interface signals
 //
 
-//              TBD
+assign s_rs1_en     = 1'b0;
+assign s_rs1_addr   = i_rs1_addr;
+
+assign s_rs2_en     = 1'b0;
+assign s_rs2_addr   = i_rs2_addr;
+
+assign d_rd_wen     = 1'b0;
+assign d_rd_addr    = i_rd_addr;
 
 
 //-----------------------------------------------------------------------------
 // Program counter interface signals.
 //
 
+wire   pc_wdata_src_f_add_result = ctrl_state==FSM_INC_PC_BY_4;
+
 assign d_pc_w_en  = ctrl_state == FSM_INC_PC_BY_4;
-assign d_pc_wdata = {32{ctrl_state==FSM_INC_PC_BY_4}} & f_add_result;
+assign d_pc_wdata = {32{pc_wdata_src_f_add_result}} & f_add_result;
 
 
 //-----------------------------------------------------------------------------
-// Interface signals for the functional units.
+// Interface signals for the adder functional unit.
 // 
 
-assign f_add_lhs  = {32{ctrl_state == FSM_INC_PC_BY_4}} & s_pc;
-assign f_add_rhs  = {32{ctrl_state == FSM_INC_PC_BY_4}} & 32'd4;
-assign f_add_op   = { 2{ctrl_state == FSM_INC_PC_BY_4}} & `RVM_ARITH_ADD;
+wire   add_lhs_src_pc   = ctrl_state == FSM_INC_PC_BY_4     ;
+wire   add_lhs_src_r1   = 1'b0                              ;
+
+wire   add_rhs_src_c4   = ctrl_state == FSM_INC_PC_BY_4     ;
+wire   add_rhs_src_r2   = 1'b0                              ;
+wire   add_rhs_src_imm  = 1'b0                              ;
+
+wire   f_add_op_add     = ctrl_state == FSM_INC_PC_BY_4     ;
+wire   f_add_op_sub     = 1'b0                              ;
+
+assign f_add_lhs  = {32{add_lhs_src_pc  }} & s_pc           |
+                    {32{add_lhs_src_r1  }} & s_rs1_rdata    ;
+
+assign f_add_rhs  = {32{add_rhs_src_c4  }} & 32'd4          |
+                    {32{add_rhs_src_r2  }} & s_rs2_rdata    |
+                    {32{add_rhs_src_imm }} & i_immediate    ;
+
+assign f_add_op   = { 2{f_add_op_add    }} & `RVM_ARITH_ADD |
+                    { 2{f_add_op_sub    }} & `RVM_ARITH_SUB ;
+
+
+//-----------------------------------------------------------------------------
+// Interface signals for the shifter functional unit.
+// 
+
+wire   shf_lhs_src_pc   = 1'b0                              ;
+wire   shf_lhs_src_r1   = 1'b0                              ;
+
+wire   shf_rhs_src_r2   = 1'b0                              ;
+wire   shf_rhs_src_imm  = 1'b0                              ;
+
+wire   f_shf_op_sll     = 1'b0                              ;
+wire   f_shf_op_srl     = 1'b0                              ;
+wire   f_shf_op_asr     = 1'b0                              ;
+
+assign f_shf_lhs  = {32{shf_lhs_src_pc  }} & s_pc           |
+                    {32{shf_lhs_src_r1  }} & s_rs1_rdata    ;
+
+assign f_shf_rhs  = { 4{shf_rhs_src_r2  }} & s_rs2_rdata[4:0]|
+                    { 4{shf_rhs_src_imm }} & i_immediate[4:0];
+
+assign f_shf_op   = { 2{f_shf_op_sll    }} & `RVM_SHIFT_SLL |
+                    { 2{f_shf_op_srl    }} & `RVM_SHIFT_SRL |
+                    { 2{f_shf_op_asr    }} & `RVM_SHIFT_ASR ;
+
+
+//-----------------------------------------------------------------------------
+// Interface signals for the bitwise functional unit.
+// 
+
+wire   bit_lhs_src_pc   = 1'b0                              ;
+wire   bit_lhs_src_r1   = 1'b0                              ;
+
+wire   bit_rhs_src_r2   = 1'b0                              ;
+wire   bit_rhs_src_imm  = 1'b0                              ;
+
+wire   f_bit_op_or      = 1'b0                              ;
+wire   f_bit_op_and     = 1'b0                              ;
+wire   f_bit_op_xor     = 1'b0                              ;
+
+assign f_bit_lhs  = {32{bit_lhs_src_pc  }} & s_pc           |
+                    {32{bit_lhs_src_r1  }} & s_rs1_rdata    ;
+
+assign f_bit_rhs  = {32{bit_rhs_src_r2  }} & s_rs2_rdata    |
+                    {32{bit_rhs_src_imm }} & i_immediate    ;
+
+assign f_bit_op   = { 2{f_bit_op_or     }} & `RVM_BITWISE_OR |
+                    { 2{f_bit_op_and    }} & `RVM_BITWISE_AND|
+                    { 2{f_bit_op_xor    }} & `RVM_BITWISE_XOR;
 
 
 //-----------------------------------------------------------------------------

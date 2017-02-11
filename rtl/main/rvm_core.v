@@ -42,7 +42,7 @@ wire        f_bit_valid ; // Bitwise has finished computing.
 wire [31:0] f_bit_result; // Result of the bitwise operation.
 
 wire [31:0] f_shf_lhs   ; // Left hand side of the shift operand.
-wire [31:0] f_shf_rhs   ; // Right hand side of the shift operand.
+wire [ 4:0] f_shf_rhs   ; // Right hand side of the shift operand.
 wire [ 1:0] f_shf_op    ; // Shift operation to perform.
 wire        f_shf_valid ; // Shift has finished computing.
 wire [31:0] f_shf_result; // Result of the shift operation.
