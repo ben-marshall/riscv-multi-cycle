@@ -175,6 +175,8 @@ rvm_control i_rvm_control(
 .f_shf_op     (f_shf_op    ), // Shift operation to perform.
 .f_shf_valid  (f_shf_valid ), // Shift has finished computing.
 .f_shf_result (f_shf_result), // Result of the shift operation.
+.ctrl_illegal_instr(ctrl_illegal_instr),
+.ctrl_fdu_mem_valid(ctrl_fdu_mem_valid),
 .i_rs1_addr   (i_rs1_addr  ), // Instruction RS1 Address.
 .i_rs2_addr   (i_rs2_addr  ), // Instruction RS2 Address.
 .i_rd_addr    (i_rd_addr   ), // Instruction RD address.
