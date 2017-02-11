@@ -14,9 +14,9 @@ module rvm_control(
 input  wire         clk        , // System level clock.
 input  wire         resetn     , // Asynchronous active low reset.
 
-output wire [31:0] f_add_lhs   , // Left hand side of the adder operand.
-output wire [31:0] f_add_rhs   , // Right hand side of the adder operand.
-output wire [ 1:0] f_add_op    , // Adder operation to perform.
+output reg  [31:0] f_add_lhs   , // Left hand side of the adder operand.
+output reg  [31:0] f_add_rhs   , // Right hand side of the adder operand.
+output reg  [ 1:0] f_add_op    , // Adder operation to perform.
 input  wire        f_add_valid , // Adder has finished computing.
 input  wire [32:0] f_add_result, // Result of the adder operation.
 
@@ -50,8 +50,8 @@ output wire        d_rd_wen    , // Register file RD Write Enable.
 output wire [ 4:0] d_rd_addr   , // Register file RD Address.
 output wire [31:0] d_rd_wdata  , // Register file RD Write Data.
 
-output wire [ 1:0] d_pc_w_en   , // Set the PC to the value on wdata.
-output wire [31:0] d_pc_wdata  , // Data to write to the PC register.
+output reg  [ 1:0] d_pc_w_en   , // Set the PC to the value on wdata.
+output reg  [31:0] d_pc_wdata  , // Data to write to the PC register.
 input  wire [31:0] s_pc        , // The current program counter value.
 
 output wire [31:0] mem_addr    , // Memory address lines
@@ -71,7 +71,6 @@ localparam FSM_STATE_W = 8;
 
 localparam FSM_POST_RESET   = 0;
 localparam FSM_FETCH_INSTR  = 1;
-localparam FSM_DECODE_INSTR = 2;
 localparam FSM_INC_PC_BY_4  = 3;
 
 //
@@ -110,16 +109,13 @@ reg fsm_wait;
 // 
 
 // Memory address lines
-assign mem_addr  = 
-    n_ctrl_state == FSM_DECODE_INSTR ||
-    ctrl_state   == FSM_DECODE_INSTR && mem_stall ? s_pc : f_add_result;
+assign mem_addr  = s_pc   ;
 
 // Memory write data
 assign mem_wdata = 32'b0  ;
 
 // Memory chip enable.
-assign mem_c_en  =  n_ctrl_state == FSM_DECODE_INSTR ||
-                    ctrl_state   == FSM_DECODE_INSTR && mem_stall;
+assign mem_c_en  = ctrl_state == FSM_FETCH_INSTR;
 
 // Memory byte enable
 assign mem_b_en  =  4'b1111;
@@ -145,16 +141,16 @@ always @(*) begin : p_ctrl_next_state
         end
 
         FSM_FETCH_INSTR: begin
-            n_ctrl_state <= FSM_DECODE_INSTR;
-        end
-
-        FSM_DECODE_INSTR: begin
             n_ctrl_state <= FSM_INC_PC_BY_4;
-            fsm_wait      = mem_stall;
         end
 
         FSM_INC_PC_BY_4: begin
-            n_ctrl_state <= FSM_DECODE_INSTR;
+            n_ctrl_state    <= f_add_valid ? FSM_FETCH_INSTR : FSM_INC_PC_BY_4;
+            f_add_lhs       =  s_pc;
+            f_add_rhs       =  32'd4;
+            f_add_op        =  `RVM_ARITH_ADD;
+            d_pc_w_en       =  1'b1;
+            d_pc_wdata      =  f_add_result;
         end
 
         default: begin

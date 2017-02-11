@@ -22,7 +22,7 @@ module sram(
 
 parameter   addr_w  = 32;    // 32 bit address bus.
 parameter   data_w  = 32;    // 32 bit word size.
-parameter   size    = 4196;  // Size of the memory in words.
+parameter   size    = 8192;  // Size of the memory in words.
 
 // Index into the memory.
 wire [addr_w-1:0] addr_idx;
@@ -91,8 +91,8 @@ initial begin
 end
 
 // Load the memory file coming out of reset.
-always @(resetn) begin
-    if(memfile != "" && resetn == 1'b0) begin
+initial @(posedge resetn) begin
+    if(memfile != "") begin
         $display("In Reset -> Loading memory file: %s", memfile);
         $readmemh(memfile, memory, 0, size-1);
     end else begin

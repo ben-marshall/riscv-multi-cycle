@@ -25,13 +25,16 @@ reg                 fail_hit ;      //
 
 // Global clock and reset signals.
 reg clk;
-reg resetn;
+reg resetn =1'b0;
 wire clk_req;
+
+initial begin
+    #16 assign resetn = 1'b1;  // Take DUT out of reset after 5 ticks
+end
 
 //
 // Make the clock tick
 always begin
-    #8 assign resetn = 1'b1;  // Take DUT out of reset after 5 ticks
     #5 assign clk = !clk;     // Toggle the clock every five ticks.
 end
 
@@ -57,7 +60,7 @@ initial begin
     $display("> Fail Address   : %h", fail_addr); 
     
     $dumpfile("work/waves.vcd");     
-    $dumpvars(0,i_dut);
+    $dumpvars(0,rvm_core_tb);
 end
     
 integer i;
@@ -136,7 +139,7 @@ rvm_core i_dut(
 .mem_rdata  (mem_rdata  ), // Memory read data
 .mem_wdata  (mem_wdata  ), // Memory write data
 .mem_c_en   (mem_c_en   ), // Memory chip enable
-.mem_b_en   (mem_b_en   ), // Memory byte enable
+.mem_b_en   (mem_ben    ), // Memory byte enable
 .mem_error  (mem_error  ), // Memory error indicator
 .mem_stall  (mem_stall  )  // Memory stall indicator
 );
