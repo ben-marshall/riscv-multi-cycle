@@ -71,6 +71,7 @@ localparam FSM_STATE_W = 8;
 
 localparam FSM_POST_RESET   = 0;
 localparam FSM_FETCH_INSTR  = 1;
+localparam FSM_DECODE_INSTR = 2;
 localparam FSM_INC_PC_BY_4  = 3;
 
 //
@@ -143,6 +144,10 @@ always @(*) begin : p_ctrl_next_state
         end
 
         FSM_FETCH_INSTR: begin
+            n_ctrl_state <= FSM_DECODE_INSTR;
+        end
+
+        FSM_DECODE_INSTR : begin
             n_ctrl_state <= FSM_INC_PC_BY_4;
         end
 
