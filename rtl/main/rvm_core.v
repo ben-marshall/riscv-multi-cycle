@@ -67,7 +67,7 @@ wire [31:0] d_rd_wdata   ; // RD Write Data.
 // Program counter interface signals.
 //
 
-wire [1:0]  d_pc_w_en;   // Set the PC to the value on wdata.
+wire        d_pc_w_en;   // Set the PC to the value on wdata.
 wire [31:0] d_pc_wdata;  // Data to write to the PC register.
 wire [31:0] s_pc;        // The current program counter value.
 
@@ -94,7 +94,7 @@ rvm_fdu i_rvm_fdu(
 .rs1          (i_rs1_addr        ), // Source register 1.
 .rs2          (i_rs2_addr        ), // Source register 2.
 .dest         (i_rd_addr         ), // Destination register.
-.imm          (i_imm             ), // Decoded immediate.
+.imm          (i_immediate       ), // Decoded immediate.
 .instr        (i_instr           )  // The instruction we have decoded.
 );
 
@@ -180,7 +180,7 @@ rvm_control i_rvm_control(
 .i_rs1_addr   (i_rs1_addr  ), // Instruction RS1 Address.
 .i_rs2_addr   (i_rs2_addr  ), // Instruction RS2 Address.
 .i_rd_addr    (i_rd_addr   ), // Instruction RD address.
-.i_immediate  (i_imm       ), // Instruction immediate.
+.i_immediate  (i_immediate ), // Instruction immediate.
 .i_instr      (i_instr     ), // The instruction identifier code.
 .s_rs1_en     (s_rs1_en    ), // Register file RS1 Port Enable.
 .s_rs1_addr   (s_rs1_addr  ), // Register file RS1 Address.

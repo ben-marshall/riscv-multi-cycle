@@ -53,7 +53,7 @@ output wire        d_rd_wen    , // Register file RD Write Enable.
 output wire [ 4:0] d_rd_addr   , // Register file RD Address.
 output wire [31:0] d_rd_wdata  , // Register file RD Write Data.
 
-output wire [ 1:0] d_pc_w_en   , // Set the PC to the value on wdata.
+output wire        d_pc_w_en   , // Set the PC to the value on wdata.
 output wire [31:0] d_pc_wdata  , // Data to write to the PC register.
 input  wire [31:0] s_pc        , // The current program counter value.
 
@@ -72,62 +72,58 @@ localparam FSM_STATE_W = 8;
 //
 // State encodings for the control FSM
 
-localparam FSM_POST_RESET   = 0;
-localparam FSM_FETCH_INSTR  = 1;
-localparam FSM_DECODE_INSTR = 2;
-localparam FSM_INC_PC_BY_4  = 3;
+localparam FSM_POST_RESET   = 8'd0;
+localparam FSM_FETCH_INSTR  = 8'd1;
+localparam FSM_DECODE_INSTR = 8'd2;
+localparam FSM_INC_PC_BY_4  = 8'd3;
 
-// Easy way to tell a state where we are executuing an instruction, the
-// top most bit of the state vector is always set.
-localparam FSM_EX_MASK    = 8'hA0;
-
-localparam FSM_EX_ADD     = FSM_EX_MASK | {2'b0,`RVM_INSTR_ADD    };
-localparam FSM_EX_ADDI    = FSM_EX_MASK | {2'b0,`RVM_INSTR_ADDI   };
-localparam FSM_EX_AND     = FSM_EX_MASK | {2'b0,`RVM_INSTR_AND    };
-localparam FSM_EX_ANDI    = FSM_EX_MASK | {2'b0,`RVM_INSTR_ANDI   };
-localparam FSM_EX_AUIPC   = FSM_EX_MASK | {2'b0,`RVM_INSTR_AUIPC  };
-localparam FSM_EX_BEQ     = FSM_EX_MASK | {2'b0,`RVM_INSTR_BEQ    };
-localparam FSM_EX_BGE     = FSM_EX_MASK | {2'b0,`RVM_INSTR_BGE    };
-localparam FSM_EX_BGEU    = FSM_EX_MASK | {2'b0,`RVM_INSTR_BGEU   };
-localparam FSM_EX_BLT     = FSM_EX_MASK | {2'b0,`RVM_INSTR_BLT    };
-localparam FSM_EX_BLTU    = FSM_EX_MASK | {2'b0,`RVM_INSTR_BLTU   };
-localparam FSM_EX_BNE     = FSM_EX_MASK | {2'b0,`RVM_INSTR_BNE    };
-localparam FSM_EX_CSRRC   = FSM_EX_MASK | {2'b0,`RVM_INSTR_CSRRC  };
-localparam FSM_EX_CSRRCI  = FSM_EX_MASK | {2'b0,`RVM_INSTR_CSRRCI };
-localparam FSM_EX_CSRRS   = FSM_EX_MASK | {2'b0,`RVM_INSTR_CSRRS  };
-localparam FSM_EX_CSRRSI  = FSM_EX_MASK | {2'b0,`RVM_INSTR_CSRRSI };
-localparam FSM_EX_CSRRW   = FSM_EX_MASK | {2'b0,`RVM_INSTR_CSRRW  };
-localparam FSM_EX_CSRRWI  = FSM_EX_MASK | {2'b0,`RVM_INSTR_CSRRWI };
-localparam FSM_EX_ECALL   = FSM_EX_MASK | {2'b0,`RVM_INSTR_ECALL  };
-localparam FSM_EX_ERET    = FSM_EX_MASK | {2'b0,`RVM_INSTR_ERET   };
-localparam FSM_EX_FENCE   = FSM_EX_MASK | {2'b0,`RVM_INSTR_FENCE  };
-localparam FSM_EX_FENCE_I = FSM_EX_MASK | {2'b0,`RVM_INSTR_FENCE_I};
-localparam FSM_EX_JAL     = FSM_EX_MASK | {2'b0,`RVM_INSTR_JAL    };
-localparam FSM_EX_JALR    = FSM_EX_MASK | {2'b0,`RVM_INSTR_JALR   };
-localparam FSM_EX_LB      = FSM_EX_MASK | {2'b0,`RVM_INSTR_LB     };
-localparam FSM_EX_LBU     = FSM_EX_MASK | {2'b0,`RVM_INSTR_LBU    };
-localparam FSM_EX_LH      = FSM_EX_MASK | {2'b0,`RVM_INSTR_LH     };
-localparam FSM_EX_LHU     = FSM_EX_MASK | {2'b0,`RVM_INSTR_LHU    };
-localparam FSM_EX_LUI     = FSM_EX_MASK | {2'b0,`RVM_INSTR_LUI    };
-localparam FSM_EX_LW      = FSM_EX_MASK | {2'b0,`RVM_INSTR_LW     };
-localparam FSM_EX_OR      = FSM_EX_MASK | {2'b0,`RVM_INSTR_OR     };
-localparam FSM_EX_ORI     = FSM_EX_MASK | {2'b0,`RVM_INSTR_ORI    };
-localparam FSM_EX_SB      = FSM_EX_MASK | {2'b0,`RVM_INSTR_SB     };
-localparam FSM_EX_SH      = FSM_EX_MASK | {2'b0,`RVM_INSTR_SH     };
-localparam FSM_EX_SLL     = FSM_EX_MASK | {2'b0,`RVM_INSTR_SLL    };
-localparam FSM_EX_SLLI    = FSM_EX_MASK | {2'b0,`RVM_INSTR_SLLI   };
-localparam FSM_EX_SLT     = FSM_EX_MASK | {2'b0,`RVM_INSTR_SLT    };
-localparam FSM_EX_SLTI    = FSM_EX_MASK | {2'b0,`RVM_INSTR_SLTI   };
-localparam FSM_EX_SLTIU   = FSM_EX_MASK | {2'b0,`RVM_INSTR_SLTIU  };
-localparam FSM_EX_SLTU    = FSM_EX_MASK | {2'b0,`RVM_INSTR_SLTU   };
-localparam FSM_EX_SRA     = FSM_EX_MASK | {2'b0,`RVM_INSTR_SRA    };
-localparam FSM_EX_SRAI    = FSM_EX_MASK | {2'b0,`RVM_INSTR_SRAI   };
-localparam FSM_EX_SRL     = FSM_EX_MASK | {2'b0,`RVM_INSTR_SRL    };
-localparam FSM_EX_SRLI    = FSM_EX_MASK | {2'b0,`RVM_INSTR_SRLI   };
-localparam FSM_EX_SUB     = FSM_EX_MASK | {2'b0,`RVM_INSTR_SUB    };
-localparam FSM_EX_SW      = FSM_EX_MASK | {2'b0,`RVM_INSTR_SW     };
-localparam FSM_EX_XOR     = FSM_EX_MASK | {2'b0,`RVM_INSTR_XOR    };
-localparam FSM_EX_XORI    = FSM_EX_MASK | {2'b0,`RVM_INSTR_XORI   };
+localparam FSM_EX_ADD     = {2'd2,`RVM_INSTR_ADD    };
+localparam FSM_EX_ADDI    = {2'd2,`RVM_INSTR_ADDI   };
+localparam FSM_EX_AND     = {2'd2,`RVM_INSTR_AND    };
+localparam FSM_EX_ANDI    = {2'd2,`RVM_INSTR_ANDI   };
+localparam FSM_EX_AUIPC   = {2'd2,`RVM_INSTR_AUIPC  };
+localparam FSM_EX_BEQ     = {2'd2,`RVM_INSTR_BEQ    };
+localparam FSM_EX_BGE     = {2'd2,`RVM_INSTR_BGE    };
+localparam FSM_EX_BGEU    = {2'd2,`RVM_INSTR_BGEU   };
+localparam FSM_EX_BLT     = {2'd2,`RVM_INSTR_BLT    };
+localparam FSM_EX_BLTU    = {2'd2,`RVM_INSTR_BLTU   };
+localparam FSM_EX_BNE     = {2'd2,`RVM_INSTR_BNE    };
+localparam FSM_EX_CSRRC   = {2'd2,`RVM_INSTR_CSRRC  };
+localparam FSM_EX_CSRRCI  = {2'd2,`RVM_INSTR_CSRRCI };
+localparam FSM_EX_CSRRS   = {2'd2,`RVM_INSTR_CSRRS  };
+localparam FSM_EX_CSRRSI  = {2'd2,`RVM_INSTR_CSRRSI };
+localparam FSM_EX_CSRRW   = {2'd2,`RVM_INSTR_CSRRW  };
+localparam FSM_EX_CSRRWI  = {2'd2,`RVM_INSTR_CSRRWI };
+localparam FSM_EX_ECALL   = {2'd2,`RVM_INSTR_ECALL  };
+localparam FSM_EX_ERET    = {2'd2,`RVM_INSTR_ERET   };
+localparam FSM_EX_FENCE   = {2'd2,`RVM_INSTR_FENCE  };
+localparam FSM_EX_FENCE_I = {2'd2,`RVM_INSTR_FENCE_I};
+localparam FSM_EX_JAL     = {2'd2,`RVM_INSTR_JAL    };
+localparam FSM_EX_JALR    = {2'd2,`RVM_INSTR_JALR   };
+localparam FSM_EX_LB      = {2'd2,`RVM_INSTR_LB     };
+localparam FSM_EX_LBU     = {2'd2,`RVM_INSTR_LBU    };
+localparam FSM_EX_LH      = {2'd2,`RVM_INSTR_LH     };
+localparam FSM_EX_LHU     = {2'd2,`RVM_INSTR_LHU    };
+localparam FSM_EX_LUI     = {2'd2,`RVM_INSTR_LUI    };
+localparam FSM_EX_LW      = {2'd2,`RVM_INSTR_LW     };
+localparam FSM_EX_OR      = {2'd2,`RVM_INSTR_OR     };
+localparam FSM_EX_ORI     = {2'd2,`RVM_INSTR_ORI    };
+localparam FSM_EX_SB      = {2'd2,`RVM_INSTR_SB     };
+localparam FSM_EX_SH      = {2'd2,`RVM_INSTR_SH     };
+localparam FSM_EX_SLL     = {2'd2,`RVM_INSTR_SLL    };
+localparam FSM_EX_SLLI    = {2'd2,`RVM_INSTR_SLLI   };
+localparam FSM_EX_SLT     = {2'd2,`RVM_INSTR_SLT    };
+localparam FSM_EX_SLTI    = {2'd2,`RVM_INSTR_SLTI   };
+localparam FSM_EX_SLTIU   = {2'd2,`RVM_INSTR_SLTIU  };
+localparam FSM_EX_SLTU    = {2'd2,`RVM_INSTR_SLTU   };
+localparam FSM_EX_SRA     = {2'd2,`RVM_INSTR_SRA    };
+localparam FSM_EX_SRAI    = {2'd2,`RVM_INSTR_SRAI   };
+localparam FSM_EX_SRL     = {2'd2,`RVM_INSTR_SRL    };
+localparam FSM_EX_SRLI    = {2'd2,`RVM_INSTR_SRLI   };
+localparam FSM_EX_SUB     = {2'd2,`RVM_INSTR_SUB    };
+localparam FSM_EX_SW      = {2'd2,`RVM_INSTR_SW     };
+localparam FSM_EX_XOR     = {2'd2,`RVM_INSTR_XOR    };
+localparam FSM_EX_XORI    = {2'd2,`RVM_INSTR_XORI   };
 
 //
 // Current and next state of the control FSM.
@@ -148,13 +144,67 @@ assign ctrl_fdu_mem_valid = ctrl_state == FSM_FETCH_INSTR;
 // Register file interface signals
 //
 
-assign s_rs1_en     = 1'b0;
+assign s_rs1_en     = ctrl_state == FSM_EX_ADDI ||
+                      ctrl_state == FSM_EX_SLTI ||
+                      ctrl_state == FSM_EX_ANDI ||
+                      ctrl_state == FSM_EX_ORI  ||
+                      ctrl_state == FSM_EX_XORI ||
+                      ctrl_state == FSM_EX_ADD  ||
+                      ctrl_state == FSM_EX_SUB  ||
+                      ctrl_state == FSM_EX_AND  ||
+                      ctrl_state == FSM_EX_OR   ||
+                      ctrl_state == FSM_EX_XOR  ||
+                      ctrl_state == FSM_EX_SLTU ||
+                      ctrl_state == FSM_EX_SLL  ||
+                      ctrl_state == FSM_EX_SRL  ||
+                      ctrl_state == FSM_EX_SRA  ||
+                      ctrl_state == FSM_EX_JALR ||
+                      ctrl_state == FSM_EX_BEQ  ||
+                      ctrl_state == FSM_EX_BNE  ||
+                      ctrl_state == FSM_EX_BLT  ||
+                      ctrl_state == FSM_EX_CSRRW||
+                      ctrl_state == FSM_EX_CSRRS||
+                      ctrl_state == FSM_EX_CSRRC ;
 assign s_rs1_addr   = i_rs1_addr;
 
-assign s_rs2_en     = 1'b0;
+assign s_rs2_en     = ctrl_state == FSM_EX_ADD  ||
+                      ctrl_state == FSM_EX_SUB  ||
+                      ctrl_state == FSM_EX_AND  ||
+                      ctrl_state == FSM_EX_OR   ||
+                      ctrl_state == FSM_EX_XOR  ||
+                      ctrl_state == FSM_EX_SLTU ||
+                      ctrl_state == FSM_EX_SLL  ||
+                      ctrl_state == FSM_EX_SRL  ||
+                      ctrl_state == FSM_EX_SRA  ||
+                      ctrl_state == FSM_EX_BEQ  ||
+                      ctrl_state == FSM_EX_BNE  ||
+                      ctrl_state == FSM_EX_BLT   ;
 assign s_rs2_addr   = i_rs2_addr;
 
-assign d_rd_wen     = 1'b0;
+assign d_rd_wen     = ctrl_state == FSM_EX_ADDI  ||
+                      ctrl_state == FSM_EX_SLTI  ||
+                      ctrl_state == FSM_EX_ANDI  ||
+                      ctrl_state == FSM_EX_ORI   ||
+                      ctrl_state == FSM_EX_XORI  ||
+                      ctrl_state == FSM_EX_LUI   ||
+                      ctrl_state == FSM_EX_AUIPC ||
+                      ctrl_state == FSM_EX_ADD   ||
+                      ctrl_state == FSM_EX_SUB   ||
+                      ctrl_state == FSM_EX_AND   ||
+                      ctrl_state == FSM_EX_OR    ||
+                      ctrl_state == FSM_EX_XOR   ||
+                      ctrl_state == FSM_EX_SLTU  ||
+                      ctrl_state == FSM_EX_SLL   ||
+                      ctrl_state == FSM_EX_SRL   ||
+                      ctrl_state == FSM_EX_SRA   ||
+                      ctrl_state == FSM_EX_JAL   ||
+                      ctrl_state == FSM_EX_JALR  ||
+                      ctrl_state == FSM_EX_BEQ   ||
+                      ctrl_state == FSM_EX_BNE   ||
+                      ctrl_state == FSM_EX_BLT   ||
+                      ctrl_state == FSM_EX_CSRRW ||
+                      ctrl_state == FSM_EX_CSRRS ||
+                      ctrl_state == FSM_EX_CSRRC  ;
 assign d_rd_addr    = i_rd_addr;
 
 
@@ -173,13 +223,20 @@ assign d_pc_wdata = {32{pc_wdata_src_f_add_result}} & f_add_result;
 // 
 
 wire   add_lhs_src_pc   = ctrl_state == FSM_INC_PC_BY_4     ;
-wire   add_lhs_src_r1   = 1'b0                              ;
+
+wire   add_lhs_src_r1   = ctrl_state == FSM_EX_ADDI         ;
+
 
 wire   add_rhs_src_c4   = ctrl_state == FSM_INC_PC_BY_4     ;
-wire   add_rhs_src_r2   = 1'b0                              ;
-wire   add_rhs_src_imm  = 1'b0                              ;
 
-wire   f_add_op_add     = ctrl_state == FSM_INC_PC_BY_4     ;
+wire   add_rhs_src_r2   = ctrl_state == FSM_EX_ADD          ;
+
+wire   add_rhs_src_imm  = ctrl_state == FSM_EX_ADDI         ;
+
+
+wire   f_add_op_add     = ctrl_state == FSM_INC_PC_BY_4     |
+                          ctrl_state == FSM_EX_ADDI         ;
+
 wire   f_add_op_sub     = 1'b0                              ;
 
 assign f_add_lhs  = {32{add_lhs_src_pc  }} & s_pc           |
@@ -284,7 +341,7 @@ always @(*) begin : p_ctrl_next_state
         end
 
         FSM_DECODE_INSTR : begin
-            n_ctrl_state <= (FSM_EX_MASK | {2'b0, i_instr});
+            n_ctrl_state <= {2'd2, i_instr};
         end
 
         FSM_EX_ADD    : n_ctrl_state <= FSM_INC_PC_BY_4;
@@ -292,12 +349,12 @@ always @(*) begin : p_ctrl_next_state
         FSM_EX_AND    : n_ctrl_state <= FSM_INC_PC_BY_4;
         FSM_EX_ANDI   : n_ctrl_state <= FSM_INC_PC_BY_4;
         FSM_EX_AUIPC  : n_ctrl_state <= FSM_INC_PC_BY_4;
-        FSM_EX_BEQ    : n_ctrl_state <= FSM_INC_PC_BY_4;
-        FSM_EX_BGE    : n_ctrl_state <= FSM_INC_PC_BY_4;
-        FSM_EX_BGEU   : n_ctrl_state <= FSM_INC_PC_BY_4;
-        FSM_EX_BLT    : n_ctrl_state <= FSM_INC_PC_BY_4;
-        FSM_EX_BLTU   : n_ctrl_state <= FSM_INC_PC_BY_4;
-        FSM_EX_BNE    : n_ctrl_state <= FSM_INC_PC_BY_4;
+        FSM_EX_BEQ    : n_ctrl_state <= FSM_INC_PC_BY_4; // 2 cycle
+        FSM_EX_BGE    : n_ctrl_state <= FSM_INC_PC_BY_4; // 2 cycle
+        FSM_EX_BGEU   : n_ctrl_state <= FSM_INC_PC_BY_4; // 2 cycle
+        FSM_EX_BLT    : n_ctrl_state <= FSM_INC_PC_BY_4; // 2 cycle
+        FSM_EX_BLTU   : n_ctrl_state <= FSM_INC_PC_BY_4; // 2 cycle
+        FSM_EX_BNE    : n_ctrl_state <= FSM_INC_PC_BY_4; // 2 cycle
         FSM_EX_CSRRC  : n_ctrl_state <= FSM_INC_PC_BY_4;
         FSM_EX_CSRRCI : n_ctrl_state <= FSM_INC_PC_BY_4;
         FSM_EX_CSRRS  : n_ctrl_state <= FSM_INC_PC_BY_4;
@@ -308,14 +365,14 @@ always @(*) begin : p_ctrl_next_state
         FSM_EX_ERET   : n_ctrl_state <= FSM_INC_PC_BY_4;
         FSM_EX_FENCE  : n_ctrl_state <= FSM_INC_PC_BY_4;
         FSM_EX_FENCE_I: n_ctrl_state <= FSM_INC_PC_BY_4;
-        FSM_EX_JAL    : n_ctrl_state <= FSM_INC_PC_BY_4;
+        FSM_EX_JAL    : n_ctrl_state <= FSM_INC_PC_BY_4; // 2 cycle
         FSM_EX_JALR   : n_ctrl_state <= FSM_INC_PC_BY_4;
-        FSM_EX_LB     : n_ctrl_state <= FSM_INC_PC_BY_4;
-        FSM_EX_LBU    : n_ctrl_state <= FSM_INC_PC_BY_4;
-        FSM_EX_LH     : n_ctrl_state <= FSM_INC_PC_BY_4;
-        FSM_EX_LHU    : n_ctrl_state <= FSM_INC_PC_BY_4;
+        FSM_EX_LB     : n_ctrl_state <= FSM_INC_PC_BY_4; // 2 cycle
+        FSM_EX_LBU    : n_ctrl_state <= FSM_INC_PC_BY_4; // 2 cycle
+        FSM_EX_LH     : n_ctrl_state <= FSM_INC_PC_BY_4; // 2 cycle
+        FSM_EX_LHU    : n_ctrl_state <= FSM_INC_PC_BY_4; // 2 cycle
         FSM_EX_LUI    : n_ctrl_state <= FSM_INC_PC_BY_4;
-        FSM_EX_LW     : n_ctrl_state <= FSM_INC_PC_BY_4;
+        FSM_EX_LW     : n_ctrl_state <= FSM_INC_PC_BY_4; // 2 cycle
         FSM_EX_OR     : n_ctrl_state <= FSM_INC_PC_BY_4;
         FSM_EX_ORI    : n_ctrl_state <= FSM_INC_PC_BY_4;
         FSM_EX_SB     : n_ctrl_state <= FSM_INC_PC_BY_4;
