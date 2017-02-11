@@ -6,35 +6,39 @@
 # directory.
 #
 
+ELF2HEX=$RISCV/bin/elf2hex
+OBJCPY=$RISCV/bin/riscv64-unknown-elf-objcopy
+OBJDMP=$RISCV/bin/riscv64-unknown-elf-objdump
+
 source_riscv_tests()
 {
-    TEST_SUBSET=rv32ui-p-
-    TEST_HEX_FILES=$RISCV/riscv64-unknown-elf/share/riscv-tests
-    TEST_FOLDER=$RVM_HOME/verif/isa-tests/hex
-    DIS_FOLDER=$RVM_HOME/verif/isa-tests/dis
+    echo -n "Setting up ISA test programs..."
+    WIDTH=4
+    DEPTH=1024
+    TEST_HEX_FILES=$RISCV/riscv64-unknown-elf/share/riscv-tests/isa
+    
+    HEX=$RVM_HOME/verif/riscv-tests/hex
+    DIS=$RVM_HOME/verif/riscv-tests/dis
+    ELF=$RVM_HOME/verif/riscv-tests/elf
 
-    if [ -d $TEST_HEX_FILES ] ; then
-        echo "Setting up test files..."
-    else
-        echo "ERROR: source test hex folder does not exist."
-        echo "    $TEST_HEX_FILES"
-        return 1
-    fi
+    rm -rf $HEX $DIS $ELF
+    
+    mkdir -p $HEX
+    mkdir -p $DIS
+    mkdir -p $ELF
 
-    rm -rf $TEST_FOLDER
-    mkdir -p $TEST_FOLDER
-    mkdir -p $DIS_FOLDER
+    cp $TEST_HEX_FILES/rv32ui-p* $ELF/.
 
-    cp -f $TEST_HEX_FILES/*$TEST_SUBSET*.hex $TEST_FOLDER/.
-    cp -f $TEST_HEX_FILES/*$TEST_SUBSET*.dump $DIS_FOLDER/.
+    rm $ELF/*.dump
 
-    FILE_LIST=`ls $TEST_FOLDER`
-    for HEX in $FILE_LIST
+    FILE_LIST=`ls $ELF`
+    for ELF_FILE in $FILE_LIST
     do
-        $RVM_HOME/bin/hexmem-refactor.py $TEST_FOLDER/$HEX 4
+        $OBJCPY --change-addresses=0x80000000 $ELF/$ELF_FILE
+        $OBJDMP -d $ELF/$ELF_FILE > $DIS/$ELF_FILE.dis
+        #echo $ELF2HEX 4 8192 $ELF/$ELF_FILE \> $HEX/$ELF_FILE.hex
+        $ELF2HEX 4 8192 $ELF/$ELF_FILE > $HEX/$ELF_FILE.hex
     done
 
-    echo "Setup Input File Tests in $TEST_FOLDER"
-    ls $TEST_FOLDER
-    return 0
+    echo " [DONE]"
 }

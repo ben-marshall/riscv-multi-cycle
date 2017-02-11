@@ -10,4 +10,4 @@ random-tests/*.hex
 random-tests/*.log
 random-tests/*.in
 
-isa-tests/
+riscv-tests/
