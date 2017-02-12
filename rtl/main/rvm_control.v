@@ -222,7 +222,8 @@ assign d_pc_wdata = {32{pc_wdata_src_f_add_result}} & f_add_result;
 // Interface signals for the adder functional unit.
 // 
 
-wire   add_lhs_src_pc   = ctrl_state == FSM_INC_PC_BY_4     ;
+wire   add_lhs_src_pc   = ctrl_state == FSM_INC_PC_BY_4     ||
+                          ctrl_state == FSM_EX_AUIPC         ;
 
 wire   add_lhs_src_r1   = ctrl_state == FSM_EX_ADDI         ;
 
