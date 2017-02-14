@@ -13,13 +13,23 @@
 module rvm_control(
 input  wire         clk        , // System level clock.
 input  wire         resetn     , // Asynchronous active low reset.
-
-// Port Listings //
+{% for interface_name in interfaces %}
+{% set interface = interfaces[interface_name]  %}
+// Interface: {{interface_name}}
+    {% for signal_name  in interface.signals -%}
+    {% set signal = interface.signals[signal_name] -%}
+{{signal.direction()}} [{{signal.get_range()}}] {{signal_name}}
+    {%- if not loop.last -%},{% endif %}
+    {% endfor -%}
+{%- if not loop.last -%},{%- endif -%}
+{% endfor %}
 
 );
 
 // STATES //
-
+{% for state in states %}
+localparam {{state}} = {{loop.index0}};
+{%- endfor %}
 
 //-----------------------------------------------------------------------------
 // Signals for the %{ }% interface.

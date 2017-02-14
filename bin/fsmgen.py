@@ -45,9 +45,31 @@ class InterfaceSignal(object):
         """
         self.interface = interface
         self.name      = name
-        self.range     = (range[1],range[0])
-        self.readable  = True
-        self.writable  = False
+        self.range     = (range[0],range[1])
+        self.readable  = readable
+        self.writable  = writable
+
+    def get_range(self):
+        """
+        Returns the signal range in the form "x:y"
+        """
+        return "%d:%d" % self.range
+    
+    def direction(self):
+        """
+        Depending on the combination of readable/writable, returns
+        "input" or "output" or "inout"
+        Returns None if neither are set.
+        """
+        if(self.readable and self.writable):
+            return "inout"
+        elif(self.readable and not self.writable):
+            return "input"
+        elif(not self.readable and self.writable):
+            return "output"
+        else:
+            return None
+
 
 class State(object):
     """
@@ -66,6 +88,12 @@ class State(object):
 
         self.next = None
         self.wait = None
+    
+    def name(self):
+        """
+        Return a verilog friendly name for the state.
+        """
+        return "FSM_%s" % self.name
 
 
 class FSM(object):

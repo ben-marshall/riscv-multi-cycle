@@ -2,30 +2,30 @@
 interfaces:
 - name: RegisterFile
   signals:
-  - {name: s_rs1_en,                    access: "rw"} 
-  - {name: s_rs1_addr,  range: [4, 0],  access: "rw"}
+  - {name: s_rs1_en,                    access: "w"} 
+  - {name: s_rs1_addr,  range: [4, 0],  access: "w"}
   - {name: s_rs1_rdata, range: [31, 0], access: "r" }
-  - {name: s_rs2_en,                    access: "rw"}
-  - {name: s_rs2_addr,  range: [4, 0],  access: "rw"}
+  - {name: s_rs2_en,                    access: "w"}
+  - {name: s_rs2_addr,  range: [4, 0],  access: "w"}
   - {name: s_rs2_rdata, range: [31, 0], access: "r" }
-  - {name: d_rd_wen,                    access: "rw"}
-  - {name: d_rd_addr,   range: [4, 0],  access: "rw"}
-  - {name: d_rd_wdata,  range: [31, 0], access: "rw"}
+  - {name: d_rd_wen,                    access: "w"}
+  - {name: d_rd_addr,   range: [4, 0],  access: "w"}
+  - {name: d_rd_wdata,  range: [31, 0], access: "w"}
 
 - name: ExternalMemory
   signals:
-  - {name: mem_addr,    range: [31, 0], access: "rw"} 
-  - {name: mem_rdata,   range: [31, 0], access: "rw"} 
+  - {name: mem_addr,    range: [31, 0], access: "w"} 
+  - {name: mem_rdata,   range: [31, 0], access: "w"} 
   - {name: mem_wdata,   range: [31, 0], access: "r" } 
-  - {name: mem_c_en,                    access: "rw"} 
-  - {name: mem_b_en,    range: [3 , 0], access: "rw"} 
+  - {name: mem_c_en,                    access: "w"} 
+  - {name: mem_b_en,    range: [3 , 0], access: "w"} 
   - {name: mem_error,                   access: "r" } 
   - {name: mem_stall,                   access: "r" } 
 
 - name: InstructionDecoder
   signals:
   - {name: ctrl_illegal_instr, access: "r" }
-  - {name: ctrl_fdu_mem_valid, access: "rw"}
+  - {name: ctrl_fdu_mem_valid, access: "w"}
   - {name: i_rs1_addr        , range: [4,0], access: "r" }
   - {name: i_rs2_addr        , range: [4,0], access: "r" }
   - {name: i_rd_addr         , range: [4,0], access: "r" }
@@ -34,25 +34,25 @@ interfaces:
 
 - name: Adder
   signals:
-  - { range: [31,0], name: f_add_lhs   , access: "rw"}
-  - { range: [ 4,0], name: f_add_rhs   , access: "rw"}
-  - { range: [ 1,0], name: f_add_op    , access: "rw"}
+  - { range: [31,0], name: f_add_lhs   , access: "w"}
+  - { range: [ 4,0], name: f_add_rhs   , access: "w"}
+  - { range: [ 1,0], name: f_add_op    , access: "w"}
   - {                name: f_add_valid , access: "r" }
   - { range: [31,0], name: f_add_result, access: "r" }
 
 - name: Shifter
   signals:
-  - { range: [31,0], name: f_shf_lhs   , access: "rw"}
-  - { range: [ 4,0], name: f_shf_rhs   , access: "rw"}
-  - { range: [ 1,0], name: f_shf_op    , access: "rw"}
+  - { range: [31,0], name: f_shf_lhs   , access: "w"}
+  - { range: [ 4,0], name: f_shf_rhs   , access: "w"}
+  - { range: [ 1,0], name: f_shf_op    , access: "w"}
   - {                name: f_shf_valid , access: "r" }
   - { range: [31,0], name: f_shf_result, access: "r" }
 
 - name: Bitwise
   signals:
-  - { range: [31,0], name: f_bit_lhs   , access: "rw"}
-  - { range: [ 4,0], name: f_bit_rhs   , access: "rw"}
-  - { range: [ 1,0], name: f_bit_op    , access: "rw"}
+  - { range: [31,0], name: f_bit_lhs   , access: "w"}
+  - { range: [ 4,0], name: f_bit_rhs   , access: "w"}
+  - { range: [ 1,0], name: f_bit_op    , access: "w"}
   - {                name: f_bit_valid , access: "r" }
   - { range: [31,0], name: f_bit_result, access: "r" }
 
