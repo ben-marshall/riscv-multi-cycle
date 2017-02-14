@@ -58,6 +58,17 @@ interfaces:
 
 states:
 - name: Post-Reset
-- name: Instruction Fetch
-- name: Instruction Decode
-- name: Increment Program Counter
+  wait: null
+  next: InstructionFetch
+
+- name: InstructionFetch
+  wait: [mem_stall != 0]
+  next: InstructionDecode
+
+- name: InstructionDecode
+  wait: null
+  next: IncrementProgramCounter
+
+- name: IncrementProgramCounter
+  wait: null
+  next: InstructionFetch

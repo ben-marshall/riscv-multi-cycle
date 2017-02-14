@@ -10,6 +10,8 @@ import sys
 import yaml
 import argparse
 
+import jinja2
+
 class Interface(object):
     """
     Describes a single interface which the FSM controls. An
@@ -62,6 +64,10 @@ class State(object):
         self.uid = self.__uid__
         self.__uid__ += 1
 
+        self.next = None
+        self.wait = None
+
+
 class FSM(object):
     """
     Describes a single FSM in terms of its states, transitions, inputs
@@ -88,6 +94,21 @@ class FSM(object):
         """
         self.interfaces[interface.name] = interface
 
+    def to_verilog(self, output_path):
+        """
+        Renders the FSM as verilog into the supplied output path.
+        """
+        ld  = jinja2.FileSystemLoader(os.path.expandvars("$RVM_HOME/bin"))
+        env = jinja2.Environment(loader = ld)
+
+        template = env.get_template("fsm-template.v")
+        
+        result = template.render(states = self.states, 
+                                 interfaces=self.interfaces)
+        
+        with open(output_path, "w") as fh:
+            fh.write(result)
+
     def fromYAML(filepath):
         """
         Load an FSM description from a YAML file.
@@ -109,13 +130,21 @@ class FSM(object):
                     continue
                 
                 for signal in interface["signals"]:
-                    s = InterfaceSignal(ta)
+                    s = InterfaceSignal(ta,
+                        name = signal["name"],
+                        range= signal["range"] if "range" in signal else [0,0],
+                        readable = "r" in signal["access"],
+                        writable = "w" in signal["access"])
                     ta.add_signal(s)
 
                 tr.add_interface(ta)
 
             for state in states:
                 ta = State(name=state["name"])
+                
+                ta.wait = state["wait"]
+                ta.next = state["next"]
+
                 tr.add_state(ta)
     
         return tr
@@ -127,6 +156,9 @@ def parseargs():
     """
     
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("-o","--output", type=str,
+        help="Output verilog path.",
+        default="./fsm.v")
     parser.add_argument("fsm", type=str,
         help="The YAML file which describes the FSM interfaces and states",
         default="./fsm-spec.yaml")
@@ -141,6 +173,7 @@ def main():
     args = parseargs()
 
     fsm = FSM.fromYAML(args.fsm)
+    fsm.to_verilog(args.output)
     
     sys.exit(0)
 
