@@ -99,7 +99,7 @@ class State(object):
         self.uid = self.__uid__
         self.__uid__ += 1
 
-        self.next = None
+        self.next_state = None
         self.wait = None
 
     def verilog_name(self):
@@ -107,13 +107,23 @@ class State(object):
         Return a verilog safe version of the interface signal name.
         """
         n = self.name()
-        return n.replace(".","_").replace("-","_");
+        return "FSM_%s" % n.replace(".","_").replace("-","_");
     
     def name(self):
         """
         Return a verilog friendly name for the state.
         """
-        return "FSM_%s" % self.state_name
+        return self.state_name
+
+    def next_state_expression(self):
+        """
+        Return verilog code representing the next state expression for
+        the FSM, given it is in this state.
+        """
+        if(type(self.next_state) == State):
+            return self.next_state.verilog_name()
+        else:
+            return "0"
 
 
 class FSM(object):
@@ -138,7 +148,7 @@ class FSM(object):
         """
         Add a new state to the FSM
         """
-        self.states[state.name] = state
+        self.states[state.name()] = state
 
     def add_interface(self, interface):
         """
@@ -163,6 +173,20 @@ class FSM(object):
         
         with open(output_path, "w") as fh:
             fh.write(result)
+    
+    def __check_states__(self):
+        """
+        Performs a simple coherencey check on the various state and next
+        state encodings.
+        """
+        for stateName in self.states:
+            state = self.states[stateName]
+
+            if(type(state.next_state) == str):
+                if(not state.next_state in self.states):
+                    print("[ERROR] next state '%s' of state '%s' doesn't exist." % (state.name(), state.next_state))
+                else:
+                    state.next_state = self.states[state.next_state]
 
     def fromYAML(filepath):
         """
@@ -198,10 +222,11 @@ class FSM(object):
                 ta = State(name=state["name"])
                 
                 ta.wait = state["wait"]
-                ta.next = state["next"]
+                ta.next_state = state["next"]
 
                 tr.add_state(ta)
-    
+        
+        tr.__check_states__()
         return tr
 
 

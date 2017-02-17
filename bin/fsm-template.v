@@ -70,7 +70,7 @@ case ({{state_var}})
 {%- for state_name in states %}
 {% set state = states[state_name] %}
     {{state.verilog_name()}}: begin
-        n_{{state_var}} = {{default_next_state}};
+        n_{{state_var}} = {{state.next_state_expression()}};
     end
 {%- endfor %}
 
