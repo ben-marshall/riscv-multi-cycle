@@ -65,6 +65,7 @@ states:
 - name: Post-Reset
   wait: null
   next: InstructionFetch
+  encoding: 0
 
 - name: InstructionFetch
   wait: [mem_stall != 0]

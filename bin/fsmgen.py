@@ -149,17 +149,28 @@ class State(object):
     """
 
     __uid__ = 0
+    __ids__ = set([])
 
-    def __init__(self, name = None):
+    def __init__(self, name = None, enc = None):
         """
         Creates a blank interface.
         """
         self.state_name = name
-        self.uid = self.__uid__
-        self.__uid__ += 1
+        self.uid = State.__uid__ + 1
+        while(self.uid in State.__ids__):
+            self.uid += 1
+            State.__uid__ = self.uid + 1
+        State.__ids__.add(self.uid)
 
         self.next_state = None
         self.wait = None
+        self.enc = enc
+
+    def get_encoding(self):
+        if(self.enc==None):
+            return self.uid
+        else:
+            return self.enc
 
     def verilog_name(self):
         """
@@ -280,7 +291,10 @@ class FSM(object):
                 tr.add_interface(ta)
 
             for state in states:
-                ta = State(name=state["name"])
+                enc = None
+                if("encoding" in state):
+                    enc = state["encoding"]
+                ta = State(name=state["name"], enc=enc)
                 
                 if("wait" in state):
                     ta.wait = state["wait"]

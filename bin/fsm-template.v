@@ -31,7 +31,7 @@ input  wire         resetn     , // Asynchronous active low reset.
 //-----------------------------------------------------------------------------
 
 {% for state in states|sort %}
-localparam {{states[state].verilog_name()}} = {{loop.index0}};
+localparam {{states[state].verilog_name()}} = {{states[state].get_encoding()}};
 {%- endfor %}
 
 //
