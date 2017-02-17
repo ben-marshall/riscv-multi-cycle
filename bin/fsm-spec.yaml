@@ -66,6 +66,21 @@ states:
 
 - name: InstructionDecode
   wait: null
+  next: [
+    {if: "i_instr == RVM_I_ADD", then: EX_Add}
+  ]
+
+- name: EX_Add
+  wait: null
+  set :
+    - Adder:
+      - f_add_lhs: A
+      - f_add_rhs: B
+      - f_add_op : RVM_ARITH_ADD
+    - RegisterFile:
+      - d_rd_wen:   1
+      - d_rd_addr:  i_rd_addr
+      - d_rd_wdata: f_add_result
   next: IncrementProgramCounter
 
 - name: IncrementProgramCounter
