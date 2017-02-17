@@ -13,10 +13,10 @@
 module rvm_control(
 input  wire         clk        , // System level clock.
 input  wire         resetn     , // Asynchronous active low reset.
-{% for interface_name in interfaces %}
+{% for interface_name in interfaces|sort %}
 {% set interface = interfaces[interface_name]  %}
 // Interface: {{interface_name}}
-    {% for signal_name  in interface.signals -%}
+    {% for signal_name  in interface.signals|sort -%}
     {% set signal = interface.signals[signal_name] -%}
 {{signal.direction()}} [{{signal.get_range()}}] {{signal.verilog_name()}}
     {%- if not loop.last -%},{% endif %}
@@ -30,7 +30,7 @@ input  wire         resetn     , // Asynchronous active low reset.
 // State variable encodings.
 //-----------------------------------------------------------------------------
 
-{% for state in states %}
+{% for state in states|sort %}
 localparam {{states[state].verilog_name()}} = {{loop.index0}};
 {%- endfor %}
 
@@ -41,19 +41,20 @@ reg [{{state_var_w}}:0] n_{{state_var}};
 
 //-----------------------------------------------------------------------------
 
-{% for interface_name in interfaces %}
+{% for interface_name in interfaces|sort %}
 {%- set interface = interfaces[interface_name]  %}
 
 //-----------------------------------------------------------------------------
 // Signal assignments for the {{interface_name}} interface.
 //-----------------------------------------------------------------------------
 
-    {% for signal_name  in interface.signals -%}
+    {% for signal_name in interface.signals|sort -%}
     {%- set signal = interface.signals[signal_name] -%}
     {%- if signal.writable %}
 
 assign {{signal_name}} =  
-    {% for assignment in signal.values -%}
+    {%- if signal.values|length == 0 -%} 0; {%-endif-%}
+    {% for assignment in signal.values|sort(attribute="value") -%}
         { {{signal|length}} { {{state_var-}} 
             == 
         {{-assignment.state.verilog_name()-}} } } &  
@@ -80,7 +81,7 @@ assign {{signal_name}} =
 always @(*) begin : p_ctrl_next_state
 case ({{state_var}})
 
-{%- for state_name in states %}
+{%- for state_name in states|sort %}
 {% set state = states[state_name] %}
     {{state.verilog_name()}}: begin
         {% if state.single_next_state -%}
@@ -88,7 +89,7 @@ case ({{state_var}})
 
         {%- else -%}
             n_{{state_var}} = default_next_state;
-            {% for ass in state.next_state %}
+            {% for ass in state.next_state|sort(attribute="value") %}
             if ({{ass.condition}}) n_{{state_var}} = {{ass.value}};
             {% endfor -%}
         {%- endif %}
