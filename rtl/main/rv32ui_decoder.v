@@ -220,52 +220,52 @@ assign imm = {32{itype_i }} & {{21{enc[31]}},enc[31:20]               } |
 // Decoder outputs to decide which instruction to execute.
 //
 
-assign instr =  gen_bltu    &  `RVM_INSTR_BLTU      |
-                gen_csrrw   &  `RVM_INSTR_CSRRW     |
-                gen_lw      &  `RVM_INSTR_LW        |
-                gen_lh      &  `RVM_INSTR_LH        |
-                gen_lhu     &  `RVM_INSTR_LHU       |
-                gen_lb      &  `RVM_INSTR_LB        |
-                gen_lbu     &  `RVM_INSTR_LBU       |
-                gen_sh      &  `RVM_INSTR_SH        |
-                gen_sb      &  `RVM_INSTR_SB        |
-                gen_add     &  `RVM_INSTR_ADD       |
-                gen_csrrc   &  `RVM_INSTR_CSRRC     |
-                gen_bne     &  `RVM_INSTR_BNE       |
-                gen_bgeu    &  `RVM_INSTR_BGEU      |
-                gen_sltiu   &  `RVM_INSTR_SLTIU     |
-                gen_srli    &  `RVM_INSTR_SRLI      |
-                gen_fence   &  `RVM_INSTR_FENCE     |
-                gen_fence_i &  `RVM_INSTR_FENCE_I   |
-                gen_sll     &  `RVM_INSTR_SLL       |
-                gen_xor     &  `RVM_INSTR_XOR       |
-                gen_sub     &  `RVM_INSTR_SUB       |
-                gen_blt     &  `RVM_INSTR_BLT       |
-                gen_ecall   &  `RVM_INSTR_ECALL     |
-                gen_lui     &  `RVM_INSTR_LUI       |
-                gen_csrrci  &  `RVM_INSTR_CSRRCI    |
-                gen_addi    &  `RVM_INSTR_ADDI      |
-                gen_csrrsi  &  `RVM_INSTR_CSRRSI    |
-                gen_srai    &  `RVM_INSTR_SRAI      |
-                gen_ori     &  `RVM_INSTR_ORI       |
-                gen_csrrs   &  `RVM_INSTR_CSRRS     |
-                gen_sra     &  `RVM_INSTR_SRA       |
-                gen_bge     &  `RVM_INSTR_BGE       |
-                gen_srl     &  `RVM_INSTR_SRL       |
-                gen_or      &  `RVM_INSTR_OR        |
-                gen_xori    &  `RVM_INSTR_XORI      |
-                gen_andi    &  `RVM_INSTR_ANDI      |
-                gen_jal     &  `RVM_INSTR_JAL       |
-                gen_slt     &  `RVM_INSTR_SLT       |
-                gen_slti    &  `RVM_INSTR_SLTI      |
-                gen_sltu    &  `RVM_INSTR_SLTU      |
-                gen_slli    &  `RVM_INSTR_SLLI      |
-                gen_beq     &  `RVM_INSTR_BEQ       |
-                gen_and     &  `RVM_INSTR_AND       |
-                gen_auipc   &  `RVM_INSTR_AUIPC     |
-                gen_csrrwi  &  `RVM_INSTR_CSRRWI    |
-                gen_jalr    &  `RVM_INSTR_JALR      |
-                gen_sw      &  `RVM_INSTR_SW        |
-                gen_eret    &  `RVM_INSTR_ERET      ;
+assign instr =  {6{gen_bltu   }} &  `RVM_INSTR_BLTU      |
+                {6{gen_csrrw  }} &  `RVM_INSTR_CSRRW     |
+                {6{gen_lw     }} &  `RVM_INSTR_LW        |
+                {6{gen_lh     }} &  `RVM_INSTR_LH        |
+                {6{gen_lhu    }} &  `RVM_INSTR_LHU       |
+                {6{gen_lb     }} &  `RVM_INSTR_LB        |
+                {6{gen_lbu    }} &  `RVM_INSTR_LBU       |
+                {6{gen_sh     }} &  `RVM_INSTR_SH        |
+                {6{gen_sb     }} &  `RVM_INSTR_SB        |
+                {6{gen_add    }} &  `RVM_INSTR_ADD       |
+                {6{gen_csrrc  }} &  `RVM_INSTR_CSRRC     |
+                {6{gen_bne    }} &  `RVM_INSTR_BNE       |
+                {6{gen_bgeu   }} &  `RVM_INSTR_BGEU      |
+                {6{gen_sltiu  }} &  `RVM_INSTR_SLTIU     |
+                {6{gen_srli   }} &  `RVM_INSTR_SRLI      |
+                {6{gen_fence  }} &  `RVM_INSTR_FENCE     |
+                {6{gen_fence_i}} &  `RVM_INSTR_FENCE_I   |
+                {6{gen_sll    }} &  `RVM_INSTR_SLL       |
+                {6{gen_xor    }} &  `RVM_INSTR_XOR       |
+                {6{gen_sub    }} &  `RVM_INSTR_SUB       |
+                {6{gen_blt    }} &  `RVM_INSTR_BLT       |
+                {6{gen_ecall  }} &  `RVM_INSTR_ECALL     |
+                {6{gen_lui    }} &  `RVM_INSTR_LUI       |
+                {6{gen_csrrci }} &  `RVM_INSTR_CSRRCI    |
+                {6{gen_addi   }} &  `RVM_INSTR_ADDI      |
+                {6{gen_csrrsi }} &  `RVM_INSTR_CSRRSI    |
+                {6{gen_srai   }} &  `RVM_INSTR_SRAI      |
+                {6{gen_ori    }} &  `RVM_INSTR_ORI       |
+                {6{gen_csrrs  }} &  `RVM_INSTR_CSRRS     |
+                {6{gen_sra    }} &  `RVM_INSTR_SRA       |
+                {6{gen_bge    }} &  `RVM_INSTR_BGE       |
+                {6{gen_srl    }} &  `RVM_INSTR_SRL       |
+                {6{gen_or     }} &  `RVM_INSTR_OR        |
+                {6{gen_xori   }} &  `RVM_INSTR_XORI      |
+                {6{gen_andi   }} &  `RVM_INSTR_ANDI      |
+                {6{gen_slt    }} &  `RVM_INSTR_SLT       |
+                {6{gen_slti   }} &  `RVM_INSTR_SLTI      |
+                {6{gen_sltu   }} &  `RVM_INSTR_SLTU      |
+                {6{gen_slli   }} &  `RVM_INSTR_SLLI      |
+                {6{gen_beq    }} &  `RVM_INSTR_BEQ       |
+                {6{gen_and    }} &  `RVM_INSTR_AND       |
+                {6{gen_auipc  }} &  `RVM_INSTR_AUIPC     |
+                {6{gen_csrrwi }} &  `RVM_INSTR_CSRRWI    |
+                {6{gen_jal    }} &  `RVM_INSTR_JAL       |
+                {6{gen_jalr   }} &  `RVM_INSTR_JALR      |
+                {6{gen_sw     }} &  `RVM_INSTR_SW        |
+                {6{gen_eret   }} &  `RVM_INSTR_ERET      ;
 
 endmodule

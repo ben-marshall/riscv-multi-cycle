@@ -75,12 +75,11 @@ states:
     - mem_addr: s_pc
       mem_b_en: 4'hF
       mem_c_en: 1
+  - InstructionDecoder:
+    - ctrl_fdu_mem_valid: 1
 
 - name: InstructionDecode
   wait: null
-  set:
-  - InstructionDecoder:
-    - ctrl_fdu_mem_valid: 1
   next: [
     {if: "i_instr == `RVM_INSTR_ADD", then: EX_Add},
     {if: "i_instr == `RVM_INSTR_SUB", then: EX_Sub},
