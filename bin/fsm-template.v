@@ -50,8 +50,21 @@ reg [{{state_var_w}}:0] n_{{state_var}};
 
     {% for signal_name  in interface.signals -%}
     {% set signal = interface.signals[signal_name] -%}
+    {%- if signal.writable -%}
 
-assign {{signal_name}} = {{signal.set_expression()}};
+assign {{signal_name}} =  
+    {% for assignment in signal.values -%}
+        { {{signal|length}} { {{state_var-}} 
+            == 
+        {{-assignment.state.verilog_name()-}} } } &  
+        {{-assignment.value}}
+        {%- if(loop.last) -%}
+            ;
+        {%- else -%}
+            |
+        {%- endif %}
+    {% endfor %}
+    {%- endif %}
     
     {% endfor -%}
 {% endfor %}

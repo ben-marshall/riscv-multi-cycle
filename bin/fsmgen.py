@@ -49,6 +49,35 @@ class InterfaceSignal(object):
         self.readable  = readable
         self.writable  = writable
 
+        self.values    = []
+        self.state_conditions = set([])
+
+    def __len__(self):
+        return 1+(self.range[0]-self.range[1])
+
+    def value_in(self, state):
+        """
+        Return the value this signal should take in a given state or None
+        if no value is prescribed.
+        """
+        for v in values:
+            if(v.value_in(state) != None):
+                return v.value
+        return None
+
+    def add_state_assignment(self, assignment):
+        """
+        Adds a new assignment to this signal such that when the FSM is in
+        the given state, it will take a certain value.
+        """
+        assert(type(assignment) == AssignOnState)
+        
+        if(not assignment.state in self.state_conditions):
+            self.values.append(assignment)
+            self.state_conditions.add(assignment.state)
+        else:
+            print("[ERROR] The state %s already prescribes a value for the signal %s." % (assignment.state.name(),self.name))
+
     def verilog_name(self):
         """
         Return a verilog safe version of the interface signal name.
@@ -82,6 +111,29 @@ class InterfaceSignal(object):
         take in a given state with given inputs.
         """
         return "0"
+
+class AssignOnState(object):
+    """
+    A class for representing the value a particular signal should take
+    when the FSM is in a particular state.
+    """
+
+    def __init__(self, state, value):
+        """
+        Given a state, take this value.
+        """
+        self.state = state
+        self.value = value
+
+    def value_in(self,state):
+        """
+        Returns None if the state argument doesn't match the class's
+        own state or value if it does.
+        """
+        if(state.name() == self.state.name()):
+            return self.value
+        else:
+            return None
 
 
 class State(object):
@@ -174,6 +226,7 @@ class FSM(object):
         with open(output_path, "w") as fh:
             fh.write(result)
     
+
     def __check_states__(self):
         """
         Performs a simple coherencey check on the various state and next
@@ -187,6 +240,7 @@ class FSM(object):
                     print("[ERROR] next state '%s' of state '%s' doesn't exist." % (state.name(), state.next_state))
                 else:
                     state.next_state = self.states[state.next_state]
+
 
     def fromYAML(filepath):
         """
@@ -223,6 +277,19 @@ class FSM(object):
                 
                 ta.wait = state["wait"]
                 ta.next_state = state["next"]
+
+                if("set" in state):
+                    for interface in state["set"]:
+                        for i_name in interface:
+                            for signal in interface[i_name]:
+                                for s_name in signal:
+                                    v = signal[s_name]
+                                    t = AssignOnState(ta,v)
+                                    i = tr.interfaces[i_name]
+                                    i.signals[s_name].add_state_assignment(t)
+
+
+
 
                 tr.add_state(ta)
         

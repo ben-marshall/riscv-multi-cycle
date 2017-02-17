@@ -74,10 +74,12 @@ states:
   wait: null
   set :
     - Adder:
-      - f_add_lhs: A
-      - f_add_rhs: B
+      - f_add_lhs: s_rs1_rdata
+      - f_add_rhs: s_rs2_rdata
       - f_add_op : RVM_ARITH_ADD
     - RegisterFile:
+      - s_rs1_addr: i_rs1_addr
+      - s_rs2_addr: i_rs2_addr
       - d_rd_wen:   1
       - d_rd_addr:  i_rd_addr
       - d_rd_wdata: f_add_result
