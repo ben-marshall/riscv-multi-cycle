@@ -8,6 +8,7 @@ $(RVM_HOME)/rtl/main/rvm_core.v
 $(RVM_HOME)/rtl/main/rvm_fdu.v
 $(RVM_HOME)/rtl/main/rvm_gprs.v
 $(RVM_HOME)/rtl/main/rvm_pcu.v
+$(RVM_HOME)/rtl/main/rvm_scu.v
 $(RVM_HOME)/rtl/main/rvm_shift.v
 $(RVM_HOME)/rtl/test/sram.v
 $(RVM_HOME)/rtl/test/rvm_core_tb.v

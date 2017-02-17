@@ -170,6 +170,9 @@ rvm_shift i_rvm_shift(
 rvm_control i_rvm_control(
 .clk          (clk         ), // System level clock.
 .resetn       (resetn      ), // Asynchronous active low reset.
+.f_scu_op         (f_scu_op           ),
+.f_scu_result     (f_scu_result       ),
+.scu_instr_retired(scu_instr_retired  ),
 .f_add_lhs    (f_add_lhs   ), // Left hand side of the adder operand.
 .f_add_rhs    (f_add_rhs   ), // Right hand side of the adder operand.
 .f_add_op     (f_add_op    ), // Adder operation to perform.

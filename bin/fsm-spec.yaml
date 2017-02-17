@@ -1,4 +1,10 @@
 interfaces:
+- name: ControlRegisters
+  signals:
+  - {name: scu_instr_retired,           access: "w"}
+  - {name: f_scu_op, range: [3,0],      access: "w"}
+  - {name: f_scu_result, range: [31,0], access: "r"}
+
 - name: RegisterFile
   signals:
   - {name: s_rs1_en,                    access: "w"} 
@@ -77,14 +83,82 @@ states:
       mem_c_en: 1
   - InstructionDecoder:
     - ctrl_fdu_mem_valid: 1
+  - ControlRegisters:
+    - scu_instr_retired: 1
 
 - name: InstructionDecode
   wait: null
   next: [
-    {if: "i_instr == `RVM_INSTR_ADD", then: EX_Add},
-    {if: "i_instr == `RVM_INSTR_SUB", then: EX_Sub},
-    {if: "i_instr == `RVM_INSTR_JAL", then: EX_Jal_0},
+    {if: "i_instr == `RVM_INSTR_ADD"  , then: EX_Add},
+    {if: "i_instr == `RVM_INSTR_SUB"  , then: EX_Sub},
+    {if: "i_instr == `RVM_INSTR_JAL"  , then: EX_Jal_0},
+    {if: "i_instr == `RVM_INSTR_CSRRS", then: EX_CSRRS},
+    {if: "i_instr == `RVM_INSTR_CSRRW", then: EX_CSRRW},
+    {if: "i_instr == `RVM_INSTR_CSRRC", then: EX_CSRRC},
+    {if: "i_instr == `RVM_INSTR_CSRRCI", then: EX_CSRRCI},
+    {if: "i_instr == `RVM_INSTR_CSRRWI", then: EX_CSRRWI},
+    {if: "i_instr == `RVM_INSTR_CSRRSI", then: EX_CSRRSI},
   ]
+
+- name: EX_CSRRWI
+  set :
+  - ControlRegisters:
+    - f_scu_op: "`RVM_SCU_CSRRWI"
+  - RegisterFile:
+    - d_rd_wen:  1
+    - d_rd_addr: i_rd_addr
+    - d_rd_wdata: f_scu_result
+  next: IncrementProgramCounter
+
+- name: EX_CSRRCI
+  set :
+  - ControlRegisters:
+    - f_scu_op: "`RVM_SCU_CSRRCI"
+  - RegisterFile:
+    - d_rd_wen:  1
+    - d_rd_addr: i_rd_addr
+    - d_rd_wdata: f_scu_result
+  next: IncrementProgramCounter
+
+- name: EX_CSRRSI
+  set :
+  - ControlRegisters:
+    - f_scu_op: "`RVM_SCU_CSRRSI"
+  - RegisterFile:
+    - d_rd_wen:  1
+    - d_rd_addr: i_rd_addr
+    - d_rd_wdata: f_scu_result
+  next: IncrementProgramCounter
+
+- name: EX_CSRRW
+  set :
+  - ControlRegisters:
+    - f_scu_op: "`RVM_SCU_CSRRW"
+  - RegisterFile:
+    - d_rd_wen:  1
+    - d_rd_addr: i_rd_addr
+    - d_rd_wdata: f_scu_result
+  next: IncrementProgramCounter
+
+- name: EX_CSRRC
+  set :
+  - ControlRegisters:
+    - f_scu_op: "`RVM_SCU_CSRRC"
+  - RegisterFile:
+    - d_rd_wen:  1
+    - d_rd_addr: i_rd_addr
+    - d_rd_wdata: f_scu_result
+  next: IncrementProgramCounter
+
+- name: EX_CSRRS
+  set :
+  - ControlRegisters:
+    - f_scu_op: "`RVM_SCU_CSRRS"
+  - RegisterFile:
+    - d_rd_wen:  1
+    - d_rd_addr: i_rd_addr
+    - d_rd_wdata: f_scu_result
+  next: IncrementProgramCounter
 
 - name: EX_Add
   set :
@@ -115,6 +189,8 @@ states:
   next: IncrementProgramCounter
 
 - name: EX_Jal_0
+  notes: "First state of executing JAL. Add 4 to the PC and store this in a
+          register"
   set :
     - Adder:
       - f_add_lhs: s_pc
@@ -127,6 +203,8 @@ states:
   next: EX_Jal_1
 
 - name: EX_Jal_1
+  notes: "Second state of executing JAL. Add the immediate to the PC and then
+          fetch the next instruction."
   set :
     - Adder:
       - f_add_lhs: s_pc

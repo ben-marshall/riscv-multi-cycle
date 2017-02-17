@@ -30,7 +30,6 @@ input  wire [3:0 ] scu_op, // Operation the FU should perform.
 input  wire [4 :0] arg_rs1_addr, // Address of register 2
 input  wire [31:0] arg_rs1, //The value of source register 1.
 input  wire [31:0] arg_rs2, //The value of source register 2.
-input  wire [4 :0] arg_rd , //The writeback register address input.
 input  wire [31:0] arg_imm, //The Value of the immediate (if any).
 
 output wire [31:0] wb_val , //The value to write back to the register file.
@@ -272,12 +271,12 @@ assign trap_mti  = reg_mtimecmp < reg_mtime;
 // ------------------------------------------------------------------------
 
 // Which instruction are we executing?
-wire op_csrrw = op == `RVM_SCU_CSRRW;
-wire op_csrrs = op == `RVM_SCU_CSRRS;
-wire op_csrrc = op == `RVM_SCU_CSRRC;
-wire op_csrwi = op == `RVM_SCU_CSRRWI;
-wire op_csrsi = op == `RVM_SCU_CSRRSI;
-wire op_csrci = op == `RVM_SCU_CSRRCI;
+wire op_csrrw = scu_op == `RVM_SCU_CSRRW;
+wire op_csrrs = scu_op == `RVM_SCU_CSRRS;
+wire op_csrrc = scu_op == `RVM_SCU_CSRRC;
+wire op_csrwi = scu_op == `RVM_SCU_CSRRWI;
+wire op_csrsi = scu_op == `RVM_SCU_CSRRSI;
+wire op_csrci = scu_op == `RVM_SCU_CSRRCI;
 
 // Writes to & reads from CSR
 wire csr_read  = op_csrrw | op_csrrs | op_csrrc | op_csrwi | op_csrsi | op_csrci;
