@@ -18,7 +18,7 @@ input  wire         resetn     , // Asynchronous active low reset.
 // Interface: {{interface_name}}
     {% for signal_name  in interface.signals -%}
     {% set signal = interface.signals[signal_name] -%}
-{{signal.direction()}} [{{signal.get_range()}}] {{signal_name}}
+{{signal.direction()}} [{{signal.get_range()}}] {{signal.verilog_name()}}
     {%- if not loop.last -%},{% endif %}
     {% endfor -%}
 {%- if not loop.last -%},{%- endif -%}
@@ -26,16 +26,35 @@ input  wire         resetn     , // Asynchronous active low reset.
 
 );
 
-// STATES //
+//-----------------------------------------------------------------------------
+// State variable encodings.
+//-----------------------------------------------------------------------------
+
 {% for state in states %}
-localparam {{state}} = {{loop.index0}};
+localparam {{states[state].verilog_name()}} = {{loop.index0}};
 {%- endfor %}
 
-//-----------------------------------------------------------------------------
-// Signals for the %{ }% interface.
+//
+// Holders for the current and next states.
+reg [{{state_var_w}}:0] {{state_var}};
+reg [{{state_var_w}}:0] n_{{state_var}};
+
 //-----------------------------------------------------------------------------
 
-// SIGNALS //
+{% for interface_name in interfaces %}
+{% set interface = interfaces[interface_name]  %}
+
+//-----------------------------------------------------------------------------
+// Signal assignments for the {{interface_name}} interface.
+//-----------------------------------------------------------------------------
+
+    {% for signal_name  in interface.signals -%}
+    {% set signal = interface.signals[signal_name] -%}
+
+assign {{signal_name}} = {{signal.set_expression()}};
+    
+    {% endfor -%}
+{% endfor %}
 
 //-----------------------------------------------------------------------------
 
@@ -46,10 +65,19 @@ localparam {{state}} = {{loop.index0}};
 //      current state.
 //
 always @(*) begin : p_ctrl_next_state
+case ({{state_var}})
 
-    // NEXT STATE LOGIC //
+{%- for state_name in states %}
+{% set state = states[state_name] %}
+    {{state.verilog_name()}}: begin
+        n_{{state_var}} = {{default_next_state}};
+    end
+{%- endfor %}
 
-end
+    default:
+        n_{{state_var}} = {{default_next_state}};
+
+endcase end
 
 
 //

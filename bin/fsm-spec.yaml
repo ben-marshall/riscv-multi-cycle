@@ -1,4 +1,3 @@
-
 interfaces:
 - name: RegisterFile
   signals:

@@ -49,6 +49,12 @@ class InterfaceSignal(object):
         self.readable  = readable
         self.writable  = writable
 
+    def verilog_name(self):
+        """
+        Return a verilog safe version of the interface signal name.
+        """
+        return self.name.replace(".","_").replace("-","_");
+
     def get_range(self):
         """
         Returns the signal range in the form "x:y"
@@ -70,6 +76,13 @@ class InterfaceSignal(object):
         else:
             return None
 
+    def set_expression(self):
+        """
+        Returns the verilog assignment for what value the signal should
+        take in a given state with given inputs.
+        """
+        return "0"
+
 
 class State(object):
     """
@@ -82,18 +95,25 @@ class State(object):
         """
         Creates a blank interface.
         """
-        self.name = name
+        self.state_name = name
         self.uid = self.__uid__
         self.__uid__ += 1
 
         self.next = None
         self.wait = None
+
+    def verilog_name(self):
+        """
+        Return a verilog safe version of the interface signal name.
+        """
+        n = self.name()
+        return n.replace(".","_").replace("-","_");
     
     def name(self):
         """
         Return a verilog friendly name for the state.
         """
-        return "FSM_%s" % self.name
+        return "FSM_%s" % self.state_name
 
 
 class FSM(object):
@@ -109,6 +129,10 @@ class FSM(object):
         self.states         = {}
         self.interfaces     = {}
         self.initial_state  = None
+
+        self.state_var_name     = "ctrl_state"
+        self.state_var_width    = 6
+        self.default_next_state = "0"
 
     def add_state(self, state):
         """
@@ -132,7 +156,10 @@ class FSM(object):
         template = env.get_template("fsm-template.v")
         
         result = template.render(states = self.states, 
-                                 interfaces=self.interfaces)
+                                 interfaces=self.interfaces,
+                                 state_var = self.state_var_name,
+                                 state_var_w = self.state_var_width,
+                                 default_next_state = self.default_next_state)
         
         with open(output_path, "w") as fh:
             fh.write(result)
