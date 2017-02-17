@@ -72,8 +72,8 @@ states:
   set:
   - ExternalMemory:
     - mem_addr: pc
-    - mem_b_en: 4'hF
-    - mem_c_en: 1
+      mem_b_en: 4'hF
+      mem_c_en: 1
 
 - name: InstructionDecode
   wait: null
@@ -83,7 +83,6 @@ states:
   next: [
     {if: "i_instr == `RVM_I_ADD", then: EX_Add},
     {if: "i_instr == `RVM_I_SUB", then: EX_Sub},
-    {else: IncrementProgramCounter}
   ]
 
 - name: EX_Add
@@ -91,14 +90,14 @@ states:
   set :
     - Adder:
       - f_add_lhs: s_rs1_rdata
-      - f_add_rhs: s_rs2_rdata
-      - f_add_op : "`RVM_ARITH_ADD"
+        f_add_rhs: s_rs2_rdata
+        f_add_op : "`RVM_ARITH_ADD"
     - RegisterFile:
       - s_rs1_addr: i_rs1_addr
-      - s_rs2_addr: i_rs2_addr
-      - d_rd_wen:   1
-      - d_rd_addr:  i_rd_addr
-      - d_rd_wdata: f_add_result
+        s_rs2_addr: i_rs2_addr
+        d_rd_wen:   1
+        d_rd_addr:  i_rd_addr
+        d_rd_wdata: f_add_result
   next: IncrementProgramCounter
 
 - name: EX_Sub
@@ -106,14 +105,14 @@ states:
   set :
     - Adder:
       - f_add_lhs: s_rs1_rdata
-      - f_add_rhs: s_rs2_rdata
-      - f_add_op : "`RVM_ARITH_SUB"
+        f_add_rhs: s_rs2_rdata
+        f_add_op : "`RVM_ARITH_SUB"
     - RegisterFile:
       - s_rs1_addr: i_rs1_addr
-      - s_rs2_addr: i_rs2_addr
-      - d_rd_wen:   1
-      - d_rd_addr:  i_rd_addr
-      - d_rd_wdata: f_add_result
+        s_rs2_addr: i_rs2_addr
+        d_rd_wen:   1
+        d_rd_addr:  i_rd_addr
+        d_rd_wdata: f_add_result
   next: IncrementProgramCounter
 
 - name: IncrementProgramCounter
@@ -122,11 +121,11 @@ states:
   set:
   - ProgramCounter:
     - pc_w_en: 1
-    - pc_wdata: f_add_result
+      pc_wdata: f_add_result
   - Adder:
     - f_add_lhs: pc
-    - f_add_rhs: 4
-    - f_add_op : "`RVM_ARITH_ADD"
+      f_add_rhs: "32'd4"
+      f_add_op : "`RVM_ARITH_ADD"
 
 
 

@@ -83,7 +83,15 @@ case ({{state_var}})
 {%- for state_name in states %}
 {% set state = states[state_name] %}
     {{state.verilog_name()}}: begin
-        n_{{state_var}} = {{state.next_state_expression()}};
+        {% if state.single_next_state -%}
+            n_{{state_var}} = {{state.next_state.verilog_name()}};
+
+        {%- else -%}
+            n_{{state_var}} = default_next_state;
+            {% for ass in state.next_state %}
+            if ({{ass.condition}}) n_{{state_var}} = {{ass.value}};
+            {% endfor -%}
+        {%- endif %}
     end
 {%- endfor %}
 
@@ -99,9 +107,11 @@ endcase end
 //      Responsible for moving to the next state
 //
 always @(posedge clk, negedge resetn) begin : p_ctrl_progress_state
-
-    // STATE PROGRESSION //
-
+    if(!resetn) begin
+        {{state_var}} = {{default_next_state}};
+    end else begin
+        {{state_var}} = n_{{state_var}};
+    end
 end
 
 endmodule

@@ -105,6 +105,19 @@ class InterfaceSignal(object):
         else:
             return None
 
+class AssignOnCondition(object):
+    """
+    A class for representing the value a particular signal should take
+    when an arbitrary condition is met.
+    """
+
+    def __init__(self, condition, value):
+        """
+        Given a condition, take this value.
+        """
+        self.condition = condition
+        self.value = value
+
 
 class AssignOnState(object):
     """
@@ -270,7 +283,16 @@ class FSM(object):
                 ta = State(name=state["name"])
                 
                 ta.wait = state["wait"]
-                ta.next_state = state["next"]
+                if(type(state["next"]) == str):
+                    ta.next_state = state["next"]
+                    ta.single_next_state = True
+                else:
+                    ta.single_next_state = False
+                    ta.next_state = []
+                    for n in state["next"]:
+                        cond = AssignOnCondition(n["if"],n["then"])
+                        ta.next_state.append(cond)
+
 
                 if("set" in state):
                     for interface in state["set"]:
@@ -281,8 +303,6 @@ class FSM(object):
                                     t = AssignOnState(ta,v)
                                     i = tr.interfaces[i_name]
                                     i.signals[s_name].add_state_assignment(t)
-
-
 
 
                 tr.add_state(ta)
