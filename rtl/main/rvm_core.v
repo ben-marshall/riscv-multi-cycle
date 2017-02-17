@@ -24,6 +24,16 @@ input  wire         mem_stall           // Memory stall indicator
 
 );
 
+//-----------------------------------------------------------------------------
+// Interface signals for the CSR registers module
+// 
+
+wire        scu_instr_retired; // Set each time an instruction finishes.
+wire        scu_goto_mtvec   ; // Next pc write should be to mtvec.
+wire [ 3:0] f_scu_op         ; // Operation the SCU should do on CSRs
+wire [31:0] f_scu_result     ; // WB result of any CSR operation.
+wire [31:0] s_epc            ; // Current EPC value.
+wire [31:0] s_mtvec          ; // Current MTVEC value.
 
 //-----------------------------------------------------------------------------
 // Interface signals for the functional units.
@@ -201,6 +211,36 @@ rvm_control i_rvm_control(
 .mem_b_en     (mem_b_en    ), // Memory byte enable
 .mem_error    (mem_error   ), // Memory error indicator
 .mem_stall    (mem_stall   )  // Memory stall indicator
+);
+
+
+rvm_scu i_scu(
+.clk                (clk), // Core level clock signal.
+.resetn             (resetn), // Asynchronous negative edge reset.
+.core_stall         (1'b0), // The SCU should wait while the core stalls.
+.pc                 (s_pc), // Current value of the program counter.
+.instr_retired      (scu_instr_retired), // completion of an instruction.
+.goto_mtvec         (scu_goto_mtvec   ), // Tells PCU to go straight to MTVEC.
+.scu_op             (f_scu_op         ), // Operation the FU should perform.
+.arg_rs1_addr       (i_rs1_addr), // Address of register 2
+.arg_rs1            (s_rs1_rdata), //The value of source register 1.
+.arg_rs2            (s_rs2_rdata), //The value of source register 2.
+.arg_imm            (i_immediate), //The Value of the immediate (if any).
+.wb_val             (f_scu_result), // value to write back to register file.
+.ld_bad_addr        (1'b0), // Do we need to store a bad address?
+.bad_addr_val       (mem_addr), // The bad address value to store.
+.trap_msi           (1'b0), // Machine software interrupt
+.trap_mei           (1'b0), // Machine external interrupt
+.trap_iaddr_misalign(1'b0), // Instruction address misaligned
+.trap_iaddr_fault   (1'b0), // Instruction access fault
+.trap_illegal_instr (1'b0), // Illegal instruction
+.trap_breakpoint    (1'b0), // Breakpoint
+.trap_laddr_misalign(1'b0), // Load address misaligned
+.trap_laddr_fault   (1'b0), // Load access fault
+.trap_saddr_misalign(1'b0), // Store/AMO address misaligned
+.trap_saddr_fault   (1'b0), // Store/AMO access fault
+.mepc               (s_epc), // The machine error program counter register.
+.mtvec              (s_mtvec)  // The machine trap handler address register.
 );
 
 endmodule

@@ -24,6 +24,73 @@
 `define RVM_SHIFT_SRL     2'b10
 `define RVM_SHIFT_ASR     2'b11
 
+//
+// System Control Unit register addresses and values.
+// ---------------------------------------------------------------------------
+
+// Individual opcodes for the system control unit.
+`define RVM_SCU_NOP     4'b0000
+`define RVM_SCU_CSRRS   4'b0001
+`define RVM_SCU_CSRRC   4'b0010
+`define RVM_SCU_CSRRW   4'b0011
+`define RVM_SCU_CSRRSI  4'b0100
+`define RVM_SCU_CSRRCI  4'b0101
+`define RVM_SCU_CSRRWI  4'b0110
+
+`define RVM_SCU_MISA        32'h40000100
+`define RVM_SCU_MVENDORID   32'h0BE0AA11
+`define RVM_SCU_MARCHID     32'h00000000
+`define RVM_SCU_MIMPID      32'h00000001
+`define RVM_SCU_MHARTID     32'h00000000
+
+`define RVM_SCU_ADDR_MISA      12'hF14 // Should be F10, toolchain gives this.
+`define RVM_SCU_ADDR_MVENDORID 12'hF11 
+`define RVM_SCU_ADDR_MARCHID   12'hF12 
+`define RVM_SCU_ADDR_MIMPID    12'hF13 
+`define RVM_SCU_ADDR_MHARTID   12'hF10 
+`define RVM_SCU_ADDR_MSCRATCH  12'h340 
+`define RVM_SCU_ADDR_MEPC      12'h341 
+`define RVM_SCU_ADDR_MEDELEG   12'h302 
+`define RVM_SCU_ADDR_MIDELEG   12'h303 
+`define RVM_SCU_ADDR_MIE       12'h304 
+`define RVM_SCU_ADDR_MTVEC     12'h305 
+`define RVM_SCU_ADDR_MCYCLE    12'hF00 
+`define RVM_SCU_ADDR_MTIME     12'hF01
+`define RVM_SCU_ADDR_MINSTRET  12'hF02 
+`define RVM_SCU_ADDR_MCYCLEH   12'hF80 
+`define RVM_SCU_ADDR_MTIMEH    12'hF81
+`define RVM_SCU_ADDR_MINSTRETH 12'hF82 
+`define RVM_SCU_ADDR_MCAUSE    12'h342 
+`define RVM_SCU_ADDR_MBADADDR  12'h343 
+`define RVM_SCU_ADDR_MIP       12'h344 
+`define RVM_SCU_ADDR_MTIMECMP  12'hFF0
+`define RVM_SCU_ADDR_MTIMECMPH 12'hFF1
+
+//
+// Cause register values.
+`define RVM_CAUSE_MSI 31'd4  // Machine software interrupt
+`define RVM_CAUSE_MTI 31'd7  // Machine timer interrupt
+`define RVM_CAUSE_MEI 31'd11 // Machine external interrupt
+
+`define RVM_CAUSE_IADDR_MISALIGN 31'd0 // Instruction address misaligned
+`define RVM_CAUSE_IADDR_FAULT    31'd1 // Instruction access fault
+`define RVM_CAUSE_ILLEGAL_INSTR  31'd2 // Illegal instruction
+`define RVM_CAUSE_BREAKPOINT     31'd3 // Breakpoint
+`define RVM_CAUSE_LADDR_MISALIGN 31'd4 // Load address misaligned
+`define RVM_CAUSE_LADDR_FAULT    31'd5 // Load access fault
+`define RVM_CAUSE_SADDR_MISALIGN 31'd6 // Store/AMO address misaligned
+`define RVM_CAUSE_SADDR_FAULT    31'd7 // Store/AMO access fault
+`define RVM_CAUSE_ECALL_U        31'd8 // call from U-mode
+`define RVM_CAUSE_ECALL_S        31'd9 // call from S-mode
+`define RVM_CAUSE_ECALL_H        31'd10 // call from H-mode
+`define RVM_CAUSE_ECALL_M        31'd11 // call from M-mode
+
+
+//
+// Dense instruction encodings.
+// ---------------------------------------------------------------------------
+
+
 `define RVM_INSTR_BLTU    6'd0 
 `define RVM_INSTR_CSRRW   6'd1 
 `define RVM_INSTR_LW      6'd2 
