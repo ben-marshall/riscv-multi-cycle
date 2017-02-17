@@ -83,6 +83,7 @@ states:
   next: [
     {if: "i_instr == `RVM_INSTR_ADD", then: EX_Add},
     {if: "i_instr == `RVM_INSTR_SUB", then: EX_Sub},
+    {if: "i_instr == `RVM_INSTR_JAL", then: EX_Jal_0},
   ]
 
 - name: EX_Add
@@ -112,6 +113,29 @@ states:
         d_rd_addr:  i_rd_addr
         d_rd_wdata: f_add_result
   next: IncrementProgramCounter
+
+- name: EX_Jal_0
+  set :
+    - Adder:
+      - f_add_lhs: s_pc
+        f_add_rhs: "32'd4"
+        f_add_op : "`RVM_ARITH_ADD"
+    - RegisterFile:
+      - d_rd_wen:   1
+        d_rd_addr:  i_rd_addr
+        d_rd_wdata: f_add_result
+  next: EX_Jal_1
+
+- name: EX_Jal_1
+  set :
+    - Adder:
+      - f_add_lhs: s_pc
+        f_add_rhs: i_immediate
+        f_add_op : "`RVM_ARITH_ADD"
+    - ProgramCounter:
+      - d_pc_w_en: 1
+        d_pc_wdata: f_add_result
+  next: InstructionFetch
 
 - name: IncrementProgramCounter
   wait: null
