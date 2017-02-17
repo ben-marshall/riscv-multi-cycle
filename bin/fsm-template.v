@@ -88,7 +88,7 @@ case ({{state_var}})
             n_{{state_var}} = {{state.next_state.verilog_name()}};
 
         {%- else -%}
-            n_{{state_var}} = default_next_state;
+            n_{{state_var}} = {{default_next_state}};
             {% for ass in state.next_state|sort(attribute="value") %}
             if ({{ass.condition}}) n_{{state_var}} = {{ass.value}};
             {% endfor -%}

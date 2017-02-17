@@ -33,9 +33,9 @@ interfaces:
 
 - name: ProgramCounter
   signals:
-  - { range: [31,0], name: pc, access: "r"}
-  - { range: [31,0], name: pc_wdata, access: "w"}
-  - { range: [0,0] , name: pc_w_en, access: "w"}
+  - { range: [31,0], name: s_pc, access: "r"}
+  - { range: [31,0], name: d_pc_wdata, access: "w"}
+  - { range: [0,0] , name: d_pc_w_en, access: "w"}
 
 - name: Adder
   signals:
@@ -71,7 +71,7 @@ states:
   next: InstructionDecode
   set:
   - ExternalMemory:
-    - mem_addr: pc
+    - mem_addr: s_pc
       mem_b_en: 4'hF
       mem_c_en: 1
 
@@ -81,12 +81,11 @@ states:
   - InstructionDecoder:
     - ctrl_fdu_mem_valid: 1
   next: [
-    {if: "i_instr == `RVM_I_ADD", then: EX_Add},
-    {if: "i_instr == `RVM_I_SUB", then: EX_Sub},
+    {if: "i_instr == `RVM_INSTR_ADD", then: EX_Add},
+    {if: "i_instr == `RVM_INSTR_SUB", then: EX_Sub},
   ]
 
 - name: EX_Add
-  wait: null
   set :
     - Adder:
       - f_add_lhs: s_rs1_rdata
@@ -101,7 +100,6 @@ states:
   next: IncrementProgramCounter
 
 - name: EX_Sub
-  wait: null
   set :
     - Adder:
       - f_add_lhs: s_rs1_rdata
@@ -120,10 +118,10 @@ states:
   next: InstructionFetch
   set:
   - ProgramCounter:
-    - pc_w_en: 1
-      pc_wdata: f_add_result
+    - d_pc_w_en: 1
+      d_pc_wdata: f_add_result
   - Adder:
-    - f_add_lhs: pc
+    - f_add_lhs: s_pc
       f_add_rhs: "32'd4"
       f_add_op : "`RVM_ARITH_ADD"
 

@@ -166,7 +166,7 @@ class State(object):
         Return a verilog safe version of the interface signal name.
         """
         n = self.name()
-        return ("FSM_%s" % n.replace(".","_").replace("-","_")).upper();
+        return ("%s" % n.replace(".","_").replace("-","_"));
     
     def name(self):
         """
@@ -282,7 +282,9 @@ class FSM(object):
             for state in states:
                 ta = State(name=state["name"])
                 
-                ta.wait = state["wait"]
+                if("wait" in state):
+                    ta.wait = state["wait"]
+
                 if(type(state["next"]) == str):
                     ta.next_state = state["next"]
                     ta.single_next_state = True

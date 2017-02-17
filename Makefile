@@ -29,7 +29,7 @@ docs:
 	$(MAKE) -C $(RVM_HOME)/docs all
 
 # Force a re-build of the RTL source simulation.
-build:
+build: control-fsm
 	$(MAKE) -B $(VCC_OUTPUT)
 
 $(VCC_OUTPUT) : $(VCC_SCRIPT)
