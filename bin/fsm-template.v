@@ -42,15 +42,15 @@ reg [{{state_var_w}}:0] n_{{state_var}};
 //-----------------------------------------------------------------------------
 
 {% for interface_name in interfaces %}
-{% set interface = interfaces[interface_name]  %}
+{%- set interface = interfaces[interface_name]  %}
 
 //-----------------------------------------------------------------------------
 // Signal assignments for the {{interface_name}} interface.
 //-----------------------------------------------------------------------------
 
     {% for signal_name  in interface.signals -%}
-    {% set signal = interface.signals[signal_name] -%}
-    {%- if signal.writable -%}
+    {%- set signal = interface.signals[signal_name] -%}
+    {%- if signal.writable %}
 
 assign {{signal_name}} =  
     {% for assignment in signal.values -%}
@@ -64,9 +64,9 @@ assign {{signal_name}} =
             |
         {%- endif %}
     {% endfor %}
-    {%- endif %}
+    {%- endif -%}
     
-    {% endfor -%}
+    {%- endfor -%}
 {% endfor %}
 
 //-----------------------------------------------------------------------------

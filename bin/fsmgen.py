@@ -166,7 +166,7 @@ class State(object):
         Return a verilog safe version of the interface signal name.
         """
         n = self.name()
-        return "FSM_%s" % n.replace(".","_").replace("-","_");
+        return ("FSM_%s" % n.replace(".","_").replace("-","_")).upper();
     
     def name(self):
         """
