@@ -14,8 +14,8 @@ interfaces:
 - name: ExternalMemory
   signals:
   - {name: mem_addr,    range: [31, 0], access: "w"} 
-  - {name: mem_rdata,   range: [31, 0], access: "w"} 
-  - {name: mem_wdata,   range: [31, 0], access: "r" } 
+  - {name: mem_rdata,   range: [31, 0], access: "r"} 
+  - {name: mem_wdata,   range: [31, 0], access: "w" } 
   - {name: mem_c_en,                    access: "w"} 
   - {name: mem_b_en,    range: [3 , 0], access: "w"} 
   - {name: mem_error,                   access: "r" } 
@@ -30,6 +30,12 @@ interfaces:
   - {name: i_rd_addr         , range: [4,0], access: "r" }
   - {name: i_immediate       , range: [31,0],access: "r" }
   - {name: i_instr           , range: [5,0], access: "r" }
+
+- name: ProgramCounter
+  signals:
+  - { range: [31,0], name: pc, access: "r"}
+  - { range: [31,0], name: pc_wdata, access: "w"}
+  - { range: [0,0] , name: pc_w_en, access: "w"}
 
 - name: Adder
   signals:
@@ -63,11 +69,21 @@ states:
 - name: InstructionFetch
   wait: [mem_stall != 0]
   next: InstructionDecode
+  set:
+  - ExternalMemory:
+    - mem_addr: pc
+    - mem_b_en: 4'hF
+    - mem_c_en: 1
 
 - name: InstructionDecode
   wait: null
+  set:
+  - InstructionDecoder:
+    - ctrl_fdu_mem_valid: 1
   next: [
-    {if: "i_instr == RVM_I_ADD", then: EX_Add}
+    {if: "i_instr == `RVM_I_ADD", then: EX_Add},
+    {if: "i_instr == `RVM_I_SUB", then: EX_Sub},
+    {else: IncrementProgramCounter}
   ]
 
 - name: EX_Add
@@ -76,7 +92,22 @@ states:
     - Adder:
       - f_add_lhs: s_rs1_rdata
       - f_add_rhs: s_rs2_rdata
-      - f_add_op : RVM_ARITH_ADD
+      - f_add_op : "`RVM_ARITH_ADD"
+    - RegisterFile:
+      - s_rs1_addr: i_rs1_addr
+      - s_rs2_addr: i_rs2_addr
+      - d_rd_wen:   1
+      - d_rd_addr:  i_rd_addr
+      - d_rd_wdata: f_add_result
+  next: IncrementProgramCounter
+
+- name: EX_Sub
+  wait: null
+  set :
+    - Adder:
+      - f_add_lhs: s_rs1_rdata
+      - f_add_rhs: s_rs2_rdata
+      - f_add_op : "`RVM_ARITH_SUB"
     - RegisterFile:
       - s_rs1_addr: i_rs1_addr
       - s_rs2_addr: i_rs2_addr
@@ -88,3 +119,14 @@ states:
 - name: IncrementProgramCounter
   wait: null
   next: InstructionFetch
+  set:
+  - ProgramCounter:
+    - pc_w_en: 1
+    - pc_wdata: f_add_result
+  - Adder:
+    - f_add_lhs: pc
+    - f_add_rhs: 4
+    - f_add_op : "`RVM_ARITH_ADD"
+
+
+

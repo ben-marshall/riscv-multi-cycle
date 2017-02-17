@@ -105,12 +105,6 @@ class InterfaceSignal(object):
         else:
             return None
 
-    def set_expression(self):
-        """
-        Returns the verilog assignment for what value the signal should
-        take in a given state with given inputs.
-        """
-        return "0"
 
 class AssignOnState(object):
     """
