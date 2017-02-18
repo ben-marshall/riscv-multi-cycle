@@ -49,7 +49,7 @@ interfaces:
   - { range: [31,0], name: f_add_rhs   , access: "w"}
   - { range: [ 1,0], name: f_add_op    , access: "w"}
   - {                name: f_add_valid , access: "r" }
-  - { range: [31,0], name: f_add_result, access: "r" }
+  - { range: [32,0], name: f_add_result, access: "r" }
 
 - name: Shifter
   signals:
@@ -91,6 +91,7 @@ states:
   next: [
     {if: "i_instr == `RVM_INSTR_ADD"  , then: EX_Add},
     {if: "i_instr == `RVM_INSTR_BNE"  , then: EX_BNE},
+    {if: "i_instr == `RVM_INSTR_BGE"  , then: EX_BGE},
     {if: "i_instr == `RVM_INSTR_CSRRC", then: EX_CSRRC},
     {if: "i_instr == `RVM_INSTR_CSRRCI", then: EX_CSRRCI},
     {if: "i_instr == `RVM_INSTR_CSRRS", then: EX_CSRRS},
@@ -99,6 +100,24 @@ states:
     {if: "i_instr == `RVM_INSTR_CSRRWI", then: EX_CSRRWI},
     {if: "i_instr == `RVM_INSTR_JAL"  , then: EX_Jal_0},
     {if: "i_instr == `RVM_INSTR_SUB"  , then: EX_Sub},
+  ]
+
+- name: EX_BGE
+  notes: "Branch on greater than or equal to"
+  set:
+  - RegisterFile:
+    - s_rs1_addr: i_rs1_addr
+      s_rs2_addr: i_rs2_addr
+      s_rs1_en  : 1
+      s_rs2_en  : 1
+  - Adder:
+    - f_add_lhs: s_rs1_rdata
+      f_add_rhs: s_rs2_rdata
+      f_add_op: "`RVM_ARITH_SUB"
+  next: [
+    {if: "!f_add_result[32] && ~|f_add_result[31:0]", 
+     then: EX_COND_BRANCH_TAKEN},
+    {if: "f_add_result[32]", then: IncrementProgramCounter}
   ]
 
 - name: EX_BNE
