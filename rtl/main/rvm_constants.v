@@ -131,7 +131,7 @@
 `define RVM_INSTR_SLTI    6'd37 
 `define RVM_INSTR_SLTU    6'd38 
 `define RVM_INSTR_SLLI    6'd39 
-`define RVM_INSTR_BEQ     6'd30 
+`define RVM_INSTR_BEQ     6'd40 
 `define RVM_INSTR_AND     6'd41 
 `define RVM_INSTR_AUIPC   6'd42 
 `define RVM_INSTR_CSRRWI  6'd43 

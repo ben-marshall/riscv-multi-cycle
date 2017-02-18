@@ -93,6 +93,7 @@ states:
     {if: "i_instr == `RVM_INSTR_ADDI"  , then: EX_ADDI},
     {if: "i_instr == `RVM_INSTR_ANDI" , then: EX_ANDI},
     {if: "i_instr == `RVM_INSTR_AUIPC" , then: EX_AUIPC},
+    {if: "i_instr == `RVM_INSTR_BEQ"  , then: EX_BEQ},
     {if: "i_instr == `RVM_INSTR_BNE"  , then: EX_BNE},
     {if: "i_instr == `RVM_INSTR_BGE"  , then: EX_BGE},
     {if: "i_instr == `RVM_INSTR_CSRRC", then: EX_CSRRC},
@@ -164,8 +165,25 @@ states:
       f_add_rhs: s_rs2_rdata
       f_add_op: "`RVM_ARITH_SUB"
   next: [
-    {if: "~|f_add_result", then: EX_COND_BRANCH_TAKEN},
-    {if: "|f_add_result", then: IncrementProgramCounter}
+    {if: "~|f_add_result[31:0]", then: EX_COND_BRANCH_TAKEN},
+    {if: "|f_add_result[31:0]", then: IncrementProgramCounter}
+  ]
+
+- name: EX_BEQ
+  notes: "Branch on equal"
+  set:
+  - RegisterFile:
+    - s_rs1_addr: i_rs1_addr
+      s_rs2_addr: i_rs2_addr
+      s_rs1_en  : 1
+      s_rs2_en  : 1
+  - Adder:
+    - f_add_lhs: s_rs1_rdata
+      f_add_rhs: s_rs2_rdata
+      f_add_op: "`RVM_ARITH_SUB"
+  next: [
+    {if: "~|f_add_result[31:0]", then: EX_COND_BRANCH_TAKEN},
+    {if: "|f_add_result[31:0]", then: IncrementProgramCounter}
   ]
 
 - name: EX_COND_BRANCH_TAKEN
