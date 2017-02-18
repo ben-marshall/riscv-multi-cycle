@@ -93,11 +93,12 @@ states:
   next: [
     {if: "i_instr == `RVM_INSTR_ADD"  , then: EX_ADD},
     {if: "i_instr == `RVM_INSTR_ADDI"  , then: EX_ADDI},
+    {if: "i_instr == `RVM_INSTR_AND" , then: EX_AND},
     {if: "i_instr == `RVM_INSTR_ANDI" , then: EX_ANDI},
     {if: "i_instr == `RVM_INSTR_AUIPC" , then: EX_AUIPC},
     {if: "i_instr == `RVM_INSTR_BEQ"  , then: EX_BEQ},
-    {if: "i_instr == `RVM_INSTR_BNE"  , then: EX_BNE},
     {if: "i_instr == `RVM_INSTR_BGE"  , then: EX_BGE},
+    {if: "i_instr == `RVM_INSTR_BNE"  , then: EX_BNE},
     {if: "i_instr == `RVM_INSTR_CSRRC", then: EX_CSRRC},
     {if: "i_instr == `RVM_INSTR_CSRRCI", then: EX_CSRRCI},
     {if: "i_instr == `RVM_INSTR_CSRRS", then: EX_CSRRS},
@@ -107,10 +108,189 @@ states:
     {if: "i_instr == `RVM_INSTR_FENCE", then: IncrementProgramCounter},
     {if: "i_instr == `RVM_INSTR_FENCE_I", then: IncrementProgramCounter},
     {if: "i_instr == `RVM_INSTR_JAL"  , then: EX_Jal_0},
+    {if: "i_instr == `RVM_INSTR_JALR"  , then: EX_JALR_0},
     {if: "i_instr == `RVM_INSTR_LUI"  , then: EX_LUI},
     {if: "i_instr == `RVM_INSTR_MRET" , then: EX_MRET},
+    {if: "i_instr == `RVM_INSTR_ERET" , then: EX_MRET},
+    {if: "i_instr == `RVM_INSTR_OR"  , then: EX_OR},
+    {if: "i_instr == `RVM_INSTR_ORI"  , then: EX_ORI},
+    {if: "i_instr == `RVM_INSTR_XOR"  , then: EX_XOR},
+    {if: "i_instr == `RVM_INSTR_XORI"  , then: EX_XORI},
     {if: "i_instr == `RVM_INSTR_SUB"  , then: EX_Sub},
+    {if: "i_instr == `RVM_INSTR_SLL"  , then: EX_SLL},
+    {if: "i_instr == `RVM_INSTR_SLLI"  , then: EX_SLLI},
+    {if: "i_instr == `RVM_INSTR_SRL"  , then: EX_SRL},
+    {if: "i_instr == `RVM_INSTR_SRLI"  , then: EX_SRLI},
+    {if: "i_instr == `RVM_INSTR_SRA"  , then: EX_SRA},
+    {if: "i_instr == `RVM_INSTR_SRAI"  , then: EX_SRAI},
   ]
+
+- name: EX_SRL
+  notes: "Shift right with register values"
+  set:
+  - RegisterFile:
+    - s_rs1_addr: i_rs1_addr
+      s_rs1_en  : 1
+    - s_rs2_addr: i_rs2_addr
+      s_rs2_en  : 1
+      d_rd_wen  : 1
+      d_rd_addr : i_rd_addr
+      d_rd_wdata: f_shf_result
+  - Shifter:
+    - f_shf_lhs: s_rs1_rdata
+      f_shf_rhs: s_rs2_rdata
+      f_shf_op: "`RVM_SHIFT_SRL"
+  next: IncrementProgramCounter
+
+
+- name: EX_SRLI
+  notes: "Shift right with immediate"
+  set:
+  - RegisterFile:
+    - s_rs1_addr: i_rs1_addr
+      s_rs1_en  : 1
+      d_rd_wen  : 1
+      d_rd_addr : i_rd_addr
+      d_rd_wdata: f_shf_result
+  - Shifter:
+    - f_shf_lhs: s_rs1_rdata
+      f_shf_rhs: i_immediate
+      f_shf_op: "`RVM_SHIFT_SRL"
+  next: IncrementProgramCounter
+
+
+- name: EX_SRA
+  notes: "Arithmetic Shift right with register values"
+  set:
+  - RegisterFile:
+    - s_rs1_addr: i_rs1_addr
+      s_rs1_en  : 1
+    - s_rs2_addr: i_rs2_addr
+      s_rs2_en  : 1
+      d_rd_wen  : 1
+      d_rd_addr : i_rd_addr
+      d_rd_wdata: f_shf_result
+  - Shifter:
+    - f_shf_lhs: s_rs1_rdata
+      f_shf_rhs: s_rs2_rdata
+      f_shf_op: "`RVM_SHIFT_SRA"
+  next: IncrementProgramCounter
+
+
+- name: EX_SRAI
+  notes: "Arithmetic Shift right with immediate"
+  set:
+  - RegisterFile:
+    - s_rs1_addr: i_rs1_addr
+      s_rs1_en  : 1
+      d_rd_wen  : 1
+      d_rd_addr : i_rd_addr
+      d_rd_wdata: f_shf_result
+  - Shifter:
+    - f_shf_lhs: s_rs1_rdata
+      f_shf_rhs: i_immediate
+      f_shf_op: "`RVM_SHIFT_SRA"
+  next: IncrementProgramCounter
+
+
+- name: EX_SLL
+  notes: "Shift left with register values"
+  set:
+  - RegisterFile:
+    - s_rs1_addr: i_rs1_addr
+      s_rs1_en  : 1
+    - s_rs2_addr: i_rs2_addr
+      s_rs2_en  : 1
+      d_rd_wen  : 1
+      d_rd_addr : i_rd_addr
+      d_rd_wdata: f_shf_result
+  - Shifter:
+    - f_shf_lhs: s_rs1_rdata
+      f_shf_rhs: s_rs2_rdata
+      f_shf_op: "`RVM_SHIFT_SLL"
+  next: IncrementProgramCounter
+
+
+- name: EX_SLLI
+  notes: "Shift left with immediate"
+  set:
+  - RegisterFile:
+    - s_rs1_addr: i_rs1_addr
+      s_rs1_en  : 1
+      d_rd_wen  : 1
+      d_rd_addr : i_rd_addr
+      d_rd_wdata: f_shf_result
+  - Shifter:
+    - f_shf_lhs: s_rs1_rdata
+      f_shf_rhs: i_immediate
+      f_shf_op: "`RVM_SHIFT_SLL"
+  next: IncrementProgramCounter
+
+- name: EX_XOR
+  notes: "Bitwise XOR with register values"
+  set:
+  - RegisterFile:
+    - s_rs1_addr: i_rs1_addr
+      s_rs1_en  : 1
+    - s_rs2_addr: i_rs2_addr
+      s_rs2_en  : 1
+      d_rd_wen  : 1
+      d_rd_addr : i_rd_addr
+      d_rd_wdata: f_bit_result
+  - Bitwise:
+    - f_bit_lhs: s_rs1_rdata
+      f_bit_rhs: s_rs2_rdata
+      f_bit_op: "`RVM_BITWISE_XOR"
+  next: IncrementProgramCounter
+
+
+- name: EX_XORI
+  notes: "Bitwise XOR with immediate"
+  set:
+  - RegisterFile:
+    - s_rs1_addr: i_rs1_addr
+      s_rs1_en  : 1
+      d_rd_wen  : 1
+      d_rd_addr : i_rd_addr
+      d_rd_wdata: f_bit_result
+  - Bitwise:
+    - f_bit_lhs: s_rs1_rdata
+      f_bit_rhs: i_immediate
+      f_bit_op: "`RVM_BITWISE_XOR"
+  next: IncrementProgramCounter
+
+- name: EX_OR
+  notes: "Bitwise OR with register values"
+  set:
+  - RegisterFile:
+    - s_rs1_addr: i_rs1_addr
+      s_rs1_en  : 1
+    - s_rs2_addr: i_rs2_addr
+      s_rs2_en  : 1
+      d_rd_wen  : 1
+      d_rd_addr : i_rd_addr
+      d_rd_wdata: f_bit_result
+  - Bitwise:
+    - f_bit_lhs: s_rs1_rdata
+      f_bit_rhs: s_rs2_rdata
+      f_bit_op: "`RVM_BITWISE_OR"
+  next: IncrementProgramCounter
+
+
+- name: EX_ORI
+  notes: "Bitwise OR with immediate"
+  set:
+  - RegisterFile:
+    - s_rs1_addr: i_rs1_addr
+      s_rs1_en  : 1
+      d_rd_wen  : 1
+      d_rd_addr : i_rd_addr
+      d_rd_wdata: f_bit_result
+  - Bitwise:
+    - f_bit_lhs: s_rs1_rdata
+      f_bit_rhs: i_immediate
+      f_bit_op: "`RVM_BITWISE_OR"
+  next: IncrementProgramCounter
 
 - name: EX_MRET
   notes: "Return from machine mode trap - set pc to mepc."
@@ -141,6 +321,24 @@ states:
     - d_rd_wen  : 1
       d_rd_addr : i_rd_addr
       d_rd_wdata: i_immediate
+  next: IncrementProgramCounter
+
+
+- name: EX_AND
+  notes: "Bitwise AND with register values"
+  set:
+  - RegisterFile:
+    - s_rs1_addr: i_rs1_addr
+      s_rs1_en  : 1
+    - s_rs2_addr: i_rs2_addr
+      s_rs2_en  : 1
+      d_rd_wen  : 1
+      d_rd_addr : i_rd_addr
+      d_rd_wdata: f_bit_result
+  - Bitwise:
+    - f_bit_lhs: s_rs1_rdata
+      f_bit_rhs: s_rs2_rdata
+      f_bit_op: "`RVM_BITWISE_AND"
   next: IncrementProgramCounter
 
 
@@ -332,6 +530,36 @@ states:
         d_rd_addr:  i_rd_addr
         d_rd_wdata: f_add_result
   next: IncrementProgramCounter
+
+- name: EX_JALR_0
+  notes: "First state of executing JALR. Add 4 to the PC and store this in a
+          register"
+  set :
+    - Adder:
+      - f_add_lhs: s_pc
+        f_add_rhs: "32'd4"
+        f_add_op : "`RVM_ARITH_ADD"
+    - RegisterFile:
+      - d_rd_wen:   1
+        d_rd_addr:  i_rd_addr
+        d_rd_wdata: f_add_result
+  next: EX_JALR_1
+
+- name: EX_JALR_1
+  notes: "Second state of executing JALR. Add reg val to the PC and then
+          fetch the next instruction."
+  set :
+    - RegisterFile:
+      - s_rs1_en: 1
+        s_rs1_addr: i_rs1_addr
+    - Adder:
+      - f_add_lhs: s_pc
+        f_add_rhs: s_rs1_rdata
+        f_add_op : "`RVM_ARITH_ADD"
+    - ProgramCounter:
+      - d_pc_w_en: 1
+        d_pc_wdata: f_add_result
+  next: InstructionFetch
 
 - name: EX_Jal_0
   notes: "First state of executing JAL. Add 4 to the PC and store this in a
