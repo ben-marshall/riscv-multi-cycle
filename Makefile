@@ -12,9 +12,9 @@ VCC_FLAGS=-v -g2005 -t $(VCC_TARGET) -o $(VCC_OUTPUT)
 COVGROUPS=$(RVM_HOME)/verif/coverage/coverpoints.json
 
 TEST_HEX=$(RVM_HOME)/verif/riscv-tests/hex/rv32ui-p-add.hex
-HALT_ADDR=0x0000074c
-PASS_ADDR=0x000005b8
-FAIL_ADDR=0x000005a4
+HALT_ADDR=0x8000074c
+PASS_ADDR=0x800005b8
+FAIL_ADDR=0x800005a4
 TIMEOUT=10000
 
 TEST_LEN=3900 # How log a CRT test shouldbe.

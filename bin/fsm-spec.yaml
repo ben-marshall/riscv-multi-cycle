@@ -107,6 +107,7 @@ states:
     {if: "i_instr == `RVM_INSTR_FENCE", then: IncrementProgramCounter},
     {if: "i_instr == `RVM_INSTR_FENCE_I", then: IncrementProgramCounter},
     {if: "i_instr == `RVM_INSTR_JAL"  , then: EX_Jal_0},
+    {if: "i_instr == `RVM_INSTR_LUI"  , then: EX_LUI},
     {if: "i_instr == `RVM_INSTR_MRET" , then: EX_MRET},
     {if: "i_instr == `RVM_INSTR_SUB"  , then: EX_Sub},
   ]
@@ -132,6 +133,16 @@ states:
       f_add_rhs: i_immediate
       f_add_op: "`RVM_ARITH_ADD"
   next: IncrementProgramCounter
+
+- name: EX_LUI
+  notes: "Load top 20 bits of register and zero lower 12."
+  set:
+  - RegisterFile:
+    - d_rd_wen  : 1
+      d_rd_addr : i_rd_addr
+      d_rd_wdata: i_immediate
+  next: IncrementProgramCounter
+
 
 - name: EX_ANDI
   notes: "Bitwise AND with immediate"
