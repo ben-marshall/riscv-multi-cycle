@@ -35,9 +35,9 @@ wire signed  [31:0] i_rhs = rhs & {32{op != `RVM_SHIFT_NOP}};
 
 assign valid = op != `RVM_SHIFT_NOP;
 
-assign result = ({32{op == `RVM_SHIFT_SLL}} & i_lhs <<  i_rhs) |
-                ({32{op == `RVM_SHIFT_SRL}} & i_lhs >>  i_rhs) |
-                ({32{op == `RVM_SHIFT_ASR}} & i_lhs >>> i_rhs) ;
+assign result = ({32{op == `RVM_SHIFT_SLL}} & (i_lhs <<  i_rhs)) |
+                ({32{op == `RVM_SHIFT_SRL}} & (i_lhs >>  i_rhs)) |
+                ({32{op == `RVM_SHIFT_ASR}} & (i_lhs >>> i_rhs)) ;
 
 
 endmodule

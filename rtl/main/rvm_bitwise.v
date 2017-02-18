@@ -35,8 +35,8 @@ assign valid = op != `RVM_BITWISE_NOP;
 
 //
 // Compute the result
-assign result = ({32{op == `RVM_BITWISE_OR }} & i_lhs | i_rhs) |
-                ({32{op == `RVM_BITWISE_AND}} & i_lhs & i_rhs) |
-                ({32{op == `RVM_BITWISE_XOR}} & i_lhs ^ i_rhs) ;
+assign result = ({32{op == `RVM_BITWISE_OR }} & (i_lhs | i_rhs)) |
+                ({32{op == `RVM_BITWISE_AND}} & (i_lhs & i_rhs)) |
+                ({32{op == `RVM_BITWISE_XOR}} & (i_lhs ^ i_rhs)) ;
 
 endmodule
