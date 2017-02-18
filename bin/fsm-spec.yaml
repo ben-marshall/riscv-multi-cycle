@@ -104,6 +104,8 @@ states:
     {if: "i_instr == `RVM_INSTR_CSRRSI", then: EX_CSRRSI},
     {if: "i_instr == `RVM_INSTR_CSRRW", then: EX_CSRRW},
     {if: "i_instr == `RVM_INSTR_CSRRWI", then: EX_CSRRWI},
+    {if: "i_instr == `RVM_INSTR_FENCE", then: IncrementProgramCounter},
+    {if: "i_instr == `RVM_INSTR_FENCE_I", then: IncrementProgramCounter},
     {if: "i_instr == `RVM_INSTR_JAL"  , then: EX_Jal_0},
     {if: "i_instr == `RVM_INSTR_MRET" , then: EX_MRET},
     {if: "i_instr == `RVM_INSTR_SUB"  , then: EX_Sub},
