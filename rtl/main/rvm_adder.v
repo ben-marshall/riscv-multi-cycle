@@ -31,15 +31,15 @@ output wire [32:0] result    // The result of the addition / subtraction
 
 //
 // Isolate inputs to the adder when the module is not enabled.
-wire [31:0] i_lhs = lhs & {32{op != `RVM_BITWISE_NOP}};
+wire [32:0] i_lhs = lhs & {32{op != `RVM_BITWISE_NOP}};
 wire [31:0] i_rhs = rhs & {32{op != `RVM_BITWISE_NOP}};
 
 assign valid = op != `RVM_ARITH_NOP;
 
 //
 // Compute the result
-assign result = ({33{op == `RVM_ARITH_ADD}} & i_lhs + i_rhs) |
-                ({33{op == `RVM_ARITH_SUB}} & i_lhs - i_rhs) ;
+assign result = ({33{op == `RVM_ARITH_ADD}} & (i_lhs + i_rhs)) |
+                ({33{op == `RVM_ARITH_SUB}} & (i_lhs - i_rhs)) ;
 
 
 endmodule

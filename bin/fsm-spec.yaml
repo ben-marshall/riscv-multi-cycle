@@ -99,6 +99,7 @@ states:
     {if: "i_instr == `RVM_INSTR_BEQ"  , then: EX_BEQ},
     {if: "i_instr == `RVM_INSTR_BGE"  , then: EX_BGE},
     {if: "i_instr == `RVM_INSTR_BGEU"  , then: EX_BGEU},
+    {if: "i_instr == `RVM_INSTR_BLT"  , then: EX_BLT},
     {if: "i_instr == `RVM_INSTR_BNE"  , then: EX_BNE},
     {if: "i_instr == `RVM_INSTR_CSRRC", then: EX_CSRRC},
     {if: "i_instr == `RVM_INSTR_CSRRCI", then: EX_CSRRCI},
@@ -373,7 +374,27 @@ states:
   next: [
     {if: "!f_add_result[32] || (f_add_result[32] && !f_add_result[31] && |f_add_result[30:0])", 
      then: EX_COND_BRANCH_TAKEN},
-    {if: "f_add_result[32] && !f_add_result[32] || f_add_result[31]", then: IncrementProgramCounter}
+    {if: "f_add_result[32] && !f_add_result[32] || f_add_result[31]", 
+     then: IncrementProgramCounter}
+  ]
+
+- name: EX_BLT
+  notes: "Branch on less than"
+  set:
+  - RegisterFile:
+    - s_rs1_addr: i_rs1_addr
+      s_rs2_addr: i_rs2_addr
+      s_rs1_en  : 1
+      s_rs2_en  : 1
+  - Adder:
+    - f_add_lhs: s_rs1_rdata
+      f_add_rhs: s_rs2_rdata
+      f_add_op: "`RVM_ARITH_SUB"
+  next: [
+    {if: "s_rs1_rdata < s_rs2_rdata", 
+     then: EX_COND_BRANCH_TAKEN},
+    {if: "s_rs1_rdata >= s_rs2_rdata", 
+     then: IncrementProgramCounter}
   ]
 
 - name: EX_BGEU
