@@ -90,6 +90,8 @@ states:
   wait: null
   next: [
     {if: "i_instr == `RVM_INSTR_ADD"  , then: EX_Add},
+    {if: "i_instr == `RVM_INSTR_ADDI"  , then: EX_ADDI},
+    {if: "i_instr == `RVM_INSTR_ANDI" , then: EX_ANDI},
     {if: "i_instr == `RVM_INSTR_BNE"  , then: EX_BNE},
     {if: "i_instr == `RVM_INSTR_BGE"  , then: EX_BGE},
     {if: "i_instr == `RVM_INSTR_CSRRC", then: EX_CSRRC},
@@ -101,6 +103,21 @@ states:
     {if: "i_instr == `RVM_INSTR_JAL"  , then: EX_Jal_0},
     {if: "i_instr == `RVM_INSTR_SUB"  , then: EX_Sub},
   ]
+
+- name: EX_ANDI
+  notes: "Bitwise AND with immediate"
+  set:
+  - RegisterFile:
+    - s_rs1_addr: i_rs1_addr
+      s_rs1_en  : 1
+      d_rd_wen  : 1
+      d_rd_addr : i_rd_addr
+      d_rd_wdata: f_bit_result
+  - Bitwise:
+    - f_bit_lhs: s_rs1_rdata
+      f_bit_rhs: i_immediate
+      f_bit_op: "`RVM_BITWISE_AND"
+  next: IncrementProgramCounter
 
 - name: EX_BGE
   notes: "Branch on greater than or equal to"
@@ -218,6 +235,22 @@ states:
     - RegisterFile:
       - s_rs1_addr: i_rs1_addr
         s_rs2_addr: i_rs2_addr
+        s_rs1_en : 1
+        s_rs2_en : 1
+        d_rd_wen:   1
+        d_rd_addr:  i_rd_addr
+        d_rd_wdata: f_add_result
+  next: IncrementProgramCounter
+
+- name: EX_ADDI
+  set :
+    - Adder:
+      - f_add_lhs: s_rs1_rdata
+        f_add_rhs: i_immediate
+        f_add_op : "`RVM_ARITH_ADD"
+    - RegisterFile:
+      - s_rs1_addr: i_rs1_addr
+        s_rs1_en : 1
         d_rd_wen:   1
         d_rd_addr:  i_rd_addr
         d_rd_wdata: f_add_result
