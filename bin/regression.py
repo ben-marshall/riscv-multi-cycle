@@ -40,6 +40,22 @@ class RegressionTest(object):
 
         self.result      = None
         self.result_str  = "      "
+        self.__infer_pass_fail_addr__()
+
+
+    def __infer_pass_fail_addr__(self):
+        """
+        Try and automatically work out the pass/fail address from the
+        dissassembly.
+        """
+        if(os.path.isfile(self.dis_file)):
+            with open(self.dis_file,"r") as fh:
+                for line in fh.readlines():
+                    if " <pass>:" in line:
+                        self.pass_addr = line.split(" ")[0]
+                    elif " <fail>:" in line:
+                        self.fail_addr = line.split(" ")[0]
+
 
     def __str__(self):
         return "%s | %s | %s | %s | %s" % (self.result_str,
