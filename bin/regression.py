@@ -120,10 +120,10 @@ def run_regressions(to_run):
 
             if("TEST PASS" in output):
                 test.passed(output)
-                vcd_name = os.path.basename(test.hex_file).split(".")[0]+".vcd"
-                shutil.copyfile("./work/waves.vcd", "./work/%s" % vcd_name)
             elif("TEST FAIL" in output):
                 test.failed(output)
+                vcd_name = os.path.basename(test.hex_file).split(".")[0]+".vcd"
+                shutil.copyfile("./work/waves.vcd", "./work/%s" % vcd_name)
             else:
                 test.failed(output)
         
