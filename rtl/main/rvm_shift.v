@@ -30,14 +30,18 @@ output wire [31:0] result    // The result
 
 //
 // Isolate inputs to the adder when the module is not enabled.
-wire signed  [31:0] i_lhs = lhs & {32{op != `RVM_SHIFT_NOP}};
-wire signed  [31:0] i_rhs = rhs & {32{op != `RVM_SHIFT_NOP}};
+wire [31:0] i_lhs = lhs & {32{op != `RVM_SHIFT_NOP}};
+wire [ 4:0] i_rhs = rhs & { 5{op != `RVM_SHIFT_NOP}};
+
+wire [31:0] result_asr;
+
+assign result_asr = $signed(i_lhs) >>> i_rhs;
 
 assign valid = op != `RVM_SHIFT_NOP;
 
 assign result = ({32{op == `RVM_SHIFT_SLL}} & (i_lhs <<  i_rhs)) |
                 ({32{op == `RVM_SHIFT_SRL}} & (i_lhs >>  i_rhs)) |
-                ({32{op == `RVM_SHIFT_ASR}} & ($signed(i_lhs) >>> i_rhs)) ;
+                ({32{op == `RVM_SHIFT_ASR}} & result_asr) ;
 
 
 endmodule

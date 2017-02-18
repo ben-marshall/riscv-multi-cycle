@@ -172,7 +172,7 @@ states:
       d_rd_wdata: f_shf_result
   - Shifter:
     - f_shf_lhs: s_rs1_rdata
-      f_shf_rhs: s_rs2_rdata
+      f_shf_rhs: s_rs2_rdata[4:0]
       f_shf_op: "`RVM_SHIFT_ASR"
   next: IncrementProgramCounter
 
@@ -188,7 +188,7 @@ states:
       d_rd_wdata: f_shf_result
   - Shifter:
     - f_shf_lhs: s_rs1_rdata
-      f_shf_rhs: i_immediate
+      f_shf_rhs: i_immediate[4:0]
       f_shf_op: "`RVM_SHIFT_ASR"
   next: IncrementProgramCounter
 

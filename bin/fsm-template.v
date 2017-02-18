@@ -60,8 +60,7 @@ assign {{signal_name}} =
         {{-assignment.state.verilog_name()-}} } } & {{assignment.value}})
         {%- if(loop.last) -%}
             ;
-        {%- else -%}
-            |
+        {%- else %} |
         {%- endif %}
     {% endfor %}
     {%- endif -%}
