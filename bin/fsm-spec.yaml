@@ -49,9 +49,11 @@ interfaces:
   signals:
   - { range: [31,0], name: f_add_lhs   , access: "w"}
   - { range: [31,0], name: f_add_rhs   , access: "w"}
-  - { range: [ 1,0], name: f_add_op    , access: "w"}
+  - { range: [ 2,0], name: f_add_op    , access: "w"}
   - {                name: f_add_valid , access: "r" }
   - { range: [32,0], name: f_add_result, access: "r" }
+  - {                name: f_add_gt    , access: "r" }
+  - {                name: f_add_eq    , access: "r" }
 
 - name: Shifter
   signals:

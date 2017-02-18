@@ -15,9 +15,9 @@
 `define RVM_BITWISE_AND   2'b10
 `define RVM_BITWISE_XOR   2'b11
 
-`define RVM_ARITH_NOP     2'b00
-`define RVM_ARITH_ADD     2'b01
-`define RVM_ARITH_SUB     2'b10
+`define RVM_ARITH_NOP     3'b00
+`define RVM_ARITH_ADD     3'b01
+`define RVM_ARITH_SUB     3'b10
 
 `define RVM_SHIFT_NOP     2'b00
 `define RVM_SHIFT_SLL     2'b01
