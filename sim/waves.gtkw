@@ -1,16 +1,17 @@
 [*]
 [*] GTKWave Analyzer v3.3.66 (w)1999-2015 BSI
-[*] Sat Feb 11 10:46:11 2017
+[*] Sat Feb 18 11:29:34 2017
 [*]
 [dumpfile] "/home/ben/projects/riscv/multi-cycle/work/waves.vcd"
-[dumpfile_mtime] "Sat Feb 11 10:44:46 2017"
-[dumpfile_size] 503688
+[dumpfile_mtime] "Sat Feb 18 11:27:58 2017"
+[dumpfile_size] 2500823
 [savefile] "/home/ben/projects/riscv/multi-cycle/sim/waves.gtkw"
 [timestart] 0
 [size] 1920 1056
 [pos] -1 -1
-*-5.543875 39 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-5.543875 140 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] rvm_core_tb.
+[treeopen] rvm_core_tb.i_dut.
 [treeopen] rvm_core_tb.i_dut.i_rvm_fdu.
 [treeopen] rvm_core_tb.i_dut.i_rvm_gprs.
 [sst_width] 225
@@ -61,8 +62,6 @@ rvm_core_tb.i_dut.i_rvm_gprs.gpr_31[31:0]
 -GPRs
 @800200
 -Data destinations
-@28
-rvm_core_tb.i_dut.d_pc_w_en[1:0]
 @22
 rvm_core_tb.i_dut.d_pc_wdata[31:0]
 rvm_core_tb.i_dut.d_rd_addr[4:0]
@@ -71,9 +70,8 @@ rvm_core_tb.i_dut.d_rd_wdata[31:0]
 rvm_core_tb.i_dut.d_rd_wen
 @1000200
 -Data destinations
-@c00200
--Functional Units
 @800200
+-Functional Units
 -Adder
 @22
 rvm_core_tb.i_dut.f_add_lhs[31:0]
@@ -86,7 +84,7 @@ rvm_core_tb.i_dut.f_add_rhs[31:0]
 rvm_core_tb.i_dut.f_add_valid
 @1000200
 -Adder
-@800200
+@c00200
 -Bitwise
 @22
 rvm_core_tb.i_dut.f_bit_lhs[31:0]
@@ -97,9 +95,9 @@ rvm_core_tb.i_dut.f_bit_result[31:0]
 rvm_core_tb.i_dut.f_bit_rhs[31:0]
 @28
 rvm_core_tb.i_dut.f_bit_valid
-@1000200
+@1401200
 -Bitwise
-@800200
+@c00200
 -Shifter
 @22
 rvm_core_tb.i_dut.f_shf_lhs[31:0]
@@ -107,12 +105,11 @@ rvm_core_tb.i_dut.f_shf_lhs[31:0]
 rvm_core_tb.i_dut.f_shf_op[1:0]
 @22
 rvm_core_tb.i_dut.f_shf_result[31:0]
-rvm_core_tb.i_dut.f_shf_rhs[31:0]
 @28
 rvm_core_tb.i_dut.f_shf_valid
-@1000200
--Shifter
 @1401200
+-Shifter
+@1000200
 -Functional Units
 @800200
 -Memory IF
@@ -130,7 +127,7 @@ rvm_core_tb.i_dut.mem_stall
 rvm_core_tb.i_dut.mem_wdata[31:0]
 @1000200
 -Memory IF
-@800200
+@c00200
 -Data Sources
 @22
 rvm_core_tb.i_dut.s_pc[31:0]
@@ -144,25 +141,77 @@ rvm_core_tb.i_dut.s_rs2_addr[4:0]
 rvm_core_tb.i_dut.s_rs2_en
 @22
 rvm_core_tb.i_dut.s_rs2_rdata[31:0]
-@1000200
+@1401200
 -Data Sources
 @800200
 -Control
+@23
+i_rvm_control.ctrl_state[6:0]
 @28
 i_rvm_control.clk
 @22
-i_rvm_control.ctrl_state[7:0]
 i_rvm_control.i_immediate[31:0]
 i_rvm_control.i_instr[5:0]
 i_rvm_control.i_rd_addr[4:0]
 i_rvm_control.i_rs1_addr[4:0]
 i_rvm_control.i_rs2_addr[4:0]
-i_rvm_control.n_ctrl_state[7:0]
-@29
+@28
 i_rvm_control.resetn
 @22
 i_rvm_control.s_pc[31:0]
 @1000200
 -Control
+@800200
+-Decoder
+@28
+rvm_core_tb.i_dut.i_rvm_fdu.i_rvm_decoder.gen_add
+rvm_core_tb.i_dut.i_rvm_fdu.i_rvm_decoder.gen_addi
+rvm_core_tb.i_dut.i_rvm_fdu.i_rvm_decoder.gen_and
+rvm_core_tb.i_dut.i_rvm_fdu.i_rvm_decoder.gen_andi
+rvm_core_tb.i_dut.i_rvm_fdu.i_rvm_decoder.gen_auipc
+rvm_core_tb.i_dut.i_rvm_fdu.i_rvm_decoder.gen_beq
+rvm_core_tb.i_dut.i_rvm_fdu.i_rvm_decoder.gen_bge
+rvm_core_tb.i_dut.i_rvm_fdu.i_rvm_decoder.gen_bgeu
+rvm_core_tb.i_dut.i_rvm_fdu.i_rvm_decoder.gen_blt
+rvm_core_tb.i_dut.i_rvm_fdu.i_rvm_decoder.gen_bltu
+rvm_core_tb.i_dut.i_rvm_fdu.i_rvm_decoder.gen_bne
+rvm_core_tb.i_dut.i_rvm_fdu.i_rvm_decoder.gen_csrrc
+rvm_core_tb.i_dut.i_rvm_fdu.i_rvm_decoder.gen_csrrci
+rvm_core_tb.i_dut.i_rvm_fdu.i_rvm_decoder.gen_csrrs
+rvm_core_tb.i_dut.i_rvm_fdu.i_rvm_decoder.gen_csrrsi
+rvm_core_tb.i_dut.i_rvm_fdu.i_rvm_decoder.gen_csrrw
+rvm_core_tb.i_dut.i_rvm_fdu.i_rvm_decoder.gen_csrrwi
+rvm_core_tb.i_dut.i_rvm_fdu.i_rvm_decoder.gen_ecall
+rvm_core_tb.i_dut.i_rvm_fdu.i_rvm_decoder.gen_eret
+rvm_core_tb.i_dut.i_rvm_fdu.i_rvm_decoder.gen_fence
+rvm_core_tb.i_dut.i_rvm_fdu.i_rvm_decoder.gen_fence_i
+rvm_core_tb.i_dut.i_rvm_fdu.i_rvm_decoder.gen_jal
+rvm_core_tb.i_dut.i_rvm_fdu.i_rvm_decoder.gen_jalr
+rvm_core_tb.i_dut.i_rvm_fdu.i_rvm_decoder.gen_lb
+rvm_core_tb.i_dut.i_rvm_fdu.i_rvm_decoder.gen_lbu
+rvm_core_tb.i_dut.i_rvm_fdu.i_rvm_decoder.gen_lh
+rvm_core_tb.i_dut.i_rvm_fdu.i_rvm_decoder.gen_lhu
+rvm_core_tb.i_dut.i_rvm_fdu.i_rvm_decoder.gen_lui
+rvm_core_tb.i_dut.i_rvm_fdu.i_rvm_decoder.gen_lw
+rvm_core_tb.i_dut.i_rvm_fdu.i_rvm_decoder.gen_or
+rvm_core_tb.i_dut.i_rvm_fdu.i_rvm_decoder.gen_ori
+rvm_core_tb.i_dut.i_rvm_fdu.i_rvm_decoder.gen_sb
+rvm_core_tb.i_dut.i_rvm_fdu.i_rvm_decoder.gen_sh
+rvm_core_tb.i_dut.i_rvm_fdu.i_rvm_decoder.gen_sll
+rvm_core_tb.i_dut.i_rvm_fdu.i_rvm_decoder.gen_slli
+rvm_core_tb.i_dut.i_rvm_fdu.i_rvm_decoder.gen_slt
+rvm_core_tb.i_dut.i_rvm_fdu.i_rvm_decoder.gen_slti
+rvm_core_tb.i_dut.i_rvm_fdu.i_rvm_decoder.gen_sltiu
+rvm_core_tb.i_dut.i_rvm_fdu.i_rvm_decoder.gen_sltu
+rvm_core_tb.i_dut.i_rvm_fdu.i_rvm_decoder.gen_sra
+rvm_core_tb.i_dut.i_rvm_fdu.i_rvm_decoder.gen_srai
+rvm_core_tb.i_dut.i_rvm_fdu.i_rvm_decoder.gen_srl
+rvm_core_tb.i_dut.i_rvm_fdu.i_rvm_decoder.gen_srli
+rvm_core_tb.i_dut.i_rvm_fdu.i_rvm_decoder.gen_sub
+rvm_core_tb.i_dut.i_rvm_fdu.i_rvm_decoder.gen_sw
+rvm_core_tb.i_dut.i_rvm_fdu.i_rvm_decoder.gen_xor
+rvm_core_tb.i_dut.i_rvm_fdu.i_rvm_decoder.gen_xori
+@1000200
+-Decoder
 [pattern_trace] 1
 [pattern_trace] 0
