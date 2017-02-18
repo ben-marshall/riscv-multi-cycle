@@ -302,6 +302,7 @@ wire [31:0] csr_rdata =
     {32{csr_address == `RVM_SCU_ADDR_MTVEC    }} & reg_mtvec            |
     {32{csr_address == `RVM_SCU_ADDR_MSCRATCH }} & reg_mscratch         |
     {32{csr_address == `RVM_SCU_ADDR_MIDELEG  }} & reg_mideleg          |
+    {32{csr_address == `RVM_SCU_ADDR_MEDELEG  }} & reg_medeleg          |
     {32{csr_address == `RVM_SCU_ADDR_MCAUSE   }} & reg_mcause           |
     {32{csr_address == `RVM_SCU_ADDR_MBADADDR }} & reg_mbadaddr         |
     {32{csr_address == `RVM_SCU_ADDR_MIE      }} & reg_mie              |

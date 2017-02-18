@@ -131,6 +131,9 @@ wire [31:0] mem_wdata; // Instruction memory write data.
 wire [31:0] mem_rdata; // Instruction memory read data.
 wire [31:0] mem_addr ; // Instruction memory address.
 
+// Shifted memory address.
+wire [31:0] mod_addr = mem_addr & 32'h0FFF_FFFF;
+
 // The core instance.
 rvm_core i_dut(
 .clk        (clk        ), // The core level clock for sequential logic.
@@ -148,7 +151,7 @@ sram i_memory(
 .memfile(imem_file) ,
 .gclk   (clk      ) ,  // Global clock signal
 .resetn (resetn   ) ,  // Asynchronous active low reset.
-.addr   (mem_addr ) ,  // Address lines
+.addr   (mod_addr ) ,  // Address lines
 .rdata  (mem_rdata) ,  // Read data lines
 .wdata  (mem_wdata) ,  // Write data lines
 .b_en   (mem_ben  ) ,  // Chip Enable

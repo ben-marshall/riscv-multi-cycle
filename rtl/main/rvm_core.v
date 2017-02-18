@@ -33,7 +33,7 @@ wire        scu_goto_mtvec   ; // Next pc write should be to mtvec.
 wire [ 3:0] f_scu_op         ; // Operation the SCU should do on CSRs
 wire [31:0] f_scu_result     ; // WB result of any CSR operation.
 wire [31:0] s_epc            ; // Current EPC value.
-wire [31:0] s_mtvec          ; // Current MTVEC value.
+wire [31:2] s_mtvec          ; // Current MTVEC value.
 
 //-----------------------------------------------------------------------------
 // Interface signals for the functional units.

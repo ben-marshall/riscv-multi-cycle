@@ -8,7 +8,7 @@
 //
 //
 
-`define RVM_PC_POST_RESET 32'h0000_0000
+`define RVM_PC_POST_RESET 32'h8000_0000
 
 `define RVM_BITWISE_NOP   2'b00
 `define RVM_BITWISE_OR    2'b01
@@ -43,11 +43,11 @@
 `define RVM_SCU_MIMPID      32'h00000001
 `define RVM_SCU_MHARTID     32'h00000000
 
-`define RVM_SCU_ADDR_MISA      12'hF14 // Should be F10, toolchain gives this.
+`define RVM_SCU_ADDR_MISA      12'h301 // Should be F10, toolchain gives this.
 `define RVM_SCU_ADDR_MVENDORID 12'hF11 
 `define RVM_SCU_ADDR_MARCHID   12'hF12 
 `define RVM_SCU_ADDR_MIMPID    12'hF13 
-`define RVM_SCU_ADDR_MHARTID   12'hF10 
+`define RVM_SCU_ADDR_MHARTID   12'hF14 
 `define RVM_SCU_ADDR_MSCRATCH  12'h340 
 `define RVM_SCU_ADDR_MEPC      12'h341 
 `define RVM_SCU_ADDR_MEDELEG   12'h302 

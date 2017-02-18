@@ -4,7 +4,7 @@ interfaces:
   - {name: scu_instr_retired,           access: "w"}
   - {name: f_scu_op, range: [3,0],      access: "w"}
   - {name: f_scu_result, range: [31,0], access: "r"}
-  - {name: f_scu_mtvec, range: [31,0], access: "r"}
+  - {name: f_scu_mtvec, range: [31,2], access: "r"}
   - {name: f_scu_mepc , range: [31,0], access: "r"}
 
 - name: RegisterFile
@@ -91,7 +91,7 @@ states:
 - name: InstructionDecode
   wait: null
   next: [
-    {if: "i_instr == `RVM_INSTR_ADD"  , then: EX_Add},
+    {if: "i_instr == `RVM_INSTR_ADD"  , then: EX_ADD},
     {if: "i_instr == `RVM_INSTR_ADDI"  , then: EX_ADDI},
     {if: "i_instr == `RVM_INSTR_ANDI" , then: EX_ANDI},
     {if: "i_instr == `RVM_INSTR_AUIPC" , then: EX_AUIPC},
@@ -112,7 +112,7 @@ states:
   ]
 
 - name: EX_MRET
-  notes: "Return from machine mode trap - set pc to mtvec."
+  notes: "Return from machine mode trap - set pc to mepc."
   set:
   - ProgramCounter:
     - d_pc_w_en: 1
@@ -161,7 +161,7 @@ states:
       f_add_rhs: s_rs2_rdata
       f_add_op: "`RVM_ARITH_SUB"
   next: [
-    {if: "!f_add_result[32] && ~|f_add_result[31:0]", 
+    {if: "!f_add_result[32] || ~|f_add_result[31:0]", 
      then: EX_COND_BRANCH_TAKEN},
     {if: "f_add_result[32]", then: IncrementProgramCounter}
   ]
@@ -179,8 +179,8 @@ states:
       f_add_rhs: s_rs2_rdata
       f_add_op: "`RVM_ARITH_SUB"
   next: [
-    {if: "~|f_add_result[31:0]", then: EX_COND_BRANCH_TAKEN},
-    {if: "|f_add_result[31:0]", then: IncrementProgramCounter}
+    {if: "|f_add_result[31:0]", then: EX_COND_BRANCH_TAKEN},
+    {if: "~|f_add_result[31:0]", then: IncrementProgramCounter}
   ]
 
 - name: EX_BEQ
@@ -278,7 +278,7 @@ states:
     - d_rd_wdata: f_scu_result
   next: IncrementProgramCounter
 
-- name: EX_Add
+- name: EX_ADD
   set :
     - Adder:
       - f_add_lhs: s_rs1_rdata
