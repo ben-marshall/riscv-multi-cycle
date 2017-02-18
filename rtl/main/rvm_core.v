@@ -173,6 +173,7 @@ rvm_control i_rvm_control(
 .f_scu_op         (f_scu_op           ),
 .f_scu_result     (f_scu_result       ),
 .f_scu_mtvec  (s_mtvec      ),  // Trap handler vector input
+.f_scu_mepc   (s_epc        ),  // Exception program counter.
 .scu_instr_retired(scu_instr_retired  ),
 .f_add_lhs    (f_add_lhs   ), // Left hand side of the adder operand.
 .f_add_rhs    (f_add_rhs   ), // Right hand side of the adder operand.

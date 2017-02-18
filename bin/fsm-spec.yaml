@@ -5,6 +5,7 @@ interfaces:
   - {name: f_scu_op, range: [3,0],      access: "w"}
   - {name: f_scu_result, range: [31,0], access: "r"}
   - {name: f_scu_mtvec, range: [31,0], access: "r"}
+  - {name: f_scu_mepc , range: [31,0], access: "r"}
 
 - name: RegisterFile
   signals:
@@ -113,8 +114,9 @@ states:
   set:
   - ProgramCounter:
     - d_pc_w_en: 1
-      d_pc_wdata: f_scu_mtvec
+      d_pc_wdata: f_scu_mepc
   next: InstructionFetch
+
 
 - name: EX_AUIPC
   notes: "Add immediate to upper 20 bits of program coutner."
@@ -122,9 +124,9 @@ states:
   - RegisterFile:
     - d_rd_wen  : 1
       d_rd_addr : i_rd_addr
-      d_rd_wdata: f_bit_result
+      d_rd_wdata: f_add_result
   - Adder:
-    - f_add_lhs: "s_pc & {20'hFFFFF,12'h000}"
+    - f_add_lhs: s_pc
       f_add_rhs: i_immediate
       f_add_op: "`RVM_ARITH_ADD"
   next: IncrementProgramCounter
@@ -243,6 +245,8 @@ states:
   - ControlRegisters:
     - f_scu_op: "`RVM_SCU_CSRRW"
   - RegisterFile:
+    - s_rs1_addr: i_rs1_addr
+    - s_rs1_en: 1
     - d_rd_wen:  1
     - d_rd_addr: i_rd_addr
     - d_rd_wdata: f_scu_result
@@ -253,6 +257,8 @@ states:
   - ControlRegisters:
     - f_scu_op: "`RVM_SCU_CSRRC"
   - RegisterFile:
+    - s_rs1_addr: i_rs1_addr
+    - s_rs1_en: 1
     - d_rd_wen:  1
     - d_rd_addr: i_rd_addr
     - d_rd_wdata: f_scu_result
@@ -263,6 +269,8 @@ states:
   - ControlRegisters:
     - f_scu_op: "`RVM_SCU_CSRRS"
   - RegisterFile:
+    - s_rs1_addr: i_rs1_addr
+    - s_rs1_en: 1
     - d_rd_wen:  1
     - d_rd_addr: i_rd_addr
     - d_rd_wdata: f_scu_result
