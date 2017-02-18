@@ -55,10 +55,9 @@ reg [{{state_var_w}}:0] n_{{state_var}};
 assign {{signal_name}} =  
     {%- if signal.values|length == 0 -%} 0; {%-endif-%}
     {% for assignment in signal.values|sort(attribute="value") -%}
-        { {{signal|length}} { {{state_var-}} 
+        ({ {{signal|length}} { {{state_var-}} 
             == 
-        {{-assignment.state.verilog_name()-}} } } &  
-        {{-assignment.value}}
+        {{-assignment.state.verilog_name()-}} } } & {{assignment.value}})
         {%- if(loop.last) -%}
             ;
         {%- else -%}

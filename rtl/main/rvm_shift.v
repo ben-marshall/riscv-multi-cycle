@@ -24,7 +24,7 @@ input  wire [ 4:0] rhs,      // Value on right-hand side of shift operator
 input  wire [1:0]  op,       // What to do?
 
 output wire        valid,    // Asserts that the result is complete.
-output wire [32:0] result    // The result
+output wire [31:0] result    // The result
 
 );
 
@@ -37,7 +37,7 @@ assign valid = op != `RVM_SHIFT_NOP;
 
 assign result = ({32{op == `RVM_SHIFT_SLL}} & (i_lhs <<  i_rhs)) |
                 ({32{op == `RVM_SHIFT_SRL}} & (i_lhs >>  i_rhs)) |
-                ({32{op == `RVM_SHIFT_ASR}} & (i_lhs >>> i_rhs)) ;
+                ({32{op == `RVM_SHIFT_ASR}} & ($signed(i_lhs) >>> i_rhs)) ;
 
 
 endmodule

@@ -131,14 +131,14 @@ states:
   - RegisterFile:
     - s_rs1_addr: i_rs1_addr
       s_rs1_en  : 1
-    - s_rs2_addr: i_rs2_addr
+      s_rs2_addr: i_rs2_addr
       s_rs2_en  : 1
       d_rd_wen  : 1
       d_rd_addr : i_rd_addr
       d_rd_wdata: f_shf_result
   - Shifter:
     - f_shf_lhs: s_rs1_rdata
-      f_shf_rhs: s_rs2_rdata
+      f_shf_rhs: "s_rs2_rdata[4:0]"
       f_shf_op: "`RVM_SHIFT_SRL"
   next: IncrementProgramCounter
 
@@ -154,7 +154,7 @@ states:
       d_rd_wdata: f_shf_result
   - Shifter:
     - f_shf_lhs: s_rs1_rdata
-      f_shf_rhs: i_immediate
+      f_shf_rhs: "i_immediate[4:0]"
       f_shf_op: "`RVM_SHIFT_SRL"
   next: IncrementProgramCounter
 
@@ -165,7 +165,7 @@ states:
   - RegisterFile:
     - s_rs1_addr: i_rs1_addr
       s_rs1_en  : 1
-    - s_rs2_addr: i_rs2_addr
+      s_rs2_addr: i_rs2_addr
       s_rs2_en  : 1
       d_rd_wen  : 1
       d_rd_addr : i_rd_addr
@@ -173,7 +173,7 @@ states:
   - Shifter:
     - f_shf_lhs: s_rs1_rdata
       f_shf_rhs: s_rs2_rdata
-      f_shf_op: "`RVM_SHIFT_SRA"
+      f_shf_op: "`RVM_SHIFT_ASR"
   next: IncrementProgramCounter
 
 
@@ -189,7 +189,7 @@ states:
   - Shifter:
     - f_shf_lhs: s_rs1_rdata
       f_shf_rhs: i_immediate
-      f_shf_op: "`RVM_SHIFT_SRA"
+      f_shf_op: "`RVM_SHIFT_ASR"
   next: IncrementProgramCounter
 
 
@@ -199,7 +199,7 @@ states:
   - RegisterFile:
     - s_rs1_addr: i_rs1_addr
       s_rs1_en  : 1
-    - s_rs2_addr: i_rs2_addr
+      s_rs2_addr: i_rs2_addr
       s_rs2_en  : 1
       d_rd_wen  : 1
       d_rd_addr : i_rd_addr
@@ -232,7 +232,7 @@ states:
   - RegisterFile:
     - s_rs1_addr: i_rs1_addr
       s_rs1_en  : 1
-    - s_rs2_addr: i_rs2_addr
+      s_rs2_addr: i_rs2_addr
       s_rs2_en  : 1
       d_rd_wen  : 1
       d_rd_addr : i_rd_addr
@@ -265,7 +265,7 @@ states:
   - RegisterFile:
     - s_rs1_addr: i_rs1_addr
       s_rs1_en  : 1
-    - s_rs2_addr: i_rs2_addr
+      s_rs2_addr: i_rs2_addr
       s_rs2_en  : 1
       d_rd_wen  : 1
       d_rd_addr : i_rd_addr
