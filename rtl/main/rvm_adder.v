@@ -38,8 +38,8 @@ assign valid = op != `RVM_ARITH_NOP;
 
 //
 // Compute the result
-assign result = ({32{op == `RVM_ARITH_ADD}} & i_lhs + i_rhs) |
-                ({32{op == `RVM_ARITH_SUB}} & i_lhs - i_rhs) ;
+assign result = ({33{op == `RVM_ARITH_ADD}} & i_lhs + i_rhs) |
+                ({33{op == `RVM_ARITH_SUB}} & i_lhs - i_rhs) ;
 
 
 endmodule

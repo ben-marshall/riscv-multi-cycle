@@ -1,15 +1,15 @@
 [*]
 [*] GTKWave Analyzer v3.3.66 (w)1999-2015 BSI
-[*] Sat Feb 18 13:55:00 2017
+[*] Sat Feb 18 17:34:37 2017
 [*]
-[dumpfile] "/home/ben/projects/riscv/multi-cycle/work/waves.vcd"
-[dumpfile_mtime] "Sat Feb 18 13:46:06 2017"
-[dumpfile_size] 1820169
+[dumpfile] "/home/ben/projects/riscv/multi-cycle/work/rv32ui-p-bge.vcd"
+[dumpfile_mtime] "Sat Feb 18 17:29:32 2017"
+[dumpfile_size] 147179
 [savefile] "/home/ben/projects/riscv/multi-cycle/sim/waves.gtkw"
-[timestart] 336
-[size] 1920 1056
+[timestart] 2176
+[size] 1920 1059
 [pos] -1 -1
-*-6.609167 608 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-5.574508 2322 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] rvm_core_tb.
 [treeopen] rvm_core_tb.i_dut.
 [treeopen] rvm_core_tb.i_dut.i_rvm_fdu.
@@ -23,6 +23,8 @@ rvm_core_tb.i_dut.clk
 rvm_core_tb.i_dut.resetn
 rvm_core_tb.i_dut.ctrl_fdu_mem_valid
 rvm_core_tb.i_dut.ctrl_illegal_instr
+@23
+rvm_core_tb.i_dut.s_pc[31:0]
 @800200
 -GPRs
 @22
@@ -75,7 +77,6 @@ rvm_core_tb.i_dut.d_rd_wen
 -Adder
 @22
 rvm_core_tb.i_dut.f_add_lhs[31:0]
-@23
 rvm_core_tb.i_dut.f_add_rhs[31:0]
 @28
 rvm_core_tb.i_dut.f_add_op[1:0]
