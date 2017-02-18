@@ -4,6 +4,7 @@ interfaces:
   - {name: scu_instr_retired,           access: "w"}
   - {name: f_scu_op, range: [3,0],      access: "w"}
   - {name: f_scu_result, range: [31,0], access: "r"}
+  - {name: f_scu_mtvec, range: [31,0], access: "r"}
 
 - name: RegisterFile
   signals:
@@ -103,8 +104,17 @@ states:
     {if: "i_instr == `RVM_INSTR_CSRRW", then: EX_CSRRW},
     {if: "i_instr == `RVM_INSTR_CSRRWI", then: EX_CSRRWI},
     {if: "i_instr == `RVM_INSTR_JAL"  , then: EX_Jal_0},
+    {if: "i_instr == `RVM_INSTR_MRET" , then: EX_MRET},
     {if: "i_instr == `RVM_INSTR_SUB"  , then: EX_Sub},
   ]
+
+- name: EX_MRET
+  notes: "Return from machine mode trap - set pc to mtvec."
+  set:
+  - ProgramCounter:
+    - d_pc_w_en: 1
+      d_pc_wdata: f_scu_mtvec
+  next: InstructionFetch
 
 - name: EX_AUIPC
   notes: "Add immediate to upper 20 bits of program coutner."

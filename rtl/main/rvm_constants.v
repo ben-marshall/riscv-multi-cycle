@@ -138,3 +138,4 @@
 `define RVM_INSTR_JALR    6'd44 
 `define RVM_INSTR_SW      6'd45 
 `define RVM_INSTR_ERET    6'd46 
+`define RVM_INSTR_MRET    6'd47

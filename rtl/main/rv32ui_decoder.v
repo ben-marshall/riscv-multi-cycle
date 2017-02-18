@@ -183,6 +183,7 @@ wire gen_sw =    (enc[14:12] == 3'd2)
 wire gen_eret =  (enc[7:0] == 8'h73)
               && (enc[31:20] == 12'h100)
               && (enc[14:12] == 3'b0);
+wire gen_mret =  (enc[31:0] == 32'b00110000001000000000000001110011);
 // END AUTO-GENERATED CODE
 
 // Detect what sort of instruction encoding format we have.
@@ -192,7 +193,7 @@ wire itype_i    = gen_andi | gen_addi | gen_sltiu | gen_slti | gen_ori |
                   gen_xori | gen_slli | gen_srli  | gen_srai | gen_lw  |
                   gen_lh   | gen_lhu  | gen_lb    | gen_lbu  | gen_csrrw |
                   gen_csrrs| gen_csrrc| gen_csrrwi| gen_csrrsi | gen_csrrci |
-                  gen_jalr | gen_fence_i;
+                  gen_jalr | gen_mret | gen_fence_i;
 wire itype_s    = gen_sw   | gen_sh   | gen_sb    ;
 wire itype_sb   = gen_beq  | gen_bne  | gen_bltu  | gen_blt  | gen_bge |
                   gen_bgeu | gen_eret ;
@@ -266,6 +267,7 @@ assign instr =  {6{gen_bltu   }} &  `RVM_INSTR_BLTU      |
                 {6{gen_jal    }} &  `RVM_INSTR_JAL       |
                 {6{gen_jalr   }} &  `RVM_INSTR_JALR      |
                 {6{gen_sw     }} &  `RVM_INSTR_SW        |
-                {6{gen_eret   }} &  `RVM_INSTR_ERET      ;
+                {6{gen_eret   }} &  `RVM_INSTR_ERET      |
+                {6{gen_mret   }} &  `RVM_INSTR_MRET      ;
 
 endmodule
