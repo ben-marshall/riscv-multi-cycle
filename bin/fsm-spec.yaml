@@ -92,6 +92,7 @@ states:
     {if: "i_instr == `RVM_INSTR_ADD"  , then: EX_Add},
     {if: "i_instr == `RVM_INSTR_ADDI"  , then: EX_ADDI},
     {if: "i_instr == `RVM_INSTR_ANDI" , then: EX_ANDI},
+    {if: "i_instr == `RVM_INSTR_AUIPC" , then: EX_AUIPC},
     {if: "i_instr == `RVM_INSTR_BNE"  , then: EX_BNE},
     {if: "i_instr == `RVM_INSTR_BGE"  , then: EX_BGE},
     {if: "i_instr == `RVM_INSTR_CSRRC", then: EX_CSRRC},
@@ -103,6 +104,19 @@ states:
     {if: "i_instr == `RVM_INSTR_JAL"  , then: EX_Jal_0},
     {if: "i_instr == `RVM_INSTR_SUB"  , then: EX_Sub},
   ]
+
+- name: EX_AUIPC
+  notes: "Add immediate to upper 20 bits of program coutner."
+  set:
+  - RegisterFile:
+    - d_rd_wen  : 1
+      d_rd_addr : i_rd_addr
+      d_rd_wdata: f_bit_result
+  - Adder:
+    - f_add_lhs: "s_pc & {20'hFFFFF,12'h000}"
+      f_add_rhs: i_immediate
+      f_add_op: "`RVM_ARITH_ADD"
+  next: IncrementProgramCounter
 
 - name: EX_ANDI
   notes: "Bitwise AND with immediate"
