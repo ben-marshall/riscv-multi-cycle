@@ -526,6 +526,8 @@ states:
     - RegisterFile:
       - s_rs1_addr: i_rs1_addr
         s_rs2_addr: i_rs2_addr
+        s_rs1_en:   1
+        s_rs2_en:   1
         d_rd_wen:   1
         d_rd_addr:  i_rd_addr
         d_rd_wdata: f_add_result
