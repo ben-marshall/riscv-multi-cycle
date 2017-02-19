@@ -130,7 +130,96 @@ states:
     {if: "i_instr == `RVM_INSTR_SRA"  , then: EX_SRA},
     {if: "i_instr == `RVM_INSTR_SRAI"  , then: EX_SRAI},
     {if: "i_instr == `RVM_INSTR_LW"    , then: EX_LW  },
+    {if: "i_instr == `RVM_INSTR_LHU"    , then: EX_LHU },
+    {if: "i_instr == `RVM_INSTR_LH"     , then: EX_LH  },
     {if: "i_instr == `RVM_INSTR_SW"    , then: EX_SW  },
+    {if: "i_instr == `RVM_INSTR_SH"    , then: EX_SH  },
+    {if: "i_instr == `RVM_INSTR_SB"    , then: EX_SB  },
+  ]
+- name: EX_LH
+  notes: "Load signed half word from memory"
+  set:
+  - RegisterFile:
+    - s_rs1_addr: i_rs1_addr
+      s_rs1_en  : 1
+  - ExternalMemory:
+    - mem_addr: f_add_result
+      mem_c_en: 1
+      mem_b_en: 4'b1111
+  - Adder:
+    - f_add_lhs: s_rs1_rdata
+      f_add_rhs: i_immediate
+      f_add_op: "`RVM_ARITH_ADD"
+  next: [
+    {if: "f_add_result[1]",  then: EX_MEM_LH_UPPER_STALL},
+    {if: "!f_add_result[1]", then: EX_MEM_LH_LOWER_STALL}
+  ]
+
+- name: EX_MEM_LH_UPPER_STALL
+  notes: "Wait for any memory stalls or errors."
+  set:
+  - RegisterFile:
+    - d_rd_wen  : 1
+      d_rd_addr : i_rd_addr
+      d_rd_wdata: "{{16{mem_rdata[31]}},mem_rdata[31:16]}"
+  next: [
+    {if: "!mem_stall", then: IncrementProgramCounter},
+    {if: "mem_stall", then: EX_MEM_LH_UPPER_STALL}
+  ]
+
+- name: EX_MEM_LH_LOWER_STALL
+  notes: "Wait for any memory stalls or errors."
+  set:
+  - RegisterFile:
+    - d_rd_wen  : 1
+      d_rd_addr : i_rd_addr
+      d_rd_wdata: "{{16{mem_rdata[15]}},mem_rdata[15:0]}"
+  next: [
+    {if: "!mem_stall", then: IncrementProgramCounter},
+    {if: "mem_stall", then: EX_MEM_LH_LOWER_STALL}
+  ]
+
+- name: EX_LHU
+  notes: "Load unsigned half word from memory"
+  set:
+  - RegisterFile:
+    - s_rs1_addr: i_rs1_addr
+      s_rs1_en  : 1
+  - ExternalMemory:
+    - mem_addr: f_add_result
+      mem_c_en: 1
+      mem_b_en: 4'b1111
+  - Adder:
+    - f_add_lhs: s_rs1_rdata
+      f_add_rhs: i_immediate
+      f_add_op: "`RVM_ARITH_ADD"
+  next: [
+    {if: "f_add_result[1]",  then: EX_MEM_LHU_UPPER_STALL},
+    {if: "!f_add_result[1]", then: EX_MEM_LHU_LOWER_STALL}
+  ]
+
+- name: EX_MEM_LHU_UPPER_STALL
+  notes: "Wait for any memory stalls or errors."
+  set:
+  - RegisterFile:
+    - d_rd_wen  : 1
+      d_rd_addr : i_rd_addr
+      d_rd_wdata: "{16'b0,mem_rdata[31:16]}"
+  next: [
+    {if: "!mem_stall", then: IncrementProgramCounter},
+    {if: "mem_stall", then: EX_MEM_LHU_UPPER_STALL}
+  ]
+
+- name: EX_MEM_LHU_LOWER_STALL
+  notes: "Wait for any memory stalls or errors."
+  set:
+  - RegisterFile:
+    - d_rd_wen  : 1
+      d_rd_addr : i_rd_addr
+      d_rd_wdata: "{16'b0,mem_rdata[15:0]}"
+  next: [
+    {if: "!mem_stall", then: IncrementProgramCounter},
+    {if: "mem_stall", then: EX_MEM_LHU_LOWER_STALL}
   ]
 
 - name: EX_LW
@@ -162,6 +251,49 @@ states:
       mem_c_en: 1
       mem_w_en: 1
       mem_b_en: 4'b1111
+      mem_wdata: s_rs2_rdata
+  - Adder:
+    - f_add_lhs: s_rs1_rdata
+      f_add_rhs: i_immediate
+      f_add_op: "`RVM_ARITH_ADD"
+  next: IncrementProgramCounter
+
+- name: EX_SH
+  notes: "Store halfword to memory"
+  set:
+  - RegisterFile:
+    - s_rs1_addr: i_rs1_addr
+      s_rs1_en  : 1
+      s_rs2_addr: i_rs2_addr
+      s_rs2_en  : 1
+  - ExternalMemory:
+    - mem_addr: f_add_result
+      mem_c_en: 1
+      mem_w_en: 1
+      mem_b_en: "{f_add_result[1],|f_add_result[1:0],!f_add_result[1],~|f_add_result[1:0]}"
+      mem_wdata: s_rs2_rdata
+  - Adder:
+    - f_add_lhs: s_rs1_rdata
+      f_add_rhs: i_immediate
+      f_add_op: "`RVM_ARITH_ADD"
+  next: IncrementProgramCounter
+
+- name: EX_SB
+  notes: "Store byte to memory"
+  set:
+  - RegisterFile:
+    - s_rs1_addr: i_rs1_addr
+      s_rs1_en  : 1
+      s_rs2_addr: i_rs2_addr
+      s_rs2_en  : 1
+  - ExternalMemory:
+    - mem_addr: f_add_result
+      mem_c_en: 1
+      mem_w_en: 1
+      mem_b_en: "{f_add_result[1:0] == 2'b11,
+                  f_add_result[1:0] == 2'b10,
+                  f_add_result[1:0] == 2'b01,
+                  f_add_result[1:0] == 2'b00}"
       mem_wdata: s_rs2_rdata
   - Adder:
     - f_add_lhs: s_rs1_rdata
