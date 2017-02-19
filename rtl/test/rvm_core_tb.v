@@ -142,12 +142,13 @@ rvm_core i_dut(
 .mem_rdata  (mem_rdata  ), // Memory read data
 .mem_wdata  (mem_wdata  ), // Memory write data
 .mem_c_en   (mem_c_en   ), // Memory chip enable
+.mem_w_en   (mem_wen    ), // Memory write enable
 .mem_b_en   (mem_ben    ), // Memory byte enable
-.mem_error  (mem_error  ), // Memory error indicator
+.mem_error  (mem_err    ), // Memory error indicator
 .mem_stall  (mem_stall  )  // Memory stall indicator
 );
 
-sram i_memory(
+sram #(.size(16384)) i_memory(
 .memfile(imem_file) ,
 .gclk   (clk      ) ,  // Global clock signal
 .resetn (resetn   ) ,  // Asynchronous active low reset.

@@ -25,6 +25,7 @@ interfaces:
   - {name: mem_rdata,   range: [31, 0], access: "r"} 
   - {name: mem_wdata,   range: [31, 0], access: "w" } 
   - {name: mem_c_en,                    access: "w"} 
+  - {name: mem_w_en,                    access: "w"} 
   - {name: mem_b_en,    range: [3 , 0], access: "w"} 
   - {name: mem_error,                   access: "r" } 
   - {name: mem_stall,                   access: "r" } 
@@ -128,6 +129,56 @@ states:
     {if: "i_instr == `RVM_INSTR_SRLI"  , then: EX_SRLI},
     {if: "i_instr == `RVM_INSTR_SRA"  , then: EX_SRA},
     {if: "i_instr == `RVM_INSTR_SRAI"  , then: EX_SRAI},
+    {if: "i_instr == `RVM_INSTR_LW"    , then: EX_LW  },
+    {if: "i_instr == `RVM_INSTR_SW"    , then: EX_SW  },
+  ]
+
+- name: EX_LW
+  notes: "Load word from memory"
+  set:
+  - RegisterFile:
+    - s_rs1_addr: i_rs1_addr
+      s_rs1_en  : 1
+  - ExternalMemory:
+    - mem_addr: f_add_result
+      mem_c_en: 1
+      mem_b_en: 4'b1111
+  - Adder:
+    - f_add_lhs: s_rs1_rdata
+      f_add_rhs: i_immediate
+      f_add_op: "`RVM_ARITH_ADD"
+  next: EX_MEM_LD_STALL
+
+- name: EX_SW
+  notes: "Store word to memory"
+  set:
+  - RegisterFile:
+    - s_rs1_addr: i_rs1_addr
+      s_rs1_en  : 1
+      s_rs2_addr: i_rs2_addr
+      s_rs2_en  : 1
+  - ExternalMemory:
+    - mem_addr: f_add_result
+      mem_c_en: 1
+      mem_w_en: 1
+      mem_b_en: 4'b1111
+      mem_wdata: s_rs2_rdata
+  - Adder:
+    - f_add_lhs: s_rs1_rdata
+      f_add_rhs: i_immediate
+      f_add_op: "`RVM_ARITH_ADD"
+  next: IncrementProgramCounter
+
+- name: EX_MEM_LD_STALL
+  notes: "Wait for any memory stalls or errors."
+  set:
+  - RegisterFile:
+    - d_rd_wen  : 1
+      d_rd_addr : i_rd_addr
+      d_rd_wdata: mem_rdata
+  next: [
+    {if: "!mem_stall", then: IncrementProgramCounter},
+    {if: "mem_stall", then: EX_MEM_LD_STALL}
   ]
 
 - name: EX_SLT

@@ -18,6 +18,7 @@ output wire [31:0]  mem_addr,           // Memory address lines
 input  wire [31:0]  mem_rdata,          // Memory read data
 output wire [31:0]  mem_wdata,          // Memory write data
 output wire         mem_c_en,           // Memory chip enable
+output wire         mem_w_en,           // Memory write enable
 output wire [ 3:0]  mem_b_en,           // Memory byte enable
 input  wire         mem_error,          // Memory error indicator
 input  wire         mem_stall           // Memory stall indicator
@@ -213,6 +214,7 @@ rvm_control i_rvm_control(
 .mem_rdata    (mem_rdata   ), // Memory read data
 .mem_wdata    (mem_wdata   ), // Memory write data
 .mem_c_en     (mem_c_en    ), // Memory chip enable
+.mem_w_en     (mem_w_en    ), // Memory write enable
 .mem_b_en     (mem_b_en    ), // Memory byte enable
 .mem_error    (mem_error   ), // Memory error indicator
 .mem_stall    (mem_stall   )  // Memory stall indicator

@@ -34,7 +34,7 @@ source_riscv_tests()
     FILE_LIST=`ls $ELF`
     for ELF_FILE in $FILE_LIST
     do
-        $OBJDMP -d $ELF/$ELF_FILE > $DIS/$ELF_FILE.dis
+        $OBJDMP -D $ELF/$ELF_FILE > $DIS/$ELF_FILE.dis
         $OBJCPY --change-addresses=0x80000000 $ELF/$ELF_FILE
         #echo $ELF2HEX 4 8192 $ELF/$ELF_FILE \> $HEX/$ELF_FILE.hex
         $ELF2HEX 4 8192 $ELF/$ELF_FILE > $HEX/$ELF_FILE.hex
