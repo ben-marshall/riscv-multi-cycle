@@ -25,22 +25,29 @@ input  wire [31:0] rhs,      // Value on right-hand side of + operator
 input  wire [2:0]  op,       // What to do?
 
 output wire        valid,    // Asserts that the result is complete.
-output wire [32:0] result,   // The result of the addition / subtraction
-output wire        eq,
-output wire        gt
+output wire [32:0] result    // The result of the addition / subtraction
 );
 
 //
 // Isolate inputs to the adder when the module is not enabled.
-wire [32:0] i_lhs = lhs & {32{op != `RVM_BITWISE_NOP}};
-wire [31:0] i_rhs = rhs & {32{op != `RVM_BITWISE_NOP}};
+wire [32:0] i_lhs = lhs & {32{op != `RVM_ARITH_NOP}};
+wire [31:0] i_rhs = rhs & {32{op != `RVM_ARITH_NOP}};
 
 assign valid = op != `RVM_ARITH_NOP;
+
+wire result_ge = op == `RVM_ARITH_GE  && $signed(lhs) >= $signed(rhs);
+wire result_geu= op == `RVM_ARITH_GEU && $unsigned(lhs >= rhs);
+wire result_lt = op == `RVM_ARITH_LT  && $signed(lhs) <  $signed(rhs);
+wire result_ltu= op == `RVM_ARITH_LTU && $unsigned(lhs <  rhs);
 
 //
 // Compute the result
 assign result = ({33{op == `RVM_ARITH_ADD}} & (i_lhs + i_rhs)) |
-                ({33{op == `RVM_ARITH_SUB}} & (i_lhs - i_rhs)) ;
+                ({33{op == `RVM_ARITH_SUB}} & (i_lhs - i_rhs)) |
+                ({33{op == `RVM_ARITH_GE }} & (result_ge    )) |
+                ({33{op == `RVM_ARITH_GEU}} & (result_geu   )) |
+                ({33{op == `RVM_ARITH_LT }} & (result_lt    )) |
+                ({33{op == `RVM_ARITH_LTU}} & (result_ltu   )) ;
 
 
 endmodule

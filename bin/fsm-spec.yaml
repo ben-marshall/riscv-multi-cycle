@@ -52,8 +52,6 @@ interfaces:
   - { range: [ 2,0], name: f_add_op    , access: "w"}
   - {                name: f_add_valid , access: "r" }
   - { range: [32,0], name: f_add_result, access: "r" }
-  - {                name: f_add_gt    , access: "r" }
-  - {                name: f_add_eq    , access: "r" }
 
 - name: Shifter
   signals:
@@ -102,6 +100,7 @@ states:
     {if: "i_instr == `RVM_INSTR_BGE"  , then: EX_BGE},
     {if: "i_instr == `RVM_INSTR_BGEU"  , then: EX_BGEU},
     {if: "i_instr == `RVM_INSTR_BLT"  , then: EX_BLT},
+    {if: "i_instr == `RVM_INSTR_BLTU" , then: EX_BLTU},
     {if: "i_instr == `RVM_INSTR_BNE"  , then: EX_BNE},
     {if: "i_instr == `RVM_INSTR_CSRRC", then: EX_CSRRC},
     {if: "i_instr == `RVM_INSTR_CSRRCI", then: EX_CSRRCI},
@@ -121,6 +120,8 @@ states:
     {if: "i_instr == `RVM_INSTR_XOR"  , then: EX_XOR},
     {if: "i_instr == `RVM_INSTR_XORI"  , then: EX_XORI},
     {if: "i_instr == `RVM_INSTR_SUB"  , then: EX_Sub},
+    {if: "i_instr == `RVM_INSTR_SLT"  , then: EX_SLT},
+    {if: "i_instr == `RVM_INSTR_SLTI" , then: EX_SLTI},
     {if: "i_instr == `RVM_INSTR_SLL"  , then: EX_SLL},
     {if: "i_instr == `RVM_INSTR_SLLI"  , then: EX_SLLI},
     {if: "i_instr == `RVM_INSTR_SRL"  , then: EX_SRL},
@@ -129,8 +130,8 @@ states:
     {if: "i_instr == `RVM_INSTR_SRAI"  , then: EX_SRAI},
   ]
 
-- name: EX_SRL
-  notes: "Shift right with register values"
+- name: EX_SLT
+  notes: "Set on less than"
   set:
   - RegisterFile:
     - s_rs1_addr: i_rs1_addr
@@ -139,11 +140,26 @@ states:
       s_rs2_en  : 1
       d_rd_wen  : 1
       d_rd_addr : i_rd_addr
-      d_rd_wdata: f_shf_result
-  - Shifter:
-    - f_shf_lhs: s_rs1_rdata
-      f_shf_rhs: "s_rs2_rdata[4:0]"
-      f_shf_op: "`RVM_SHIFT_SRL"
+      d_rd_wdata: f_add_result
+  - Adder:
+    - f_add_lhs: s_rs1_rdata
+      f_add_rhs: s_rs2_rdata
+      f_add_op: "`RVM_ARITH_LT"
+  next: IncrementProgramCounter
+
+- name: EX_SLTI
+  notes: "Set on less than immediate"
+  set:
+  - RegisterFile:
+    - s_rs1_addr: i_rs1_addr
+      s_rs1_en  : 1
+      d_rd_wen  : 1
+      d_rd_addr : i_rd_addr
+      d_rd_wdata: f_add_result
+  - Adder:
+    - f_add_lhs: s_rs1_rdata
+      f_add_rhs: i_immediate
+      f_add_op: "`RVM_ARITH_LT"
   next: IncrementProgramCounter
 
 
@@ -162,6 +178,23 @@ states:
       f_shf_op: "`RVM_SHIFT_SRL"
   next: IncrementProgramCounter
 
+
+- name: EX_SRL
+  notes: "Logical Shift right with register values"
+  set:
+  - RegisterFile:
+    - s_rs1_addr: i_rs1_addr
+      s_rs1_en  : 1
+      s_rs2_addr: i_rs2_addr
+      s_rs2_en  : 1
+      d_rd_wen  : 1
+      d_rd_addr : i_rd_addr
+      d_rd_wdata: f_shf_result
+  - Shifter:
+    - f_shf_lhs: s_rs1_rdata
+      f_shf_rhs: s_rs2_rdata[4:0]
+      f_shf_op: "`RVM_SHIFT_SRL"
+  next: IncrementProgramCounter
 
 - name: EX_SRA
   notes: "Arithmetic Shift right with register values"
@@ -372,11 +405,11 @@ states:
   - Adder:
     - f_add_lhs: s_rs1_rdata
       f_add_rhs: s_rs2_rdata
-      f_add_op: "`RVM_ARITH_SUB"
+      f_add_op: "`RVM_ARITH_GE"
   next: [
-    {if: "!f_add_result[32] || (f_add_result[32] && !f_add_result[31] && |f_add_result[30:0])", 
+    {if: "f_add_result[0]", 
      then: EX_COND_BRANCH_TAKEN},
-    {if: "f_add_result[32] && !f_add_result[32] || f_add_result[31]", 
+    {if: "!f_add_result[0]", 
      then: IncrementProgramCounter}
   ]
 
@@ -391,11 +424,30 @@ states:
   - Adder:
     - f_add_lhs: s_rs1_rdata
       f_add_rhs: s_rs2_rdata
-      f_add_op: "`RVM_ARITH_SUB"
+      f_add_op: "`RVM_ARITH_LT"
   next: [
-    {if: "s_rs1_rdata < s_rs2_rdata", 
+    {if: "f_add_result[0]", 
      then: EX_COND_BRANCH_TAKEN},
-    {if: "s_rs1_rdata >= s_rs2_rdata", 
+    {if: "!f_add_result[0]", 
+     then: IncrementProgramCounter}
+  ]
+
+- name: EX_BLTU
+  notes: "Branch on less than unsigned"
+  set:
+  - RegisterFile:
+    - s_rs1_addr: i_rs1_addr
+      s_rs2_addr: i_rs2_addr
+      s_rs1_en  : 1
+      s_rs2_en  : 1
+  - Adder:
+    - f_add_lhs: s_rs1_rdata
+      f_add_rhs: s_rs2_rdata
+      f_add_op: "`RVM_ARITH_LTU"
+  next: [
+    {if: "f_add_result[0]", 
+     then: EX_COND_BRANCH_TAKEN},
+    {if: "!f_add_result[0]", 
      then: IncrementProgramCounter}
   ]
 
@@ -410,11 +462,12 @@ states:
   - Adder:
     - f_add_lhs: s_rs1_rdata
       f_add_rhs: s_rs2_rdata
-      f_add_op: "`RVM_ARITH_SUB"
+      f_add_op: "`RVM_ARITH_GEU"
   next: [
-    {if: "!f_add_result[32] || |f_add_result[31:0]", 
+    {if: "f_add_result[0]", 
      then: EX_COND_BRANCH_TAKEN},
-    {if: "f_add_result[32]", then: IncrementProgramCounter}
+    {if: "!f_add_result[0]", 
+     then: IncrementProgramCounter}
   ]
 
 - name: EX_BNE
@@ -590,15 +643,15 @@ states:
   next: EX_JALR_1
 
 - name: EX_JALR_1
-  notes: "Second state of executing JALR. Add reg val to the PC and then
-          fetch the next instruction."
+  notes: "Second state of executing JALR. Add reg val to the immediate and 
+          then fetch the next instruction."
   set :
     - RegisterFile:
       - s_rs1_en: 1
         s_rs1_addr: i_rs1_addr
     - Adder:
-      - f_add_lhs: s_pc
-        f_add_rhs: s_rs1_rdata
+      - f_add_lhs: s_rs1_rdata
+        f_add_rhs: i_immediate
         f_add_op : "`RVM_ARITH_ADD"
     - ProgramCounter:
       - d_pc_w_en: 1

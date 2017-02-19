@@ -11,9 +11,8 @@ $RVM_HOME/verif/riscv-tests/hex/rv32ui-p-blt.hex,$RVM_HOME/verif/riscv-tests/dis
 $RVM_HOME/verif/riscv-tests/hex/rv32ui-p-bltu.hex,$RVM_HOME/verif/riscv-tests/dis/rv32ui-p-bltu.dis,0x00000554,0x00000540,0x00000560  
 $RVM_HOME/verif/riscv-tests/hex/rv32ui-p-bne.hex,$RVM_HOME/verif/riscv-tests/dis/rv32ui-p-bne.dis,0x00000524,0x00000510,0x00000530 
 $RVM_HOME/verif/riscv-tests/hex/rv32ui-p-fence_i.hex,$RVM_HOME/verif/riscv-tests/dis/rv32ui-p-fence_i.dis,0x000002f0,0x000002dc,0x000002fc  
-$RVM_HOME/verif/riscv-tests/hex/rv32ui-p-jal.hex,$RVM_HOME/verif/riscv-tests/dis/rv32ui-p-j.dis,0x000002b8,0x000002a4,0x000002c4     
-$RVM_HOME/verif/riscv-tests/hex/rv32ui-p-jalr.hex,$RVM_HOME/verif/riscv-tests/dis/rv32ui-p-jal.dis,0x00000360,0x0000034c,0x0000036c 
-$RVM_HOME/verif/riscv-tests/hex/rv32ui-p-j.hex,$RVM_HOME/verif/riscv-tests/dis/rv32ui-p-jalr.dis,0x0000029c,0x00000288,0x000002a8  
+$RVM_HOME/verif/riscv-tests/hex/rv32ui-p-jal.hex,$RVM_HOME/verif/riscv-tests/dis/rv32ui-p-j.dis,0x80000124,0x80000110,0x000002c4     
+$RVM_HOME/verif/riscv-tests/hex/rv32ui-p-jalr.hex,$RVM_HOME/verif/riscv-tests/dis/rv32ui-p-jalr.dis,0x00000360,0x0000034c,0x0000036c 
 $RVM_HOME/verif/riscv-tests/hex/rv32ui-p-lb.hex,$RVM_HOME/verif/riscv-tests/dis/rv32ui-p-lb.dis,0x000004ac,0x00000498,0x000004b8
 $RVM_HOME/verif/riscv-tests/hex/rv32ui-p-lbu.hex,$RVM_HOME/verif/riscv-tests/dis/rv32ui-p-lbu.dis,0x000004ac,0x00000498,0x000004b8 
 $RVM_HOME/verif/riscv-tests/hex/rv32ui-p-lh.hex,$RVM_HOME/verif/riscv-tests/dis/rv32ui-p-lh.dis,0x000004cc,0x000004b8,0x000004d8
