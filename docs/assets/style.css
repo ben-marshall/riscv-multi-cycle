@@ -1,11 +1,14 @@
 body{
     color: #333;
-    line-height:1.6;
     font-size:15px;
     padding:0px;
     margin: 0px;
     height: 100%;
     font-family:Sans-serif;
+}
+
+* {
+        box-sizing: border-box;
 }
 
 html{
@@ -40,12 +43,34 @@ td{
     border-bottom: 1px solid lightgrey;
 }
 
-#header{
-    border-bottom: 4px solid orange;
+@media only screen and (min-width: 768px){
+    #header {
+        width: 25%;
+        position: fixed;
+        top:0px;
+        bottom: 0px;
+        max-width: 300px;
+        border-right: 4px solid orange;
+    }
+    #body-content{
+        margin-left:25%;
+        width: 75%;
+        max-width: 800px;
+    }
+}
+@media only screen and (max-width: 768px){
+    #header {
+        width: 100%;
+        border-bottom: 4px solid orange;
+    }
+    #body-content{
+        width: 100%;
+    }
 }
 
-#header, #footer{
-    width:100%;
+#header{
+    padding: 5px;
+    float: left;
     background: #39485e;
     background: -moz-linear-gradient(top,  #39485e 0%, #283951 100%);
     background: -webkit-linear-gradient(top,  #39485e 0%,#283951 100%);
@@ -58,7 +83,6 @@ td{
     margin-left: auto;
     margin-right: auto;
     padding: 5px;
-    max-width: 900px;
 }
 
 .header-item, .footer-item{
@@ -67,17 +91,18 @@ td{
 
 .header-item{
     font-weight: bold;
-    display: inline-block;
+    display: block;
     text-transform: uppercase;
-    text-align: center;
+    text-align: left;
+    margin-top: 15px;
     margin-right: 25px;
 }
 
 .footer-item{
-    vertical-align: top;
-    min-height: 50px;
+    padding: 5px;
+    vertical-align: bottom;
     color: white;
-    display: inline-block;
+    display: block;
     text-transform: capitalize;
     text-align: left;
     font-size: small;
@@ -88,9 +113,7 @@ td{
 }
 
 #body-content{
-    margin-left: auto;
-    margin-right: auto;
-    max-width: 890px;
-    padding-left: 5px;
-    padding-right: 5px;
+    float: left;
+    padding-left: 15px;
+    padding-right: 15px;
 }

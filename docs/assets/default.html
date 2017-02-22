@@ -3,6 +3,7 @@
 <head>
 <title>{{site.title}}</title>
 <link rel="stylesheet" href="{{site.baseurl}}/assets/style.css" type="text/css">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
 <div id="header">
@@ -23,39 +24,25 @@
         <a href="{{site.baseurl}}/getting-started/getting-started.html">Use Me</a>
         </span>
     </div>
+    <div class="footer-item">
+        <p>
+        A simple multi-cycle implementation of the RV32UI subset of the
+        RISC-V instruction set architecture.
+        </p>
+        <p style="line-height:15px;">
+        <img src="https://gitlab.com/gitlab-com/gitlab-artwork/raw/master/logo/logo-square.png"
+        height="15px" style="margin:0px; padding:0px;vertical-align:middle;"/>
+        <a href="">Gitlab Repository</a>
+        </p>
+        <p style="line-height:15px;">
+        <img src="https://ben-marshall.github.io/assets/icon.ico"
+        height="15px" style="margin:0px; padding:0px;vertical-align:middle;"/>
+        Written by <a href="">Ben Marshall</a>
+        </p>
+    </div>
 </div>
 <div id="body-content">
 {{content}}
-</div>
-
-<div id="footer">
-    <div id="footer-content">
-        <div class="footer-item">
-            <p>
-            <a href="{{site.baseurl}}/README.html">Home</a><br/>
-            <a href="{{site.baseurl}}/arch/arch.html">Architecture</a><br/>
-            <a href="{{site.baseurl}}/uarch/uarch.html">Micro-architecture</a><br/>
-            <a href="{{site.baseurl}}/flow/flow.html">Build Flow</a><br/>
-            <a href="{{site.baseurl}}/getting-started/getting-started.html">Use Me</a>
-            </p>
-        </div>
-        <div class="footer-item">
-            <p>
-            A simple multi-cycle implementation of the RV32UI subset of the
-            RISC-V instruction set architecture.
-            </p>
-            <p style="line-height:15px;">
-            <img src="https://gitlab.com/gitlab-com/gitlab-artwork/raw/master/logo/logo-square.png"
-            height="15px" style="margin:0px; padding:0px;vertical-align:middle;"/>
-            <a href="">Gitlab Repository</a>
-            </p>
-            <p style="line-height:15px;">
-            <img src="https://ben-marshall.github.io/assets/icon.ico"
-            height="15px" style="margin:0px; padding:0px;vertical-align:middle;"/>
-            Written by <a href="">Ben Marshall</a>
-            </p>
-        </div>
-    </div>
 </div>
 </body>
 </html> 
