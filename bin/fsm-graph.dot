@@ -1,0 +1,28 @@
+
+digraph fsm {
+    
+    root=PostReset;
+    rankdir=LR;
+    margin=0;
+    ranksep=2;
+    nodesep=0.1;
+    splines=polyline;
+
+{% for state_name in states | sort %}
+{% set state = states[state_name] %}
+
+    {{state.name()}} [shape=box];
+
+    {% if state.single_next_state %}
+        {{state.name()}} -> {{state.next_state.name()}} [weight=2];
+    {%- else -%}
+
+        {% for tgt in state.next_state %}
+            {{ state.name() }} -> {{tgt.value}}
+        {% endfor %}
+
+    {%- endif -%}
+
+{% endfor %}
+
+}

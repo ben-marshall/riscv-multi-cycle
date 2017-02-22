@@ -244,6 +244,24 @@ class FSM(object):
         with open(output_path, "w") as fh:
             fh.write(result)
     
+    def to_dot(self, output_path):
+        """
+        Renders the FSM as a graphviz dot file.
+        """
+        ld  = jinja2.FileSystemLoader(os.path.expandvars("$RVM_HOME/bin"))
+        env = jinja2.Environment(loader = ld)
+
+        template = env.get_template("fsm-graph.dot")
+        
+        result = template.render(states = self.states, 
+                                 interfaces=self.interfaces,
+                                 state_var = self.state_var_name,
+                                 state_var_w = self.state_var_width,
+                                 default_next_state = self.default_next_state)
+        
+        with open(output_path, "w") as fh:
+            fh.write(result)
+    
 
     def __check_states__(self):
         """
@@ -336,6 +354,9 @@ def parseargs():
     parser.add_argument("-o","--output", type=str,
         help="Output verilog path.",
         default="./fsm.v")
+    parser.add_argument("-d","--diagram", type=str,
+        help="Path to output a graphviz .dot file.",
+        default=None)
     parser.add_argument("fsm", type=str,
         help="The YAML file which describes the FSM interfaces and states",
         default="./fsm-spec.yaml")
@@ -351,6 +372,9 @@ def main():
 
     fsm = FSM.fromYAML(args.fsm)
     fsm.to_verilog(args.output)
+
+    if(args.diagram != None):
+        fsm.to_dot(args.diagram)
     
     sys.exit(0)
 

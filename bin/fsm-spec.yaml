@@ -71,7 +71,7 @@ interfaces:
   - { range: [31,0], name: f_bit_result, access: "r" }
 
 states:
-- name: Post-Reset
+- name: PostReset
   wait: null
   next: InstructionFetch
   encoding: 0

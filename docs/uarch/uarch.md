@@ -96,4 +96,4 @@ The diagram below is generated from the same YAML specification as the
 `rvm_control` module. It shows the various control states of the core and the
 transition conditions between them.
 
-
+[FSM Control Diagram](../assets/fsm.svg)

@@ -42,7 +42,12 @@ run-test: $(VCC_OUTPUT)
         +PASS_ADDR=$(PASS_ADDR) +FAIL_ADDR=$(FAIL_ADDR)
 
 control-fsm:
-	./bin/fsmgen.py -o ./work/fsm.v ./bin/fsm-spec.yaml
+	./bin/fsmgen.py -o ./work/fsm.v \
+                    -d ./work/fsm.dot \
+                       ./bin/fsm-spec.yaml
+
+control-fsm-diagram: control-fsm
+	dot -Tsvg -O ./work/fsm.dot
 
 view-waves:
 	gtkwave -l $(RVM_HOME)/work/sim.log \
