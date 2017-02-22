@@ -2,18 +2,21 @@
 #
 # Load the design
 
-read_verilog -I ../rtl/ ../rtl/main/rv32ui_decoder.v
-read_verilog -I ../rtl/ ../rtl/main/rvs_fdu.v
-read_verilog -I ../rtl/ ../rtl/main/rvs_gprs.v
-read_verilog -I ../rtl/ ../rtl/main/rvs_alu.v
-read_verilog -I ../rtl/ ../rtl/main/rvs_lsu.v
-read_verilog -I ../rtl/ ../rtl/main/rvs_pcu.v
-read_verilog -I ../rtl/ ../rtl/main/rvs_scu.v
-read_verilog -I ../rtl/ ../rtl/main/rvs_core.v
+read_verilog -I ../rtl/main ../rtl/main/rv32ui_decoder.v
+read_verilog -I ../rtl/main ../rtl/main/rvm_adder.v
+read_verilog -I ../rtl/main ../rtl/main/rvm_bitwise.v
+read_verilog -I ../rtl/main ../rtl/main/rvm_constants.v
+read_verilog -I ../rtl/main ../rtl/main/rvm_core.v
+read_verilog -I ../rtl/main ../rtl/main/rvm_fdu.v
+read_verilog -I ../rtl/main ../rtl/main/rvm_gprs.v
+read_verilog -I ../rtl/main ../rtl/main/rvm_pcu.v
+read_verilog -I ../rtl/main ../rtl/main/rvm_scu.v
+read_verilog -I ../rtl/main ../rtl/main/rvm_shift.v
+read_verilog -I ../rtl/main ../work/fsm.v
 
 #
 # Elaborate the design hierarchy using rvs_core as the top module.
-hierarchy -check -top rvs_core
+hierarchy -check -top rvm_core
 
 #
 # Make sure there are no problems
