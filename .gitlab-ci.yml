@@ -8,6 +8,7 @@ pages:
   - pip3 install -r requirements.txt
   - gem install jekyll
   - export RVM_HOME=`pwd` 
+  - mkdir $RVM_HOME/work
   - make control-fsm-diagram
   - make -C ./docs jekyll-build
   - mv ./work/fsm.dot.svg ./docs/html/assets/fsm.svg
