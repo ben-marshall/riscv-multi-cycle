@@ -9,6 +9,7 @@
 //
 
 module axi4master #(
+)(                   
 
 // AXI4 Global signals
 input ACLK      ,   // Master clock for the AXI interface.
@@ -16,7 +17,7 @@ input ARESETn   ,   // Active low asynchronous reset.
 
 // AXI Write Address Channel
 output AWID     ,   // Master Write Address ID.
-output AWADDR   ,   // Master Write address.
+output [31:0] AWADDR   ,   // Master Write address.
 output AWLEN    ,   // Master Burst Length (transfers / burst).
 output AWSIZE   ,   // Master Burst Size   (size of transfer).
 output AWBURST  ,   // Master Burst Type.
@@ -47,7 +48,7 @@ output BREADY   ,   // Master Response ready.
 
 // AXI4 Read Address Channel
 output ARID     ,   // Master Read address ID.
-output ARADDR   ,   // Master Read address.
+output [31:0] ARADDR   ,   // Master Read address.
 output ARLEN    ,   // Master Burst length.
 output ARSIZE   ,   // Master Burst size.
 output ARBURST  ,   // Master Burst type.
@@ -70,20 +71,51 @@ output RVALID   ,   // Slave Read valid.
 input  RREADY   ,   // Master Read ready.
                      
 // SRAM style requestor interface
-input [31:0]  mem_addr  , // SRAM Memory address lines
-output[31:0]  mem_rdata , // SRAM Memory read data
-input [31:0]  mem_wdata , // SRAM Memory write data
+input  [31:0] mem_addr  , // SRAM Memory address lines
+output [31:0] mem_rdata , // SRAM Memory read data
+input  [31:0] mem_wdata , // SRAM Memory write data
 input         mem_c_en  , // SRAM Memory chip enable
 input         mem_w_en  , // SRAM Memory write enable
-input [ 3:0]  mem_b_en  , // SRAM Memory byte enable
+input  [ 3:0] mem_b_en  , // SRAM Memory byte enable
 output        mem_error , // SRAM Memory error indicator
 output        mem_stall   // SRAM Memory stall indicator
-                     
-)(                   
-                     
+
 );                   
                      
-                     
+//-----------------------------------------------------------------------------
+// Auixiliary signals for internal use.
+//
+
+// Should we be performing a read or write transaction
+wire read_txn   = mem_c_en && !mem_w_en;
+wire write_txn  = mem_c_en &&  mem_w_en;
+
+
+//-----------------------------------------------------------------------------
+// Write Address channel handling
+//
+
+assign AWADDR = {32{read_txn}} & mem_addr;
+
+//-----------------------------------------------------------------------------
+// Write Data channel handling
+//
+
+
+//-----------------------------------------------------------------------------
+// Write Response channel handling
+//
+
+
+//-----------------------------------------------------------------------------
+// Read Address channel handling
+//
+
+assign ARADDR = {32{read_txn}} & mem_addr;
+
+//-----------------------------------------------------------------------------
+// Read Response channel handling
+//
                      
 endmodule            
                      
