@@ -12,73 +12,73 @@ module axi4master #(
 )(                   
 
 // AXI4 Global signals
-input ACLK      ,   // Master clock for the AXI interface.
-input ARESETn   ,   // Active low asynchronous reset.
+input         ACLK     , // Master clock for the AXI interface.
+input         ARESETn  , // Active low asynchronous reset.
 
 // AXI Write Address Channel
-output AWID     ,   // Master Write Address ID.
-output [31:0] AWADDR   ,   // Master Write address.
-output AWLEN    ,   // Master Burst Length (transfers / burst).
-output AWSIZE   ,   // Master Burst Size   (size of transfer).
-output AWBURST  ,   // Master Burst Type.
-output AWLOCK   ,   // Master lock type.
-output AWCACHE  ,   // Master memory type / cache characteristics.
-output AWPROT   ,   // Master memory protection level.
-output AWQOS    ,   // Master Quality of Service.
-output AWREGION ,   // Master Region identifier.
-output AWUSER   ,   // Master user signal.
-output AWVALID  ,   // Master Write address valid.
-input  AWREADY  ,   // Slave Write address ready.
+output        AWID     , // Master Write Address ID. Tied to zero
+output [31:0] AWADDR   , // Master Write address.
+output [ 7:0] AWLEN    , // Master Burst Length (transfers / burst).
+output [ 2:0] AWSIZE   , // Master Burst Size   (size of transfer).
+output [ 1:0] AWBURST  , // Master Burst Type.
+output        AWLOCK   , // Master lock type.
+output [ 3:0] AWCACHE  , // Master memory type / cache characteristics.
+output [ 2:0] AWPROT   , // Master memory protection level.
+output [ 3:0] AWQOS    , // Master Quality of Service.
+output [ 4:0] AWREGION , // Master Region identifier.
+output        AWUSER   , // Master user signal.
+output        AWVALID  , // Master Write address valid.
+input         AWREADY  , // Slave Write address ready.
 
 // AXI Write Data Channel
-output WID      ,   // Master Write ID tag.
-output WDATA    ,   // Master Write data.
-output WSTRB    ,   // Master Write strobes.
-output WLAST    ,   // Master Write last.
-output WUSER    ,   // Master User signal.
-output WVALID   ,   // Write Valid.
-input  WREADY   ,   // Slave Write ready.
+output        WID      , // Master Write ID tag. Tied to zero.
+output [31:0] WDATA    , // Master Write data.
+output [ 3:0] WSTRB    , // Master Write strobes. (Byte enable)
+output        WLAST    , // Master Write last.
+output        WUSER    , // Master User signal.
+output        WVALID   , // Write Valid.
+input         WREADY   , // Slave Write ready.
 
 // AXI4 Write Response Channel
-input  BID      ,   // Slave Response ID tag.
-input  BRESP    ,   // Slave Write response.
-input  BUSER    ,   // Slave User signal.
-input  BVALID   ,   // Slave Write response valid.
-output BREADY   ,   // Master Response ready.
+input         BID      , // Slave Response ID tag. Tied to zero
+input  [ 1:0] BRESP    , // Slave Write response.
+input         BUSER    , // Slave User signal.
+input         BVALID   , // Slave Write response valid.
+output        BREADY   , // Master Response ready.
 
 // AXI4 Read Address Channel
-output ARID     ,   // Master Read address ID.
-output [31:0] ARADDR   ,   // Master Read address.
-output ARLEN    ,   // Master Burst length.
-output ARSIZE   ,   // Master Burst size.
-output ARBURST  ,   // Master Burst type.
-output ARLOCK   ,   // Master Lock type.
-output ARCACHE  ,   // Master Memory type.
-output ARPROT   ,   // Master Protection type.
-output ARQOS    ,   // Master Quality of Service, QoS.
-output ARREGION ,   // Master Region identifier.
-output ARUSER   ,   // Master User signal.
-output ARVALID  ,   // Master Read address valid.
-input  ARREADY  ,   // Slave Read address ready.
+output        ARID     , // Master Read address ID. Tied to zero
+output [31:0] ARADDR   , // Master Read address.
+output [ 7:0] ARLEN    , // Master Burst length.
+output [ 2:0] ARSIZE   , // Master Burst size.
+output [ 1:0] ARBURST  , // Master Burst type.
+output        ARLOCK   , // Master Lock type.
+output [ 3:0] ARCACHE  , // Master Memory type.
+output [ 2:0] ARPROT   , // Master Protection type.
+output [ 3:0] ARQOS    , // Master Quality of Service, QoS.
+output [ 4:0] ARREGION , // Master Region identifier.
+output        ARUSER   , // Master User signal.
+output        ARVALID  , // Master Read address valid.
+input         ARREADY  , // Slave Read address ready.
 
 // AXI4 Read Data Channel 
-output RID      ,   // Slave Read ID tag.
-output RDATA    ,   // Slave Read data.
-output RRESP    ,   // Slave Read response.
-output RLAST    ,   // Slave Read last.
-output RUSER    ,   // Slave User signal.
-output RVALID   ,   // Slave Read valid.
-input  RREADY   ,   // Master Read ready.
+input         RID      , // Slave Read ID tag. Tied to zero
+input  [31:0] RDATA    , // Slave Read data.
+input  [ 1:0] RRESP    , // Slave Read response.
+input         RLAST    , // Slave Read last.
+input         RUSER    , // Slave User signal.
+input         RVALID   , // Slave Read valid.
+output        RREADY   , // Master Read ready.
                      
 // SRAM style requestor interface
-input  [31:0] mem_addr  , // SRAM Memory address lines
-output [31:0] mem_rdata , // SRAM Memory read data
-input  [31:0] mem_wdata , // SRAM Memory write data
-input         mem_c_en  , // SRAM Memory chip enable
-input         mem_w_en  , // SRAM Memory write enable
-input  [ 3:0] mem_b_en  , // SRAM Memory byte enable
-output        mem_error , // SRAM Memory error indicator
-output        mem_stall   // SRAM Memory stall indicator
+input  [31:0] mem_addr , // SRAM Memory address lines
+output [31:0] mem_rdata, // SRAM Memory read data
+input  [31:0] mem_wdata, // SRAM Memory write data
+input         mem_c_en , // SRAM Memory chip enable
+input         mem_w_en , // SRAM Memory write enable
+input  [ 3:0] mem_b_en , // SRAM Memory byte enable
+output        mem_error, // SRAM Memory error indicator
+output        mem_stall  // SRAM Memory stall indicator
 
 );                   
                      
@@ -89,33 +89,81 @@ output        mem_stall   // SRAM Memory stall indicator
 // Should we be performing a read or write transaction
 wire read_txn   = mem_c_en && !mem_w_en;
 wire write_txn  = mem_c_en &&  mem_w_en;
-
+wire i_awvalid  = // TODO;
+wire i_wvalid   = // TODO;
+wire i_wlast    = // TODO;
+wire i_bready   = // TODO;
+wire i_arvalid  = // TODO;
+wire i_rready   = // TODO;
+wire i_mem_error= // TODO;
+wire i_mem_stall= // TODO;
 
 //-----------------------------------------------------------------------------
 // Write Address channel handling
 //
 
-assign AWADDR = {32{read_txn}} & mem_addr;
+assign AWID     = 1'b0;
+assign AWADDR   = {32{read_txn}} & mem_addr;
+assign AWLEN    = 8'b0;
+assign AWSIZE   = 3'b0;
+assign AWBURST  = 2'b0;
+assign AWLOCK   = 1'b0;
+assign AWCACHE  = 4'b0;
+assign AWPROT   = 3'b0;
+assign AWQOS    = 4'b0;
+assign AWREGION = 4'b0;
+assign AWUSER   = 1'b0;
+assign AWVALID  = i_awvalid;
 
 //-----------------------------------------------------------------------------
 // Write Data channel handling
 //
+
+assign WID      = 1'b0;
+assign WDATA    = {32{write_txn}} & mem_wdata;
+assign WSTRB    = { 4{write_txn}} & mem_b_en;
+assign WLAST    = i_wlast;
+assign WUSER    = 1'b0;
+assign WVALID   = i_wvalid;
 
 
 //-----------------------------------------------------------------------------
 // Write Response channel handling
 //
 
+assign BREADY   = i_bready; // Master Response ready.
+
 
 //-----------------------------------------------------------------------------
 // Read Address channel handling
 //
 
-assign ARADDR = {32{read_txn}} & mem_addr;
+assign ARID     = 1'b0;
+assign ARADDR   = {32{read_txn}} & mem_addr;
+assign ARLEN    = 8'b0;
+assign ARSIZE   = 3'b0;
+assign ARBURST  = 2'b0;
+assign ARLOCK   = 1'b0;
+assign ARCACHE  = 4'b0;
+assign ARPROT   = 2'b0;
+assign ARQOS    = 3'b0;
+assign ARREGION = 4'b0;
+assign ARUSER   = 1'b0;
+assign ARVALID  = i_arvalid;
 
 //-----------------------------------------------------------------------------
 // Read Response channel handling
 //
+
+assign RREADY   = i_rready;
+
+//-----------------------------------------------------------------------------
+// SRAM style interface handling.
+//
+
+assign mem_rdata = RDATA;
+assign mem_error = i_mem_error;
+assign mem_stall = i_mem_stall;
                      
 endmodule            
                      
