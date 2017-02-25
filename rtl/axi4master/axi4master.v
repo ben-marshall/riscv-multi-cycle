@@ -131,7 +131,7 @@ wire i_rready   = s1_txn && !s1_w_en;
 wire i_mem_error= RVALID && !RRESP[1];
 wire i_mem_stall= !i_rready;
 
-assign pipeline_wait = !RVALID;
+assign pipeline_wait = !RVALID && s1_txn && !s1_w_en;
 
 //-----------------------------------------------------------------------------
 // Write Address channel handling
