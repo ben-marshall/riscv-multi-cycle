@@ -89,14 +89,49 @@ output        mem_stall  // SRAM Memory stall indicator
 // Should we be performing a read or write transaction
 wire read_txn   = mem_c_en && !mem_w_en;
 wire write_txn  = mem_c_en &&  mem_w_en;
-wire i_awvalid  = // TODO;
-wire i_wvalid   = // TODO;
-wire i_wlast    = // TODO;
-wire i_bready   = // TODO;
-wire i_arvalid  = // TODO;
-wire i_rready   = // TODO;
-wire i_mem_error= // TODO;
-wire i_mem_stall= // TODO;
+
+// Pipestage 1 wires
+wire [3:0] s0_b_en = mem_b_en; // Stage 0 Byte Enable
+wire       s0_txn  = mem_c_en; // Stage 0 Transaction in flight
+wire       s0_w_en = mem_w_en; // Stage 0 Write enable
+
+// Pipeline stage 1 wires.
+reg [3:0] s1_b_en; // Stage 1 Byte Enable
+reg       s1_txn ; // Stage 1 Transaction in flight
+reg       s1_w_en; // Stage 1 Write enable
+
+// Wait for a transaction to complete before progressing the pipeline.
+wire      pipeline_wait;
+
+//
+// Responsible for progressing the transaction handling pipeline.
+//
+always @(posedge ACLK, negedge ARESETn) begin: p_progress_pipeline
+    if(!ARESETn) begin
+        s1_b_en <= 4'b0;
+        s1_w_en <= 1'b0;
+        s1_txn  <= 1'b0;
+    end else if (!pipeline_wait) begin
+        s1_b_en <= s0_b_en;
+        s1_w_en <= s0_w_en;
+        s1_txn  <= s0_txn ;
+    end
+end
+
+//
+// Internal wires representing the channel control signals.
+//
+
+wire i_awvalid  = write_txn;
+wire i_wvalid   = write_txn;
+wire i_wlast    = write_txn;
+wire i_bready   = s1_txn && s1_w_en;
+wire i_arvalid  = read_txn;
+wire i_rready   = s1_txn && !s1_w_en;
+wire i_mem_error= RVALID && !RRESP[1]
+wire i_mem_stall= !i_rready;
+
+assign pipeline_wait = !RVALID;
 
 //-----------------------------------------------------------------------------
 // Write Address channel handling
