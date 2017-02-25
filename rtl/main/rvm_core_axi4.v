@@ -73,14 +73,14 @@ output        RREADY     // Master Read ready.
 
 );
 
-wire [31:0]  mem_addr,           // Memory address lines
-wire [31:0]  mem_rdata,          // Memory read data
-wire [31:0]  mem_wdata,          // Memory write data
-wire         mem_c_en,           // Memory chip enable
-wire         mem_w_en,           // Memory write enable
-wire [ 3:0]  mem_b_en,           // Memory byte enable
-wire         mem_error,          // Memory error indicator
-wire         mem_stall           // Memory stall indicator
+wire [31:0]  mem_addr;           // Memory address lines
+wire [31:0]  mem_rdata;          // Memory read data
+wire [31:0]  mem_wdata;          // Memory write data
+wire         mem_c_en;           // Memory chip enable
+wire         mem_w_en;           // Memory write enable
+wire [ 3:0]  mem_b_en;           // Memory byte enable
+wire         mem_error;          // Memory error indicator
+wire         mem_stall;           // Memory stall indicator
 
 //
 // Top level instantiation of the core.
