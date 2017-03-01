@@ -155,8 +155,8 @@ ddr3_wb i_ddr3_wb (
 .app_sr_active      (app_sr_active    ),
 .app_ref_ack        (app_ref_ack      ),
 .app_zq_ack         (app_zq_ack       ),
-.ui_clk             (clk              ),
-.ui_clk_sync_rst    (rst              ),
+.ui_clk             (ui_clk           ),
+.ui_clk_sync_rst    (ui_rst           ),
 .app_wdf_mask       (app_wdf_mask     ),
 // System Clock Ports
 .sys_clk_i          (sys_clk_i        ),
