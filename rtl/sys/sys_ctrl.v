@@ -71,9 +71,11 @@ reg  [31:0] mem_addr_counter;   // Address counter for loading/dumping memory.
 wire        mem_data_length_dec;// Decrement mem_data_length
 reg  [31:0] mem_data_length;    // Length of the memory segment to load/dump.
 
+reg         p_uart_rx_valid;
 wire        uart_rx_en    ; // Recieve enable
 wire        uart_rx_brk   ; // Did we get a BREAK message?
 wire        uart_rx_valid ; // Valid data recieved and available.
+wire        uart_rx_pvalid = !p_uart_rx_valid && uart_rx_valid;
 wire [7:0]  uart_rx_data  ; // The recieved data.
 
 wire        uart_tx_busy  ; // Module busy sending previous item.
@@ -90,8 +92,9 @@ assign app_wdf_end = 1'b1;
 assign app_wdf_mask= 16'b1 << mem_addr_counter[3:0];
 assign app_wdf_wren= ctrl_state == CTRL_LOAD_MEM;
 
-assign uart_tx_data= (app_rd_data >> {mem_addr_counter[3:0],3'b0})[7:0];
+assign uart_tx_data= (app_rd_data >> {mem_addr_counter[3:0],3'b0});
 assign uart_tx_en  = app_rd_data_valid;
+assign uart_rx_en  = !uart_rxd;
 
 assign app_en = (ctrl_state == CTRL_LOAD_MEM && uart_rx_valid) ||
                 (ctrl_state == CTRL_DUMP_MEM && !uart_tx_busy && !app_rdy);
@@ -100,7 +103,6 @@ assign mem_addr_counter_inc = app_rdy;
 assign mem_data_length_dec  = app_rdy;
 
 //----------------------------------------------------------------------------
-
 
 //
 // Computes the next state of the control FSM.
@@ -115,30 +117,30 @@ case(ctrl_state)
     CTRL_READY      : begin
         if(uart_rx_valid && uart_rx_data == CMD_LOAD) begin
             n_ctrl_state <= CTRL_LOAD_MEM;
-        end else if(uart_rx_valid && uart_rx_data == CMD_DUMP) begin
+        end else if(uart_rx_pvalid && uart_rx_data == CMD_DUMP) begin
             n_ctrl_state <= CTRL_DUMP_MEM;
-        end else if(uart_rx_valid && uart_rx_data == CMD_SETUP)begin
+        end else if(uart_rx_pvalid && uart_rx_data == CMD_SETUP)begin
             n_ctrl_state <= CTRL_LD_A_3; // Load mem registers.
         end else begin
             n_ctrl_state <= CTRL_READY;
         end
     end
     
-    CTRL_LD_A_3 : n_ctrl_state <= uart_rx_valid ? CTRL_LD_A_2 : CTRL_LD_A_3;
-    CTRL_LD_A_2 : n_ctrl_state <= uart_rx_valid ? CTRL_LD_A_1 : CTRL_LD_A_2;
-    CTRL_LD_A_1 : n_ctrl_state <= uart_rx_valid ? CTRL_LD_A_0 : CTRL_LD_A_1;
-    CTRL_LD_A_0 : n_ctrl_state <= uart_rx_valid ? CTRL_LD_D_3 : CTRL_LD_A_0;
-    CTRL_LD_D_3 : n_ctrl_state <= uart_rx_valid ? CTRL_LD_D_2 : CTRL_LD_D_3;
-    CTRL_LD_D_2 : n_ctrl_state <= uart_rx_valid ? CTRL_LD_D_1 : CTRL_LD_D_2;
-    CTRL_LD_D_1 : n_ctrl_state <= uart_rx_valid ? CTRL_LD_D_0 : CTRL_LD_D_1;
-    CTRL_LD_D_0 : n_ctrl_state <= uart_rx_valid ? CTRL_READY  : CTRL_LD_D_0;
+    CTRL_LD_A_3 : n_ctrl_state <= uart_rx_pvalid ? CTRL_LD_A_2 : CTRL_LD_A_3;
+    CTRL_LD_A_2 : n_ctrl_state <= uart_rx_pvalid ? CTRL_LD_A_1 : CTRL_LD_A_2;
+    CTRL_LD_A_1 : n_ctrl_state <= uart_rx_pvalid ? CTRL_LD_A_0 : CTRL_LD_A_1;
+    CTRL_LD_A_0 : n_ctrl_state <= uart_rx_pvalid ? CTRL_LD_D_3 : CTRL_LD_A_0;
+    CTRL_LD_D_3 : n_ctrl_state <= uart_rx_pvalid ? CTRL_LD_D_2 : CTRL_LD_D_3;
+    CTRL_LD_D_2 : n_ctrl_state <= uart_rx_pvalid ? CTRL_LD_D_1 : CTRL_LD_D_2;
+    CTRL_LD_D_1 : n_ctrl_state <= uart_rx_pvalid ? CTRL_LD_D_0 : CTRL_LD_D_1;
+    CTRL_LD_D_0 : n_ctrl_state <= uart_rx_pvalid ? CTRL_READY  : CTRL_LD_D_0;
 
     CTRL_LOAD_MEM : begin
-        mem_data_length == 0 ? CTRL_READY : CTRL_DUMP_MEM;
+        n_ctrl_state = mem_data_length == 0 ? CTRL_READY : CTRL_DUMP_MEM;
     end
 
     CTRL_DUMP_MEM : begin
-        mem_data_length == 0 ? CTRL_READY : CTRL_DUMP_MEM;
+        n_ctrl_state = mem_data_length == 0 ? CTRL_READY : CTRL_DUMP_MEM;
     end
 
 endcase
@@ -163,25 +165,25 @@ end
 always @(posedge clk, negedge resetn) begin : reg_mem_addr_ctrl
     if(!resetn) begin
         mem_addr_counter <= 32'b0;
-    end else if(ctrl_state == CTRL_LD_A_3 && uart_rx_valid) begin
+    end else if(ctrl_state == CTRL_LD_A_3 && uart_rx_pvalid) begin
         mem_addr_counter <= {uart_rx_data           ,
                              mem_addr_counter[24:16],
                              mem_addr_counter[15: 8],
                              mem_addr_counter[ 7: 0]};
 
-    end else if(ctrl_state == CTRL_LD_A_2 && uart_rx_valid) begin
+    end else if(ctrl_state == CTRL_LD_A_2 && uart_rx_pvalid) begin
         mem_addr_counter <= {mem_addr_counter[31:25],
                              uart_rx_data           ,
                              mem_addr_counter[15: 8],
                              mem_addr_counter[ 7: 0]};
 
-    end else if(ctrl_state == CTRL_LD_A_1 && uart_rx_valid) begin
+    end else if(ctrl_state == CTRL_LD_A_1 && uart_rx_pvalid) begin
         mem_addr_counter <= {mem_addr_counter[31:25],
                              mem_addr_counter[24:16],
                              uart_rx_data           ,
                              mem_addr_counter[ 7: 0]};
 
-    end else if(ctrl_state == CTRL_LD_A_0 && uart_rx_valid) begin
+    end else if(ctrl_state == CTRL_LD_A_0 && uart_rx_pvalid) begin
         mem_addr_counter <= {mem_addr_counter[31:25],
                              mem_addr_counter[24:16],
                              mem_addr_counter[15: 8],
@@ -198,25 +200,25 @@ end
 always @(posedge clk, negedge resetn) begin : reg_mem_data_length_ctrl
     if(!resetn) begin
         mem_data_length <= 32'b0;
-    end else if(ctrl_state == CTRL_LD_D_3 && uart_rx_valid) begin
+    end else if(ctrl_state == CTRL_LD_D_3 && uart_rx_pvalid) begin
         mem_data_length <= {uart_rx_data          ,
                             mem_data_length[24:16],
                             mem_data_length[15: 8],
                             mem_data_length[ 7: 0]};
 
-    end else if(ctrl_state == CTRL_LD_D_2 && uart_rx_valid) begin
+    end else if(ctrl_state == CTRL_LD_D_2 && uart_rx_pvalid) begin
         mem_data_length <= {mem_data_length[31:25],
                             uart_rx_data          ,
                             mem_data_length[15: 8],
                             mem_data_length[ 7: 0]};
 
-    end else if(ctrl_state == CTRL_LD_D_1 && uart_rx_valid) begin
+    end else if(ctrl_state == CTRL_LD_D_1 && uart_rx_pvalid) begin
         mem_data_length <= {mem_data_length[31:25],
                             mem_data_length[24:16],
                             uart_rx_data          ,
                             mem_data_length[ 7: 0]};
 
-    end else if(ctrl_state == CTRL_LD_D_0 && uart_rx_valid) begin
+    end else if(ctrl_state == CTRL_LD_D_0 && uart_rx_pvalid) begin
         mem_data_length <= {mem_data_length[31:25],
                             mem_data_length[24:16],
                             mem_data_length[15: 8],
@@ -224,6 +226,14 @@ always @(posedge clk, negedge resetn) begin : reg_mem_data_length_ctrl
     
     end else if(mem_data_length_dec) begin
         mem_data_length <= mem_data_length - 32'd1;
+    end
+end
+
+always @(posedge clk, negedge resetn) begin: p_prev_uart_valid
+    if(!resetn) begin
+        p_uart_rx_valid <= 1'b0;
+    end else begin
+        p_uart_rx_valid <= uart_rx_valid;
     end
 end
 

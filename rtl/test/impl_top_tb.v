@@ -19,7 +19,7 @@ wire [ 2:0] dut_rgb2        ;   // RGB Led 2.
 wire [ 2:0] dut_rgb3        ;   // RGB Led 3.
 wire [ 2:0] dut_led         ;   // Green Leds
 wire [ 3:0] dut_btn         ;   // Push to make buttons.
-wire            uart_rxd    ;   // UART Recieve pin.
+reg             uart_rxd=1'b1;  // UART Recieve pin.
 wire            uart_txd    ;   // UART Transmit pin.
 
 wire [15:0] dut_ddr3_dq     ;
@@ -41,6 +41,9 @@ wire [ 0:0] dut_ddr3_odt    ;
 reg                 timeout;        // Finish due to timeout.
 integer             cycle_count;    // Current cycle count.
 integer             max_cycle_count;// Max cycles before timeout.
+integer             test_finished;
+integer             test_pass;
+integer             fail_hit;
 
 // Global clock and reset signals.
 reg clk;
@@ -48,13 +51,13 @@ reg resetn =1'b0;
 wire clk_req;
 
 initial begin
-    #16 assign resetn = 1'b1;  // Take DUT out of reset after 5 ticks
+    #40 assign resetn = 1'b1;  // Take DUT out of reset after 5 ticks
 end
 
 //
 // Make the clock tick
 always begin
-    #5 assign clk = !clk;     // Toggle the clock every five ticks.
+    #10 assign clk = !clk;     // Toggle the clock every five ticks.
 end
 
 // Simulation argument parsing.
@@ -63,7 +66,6 @@ initial begin
     resetn          = 1'b0;
     cycle_count     = 0;
     max_cycle_count = 500;
-    halt_addr       = 32'b0;
 
     if($value$plusargs("MAX_CYCLE_COUNT=%d" , max_cycle_count)  )begin end
 
@@ -113,17 +115,19 @@ end
 //
 // Simulation stimulus sequence.
 initial begin
-    send_byte(8'b0011_0000); // SETUP
-    send_byte(8'b0000_0010); // Address Byte 3
-    send_byte(8'b0000_0010); // Address Byte 2
-    send_byte(8'b0000_0010); // Address Byte 1
-    send_byte(8'b0000_0010); // Address Byte 0
-    send_byte(8'b0000_0000); // Length Byte 3
-    send_byte(8'b0000_0000); // Length Byte 2
-    send_byte(8'b0000_0000); // Length Byte 1
-    send_byte(8'b0000_0100); // Length Byte 0
+    #10000
+    
+    send_byte(8'b0011_0000);
+    
+    send_byte(8'b0000_0000);
+    send_byte(8'b0000_0000);
+    send_byte(8'h10       );
+    send_byte(8'h00       );
 
-    #50
+    send_byte(8'b0000_0000);
+    send_byte(8'b0000_0000);
+    send_byte(8'b0000_0000);
+    send_byte(8'hFF       );
 
 end
 
@@ -157,8 +161,8 @@ impl_top i_dut(
 .rgb3        (dut_rgb3        ),   // RGB Led 3.
 .led         (dut_led         ),   // Green Leds
 .btn         (dut_btn         ),   // Push to make buttons.
-.uart_rxd    (dut_uart_rxd    ),   // UART Recieve pin.
-.uart_txd    (dut_uart_txd    ),   // UART Transmit pin.
+.uart_rxd    (    uart_rxd    ),   // UART Recieve pin.
+.uart_txd    (    uart_txd    ),   // UART Transmit pin.
 .ddr3_dq     (dut_ddr3_dq     ),
 .ddr3_dqs_n  (dut_ddr3_dqs_n  ),
 .ddr3_dqs_p  (dut_ddr3_dqs_p  ),
