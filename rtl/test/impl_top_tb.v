@@ -76,6 +76,7 @@ end
     
 integer i;
 
+//
 // Simulation running and control
 always @(posedge clk) begin
     cycle_count = cycle_count + 1;
@@ -106,6 +107,23 @@ always @(posedge clk) begin
         
         $finish(0);
     end
+
+end
+
+//
+// Simulation stimulus sequence.
+initial begin
+    send_byte(8'b0011_0000); // SETUP
+    send_byte(8'b0000_0010); // Address Byte 3
+    send_byte(8'b0000_0010); // Address Byte 2
+    send_byte(8'b0000_0010); // Address Byte 1
+    send_byte(8'b0000_0010); // Address Byte 0
+    send_byte(8'b0000_0000); // Length Byte 3
+    send_byte(8'b0000_0000); // Length Byte 2
+    send_byte(8'b0000_0000); // Length Byte 1
+    send_byte(8'b0000_0100); // Length Byte 0
+
+    #50
 
 end
 
