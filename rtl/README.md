@@ -17,3 +17,9 @@ AXI4 Bus master.
 ## test/
 
 Contains non-synthesisable testbench environment stuff.
+
+## sys/
+
+Contains the system control module. This is responsible for managing the
+loading of a memory image via UART, dumping memory contents via UART, and
+starting / stopping the core.
