@@ -14,16 +14,29 @@
 
 module sys_ctrl(
 
-input  wire      clk         , // Top level system clock input.
-input  wire      resetn      , // Asynchronous active low reset.
+input  wire         clk         , // Top level system clock input.
+input  wire         resetn      , // Asynchronous active low reset.
 
-input  wire      uart_rxd    , // UART Recieve.
-output wire      uart_txd    , // UART Transmit.
+input  wire         uart_rxd    , // UART Recieve.
+output wire         uart_txd    , // UART Transmit.
 
-output wire      core_en     , // Core enable signal.
-output wire      core_reset  , // Core reset signal.
+output wire         core_en     , // Core enable signal.
+output wire         core_reset  , // Core reset signal.
 
-output wire      mem_bus_ctrl, // 0 = sys_ctrl, 1 = core.
+output wire         mem_bus_ctrl, // 0 = sys_ctrl, 1 = core.
+
+output wire [27:0]  app_addr         , // Quad word aligned address.
+output wire [2:0]   app_cmd          , // 000 = write, 001 = read
+output wire         app_en           , // Initiate a new request. (addr,cmd)
+output wire [127:0] app_wdf_data     , // Data to be written.
+output wire         app_wdf_end      , // End of data to write.
+output wire [15:0]  app_wdf_mask     , // Byte enable write data lines.
+output wire         app_wdf_wren     , // Write enable line.
+input  wire         app_wdf_rdy      , // Write data accepted.
+input  wire [127:0] app_rd_data      , // Read data value.
+input  wire         app_rd_data_end  , // End of data being read.
+input  wire         app_rd_data_valid, // Data being read is valid.
+input  wire         app_rdy            // Current request accpeted.
 );
 
 //
@@ -40,6 +53,10 @@ localparam CTRL_LD_D_1      = 4'd8;
 localparam CTRL_LD_D_0      = 4'd9;
 localparam CTRL_LOAD_MEM    = 4'd10;
 localparam CTRL_DUMP_MEM    = 4'd11;
+
+localparam CMD_SETUP        = 8'b0011_0000;
+localparam CMD_LOAD         = 8'b0011_0001;
+localparam CMD_DUMP         = 8'b0011_0010;
 
 //----------------------------------------------------------------------------
 
@@ -63,6 +80,24 @@ wire        uart_tx_busy  ; // Module busy sending previous item.
 wire        uart_tx_en    ; // Valid data recieved and available.
 wire [7:0]  uart_tx_data  ; // The recieved data.
 
+
+//----------------------------------------------------------------------------
+
+assign app_addr    = mem_addr_counter[31:4];
+assign app_cmd     = {2'b0, ctrl_state != CTRL_LOAD_MEM};
+assign app_wdf_data= {119'b0, uart_rx_data} << {mem_addr_counter[3:0],3'b0}; 
+assign app_wdf_end = 1'b1;
+assign app_wdf_mask= 16'b1 << mem_addr_counter[3:0];
+assign app_wdf_wren= ctrl_state == CTRL_LOAD_MEM;
+
+assign uart_tx_data= (app_rd_data >> {mem_addr_counter[3:0],3'b0})[7:0];
+assign uart_tx_en  = app_rd_data_valid;
+
+assign app_en = (ctrl_state == CTRL_LOAD_MEM && uart_rx_valid) ||
+                (ctrl_state == CTRL_DUMP_MEM && !uart_tx_busy && !app_rdy);
+
+assign mem_addr_counter_inc = app_rdy;
+assign mem_data_length_dec  = app_rdy;
 
 //----------------------------------------------------------------------------
 

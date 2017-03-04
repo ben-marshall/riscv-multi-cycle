@@ -56,6 +56,10 @@ wire [ 3:0]  rvm_mem_b_en  ; // Memory byte enable
 wire         rvm_mem_error ; // Memory error indicator
 wire         rvm_mem_stall ; // Memory stall indicator
 
+wire         core_enable;
+wire         core_reset;
+
+wire         mem_bus_ctrl;
 
 //-------------------------------------------------------------------------
 // DDR3 Controller instance interface wires.
@@ -63,35 +67,61 @@ wire         rvm_mem_stall ; // Memory stall indicator
 
 wire         sys_clk_i          ; // Single-ended system clock
 wire         clk_ref_i          ; // Single-ended iodelayctrl clk
-wire [27:0]  app_addr           ;
-wire [2:0]   app_cmd            ;
-wire         app_en             ;
-wire [127:0] app_wdf_data       ;
-wire         app_wdf_end        ;
-wire [15:0]  app_wdf_mask       ;
-wire         app_wdf_wren       ;
-wire [127:0] app_rd_data        ;
-wire         app_rd_data_end    ;
-wire         app_rd_data_valid  ;
-wire         app_rdy            ;
-wire         app_wdf_rdy        ;
-wire         app_sr_req         ;
-wire         app_ref_req        ;
-wire         app_zq_req         ;
-wire         app_sr_active      ;
-wire         app_ref_ack        ;
-wire         app_zq_ack         ;
+wire [27:0]  app_addr           ; // Quad word aligned address.
+wire [2:0]   app_cmd            ; // 000 = write, 001 = read
+wire         app_en             ; // Initiate a new request. (addr,cmd)
+wire [127:0] app_wdf_data       ; // Data to be written.
+wire         app_wdf_end        ; // End of data to write.
+wire [15:0]  app_wdf_mask       ; // Byte enable write data lines.
+wire         app_wdf_wren       ; // Write enable line.
+wire         app_wdf_rdy        ; // Write data accepted.
+wire [127:0] app_rd_data        ; // Read data value.
+wire         app_rd_data_end    ; // End of data being read.
+wire         app_rd_data_valid  ; // Data being read is valid.
+wire         app_rdy            ; // Current request accpeted.
+wire         app_sr_req         ; // ??
+wire         app_ref_req        ; // ??
+wire         app_zq_req         ; // Calibration request
+wire         app_sr_active      ; //
+wire         app_ref_ack        ; // Refresh acknowledge
+wire         app_zq_ack         ; // Calibration acknowledge
 wire         ui_clk             ;
 wire         ui_clk_sync_rst    ;
 wire         init_calib_complete;
 wire [11:0]  device_temp        ;
-wire         sys_rst            ;
 
 
 //-------------------------------------------------------------------------
 // Core & DDR3 controller connection interfacing.
 //
 
+
+//-------------------------------------------------------------------------
+// System controller module instance.
+//
+
+
+sys_ctrl i_sys_ctrl(
+.clk              (clk              ), // Top level system clock input.
+.resetn           (sw[0]            ), // Asynchronous active low reset.
+.uart_rxd         (uart_rxd         ), // UART Recieve.
+.uart_txd         (uart_txd         ), // UART Transmit.
+.core_en          (core_enable      ), // Core enable signal.
+.core_reset       (core_reset       ), // Core reset signal.
+.mem_bus_ctrl     (mem_bus_ctrl     ), // 0 = sys_ctrl, 1 = core.
+.app_addr         (app_addr         ), // Quad word aligned address.
+.app_cmd          (app_cmd          ), // 000 = write, 001 = read
+.app_en           (app_en           ), // Initiate a new request. (addr,cmd)
+.app_wdf_data     (app_wdf_data     ), // Data to be written.
+.app_wdf_end      (app_wdf_end      ), // End of data to write.
+.app_wdf_mask     (app_wdf_mask     ), // Byte enable write data lines.
+.app_wdf_wren     (app_wdf_wren     ), // Write enable line.
+.app_wdf_rdy      (app_wdf_rdy      ), // Write data accepted.
+.app_rd_data      (app_rd_data      ), // Read data value.
+.app_rd_data_end  (app_rd_data_end  ), // End of data being read.
+.app_rd_data_valid(app_rd_data_valid), // Data being read is valid.
+.app_rdy          (app_rdy          )  // Current request accpeted.
+);
 
 
 
@@ -163,7 +193,7 @@ ddr3_wb i_ddr3_wb (
 // Reference Clock Ports
 .clk_ref_i          (clk_ref_i        ),
 .device_temp        (device_temp      ),
-.sys_rst            (sys_rst          )
+.sys_rst            (sw[0]            )
 );
 
 endmodule
