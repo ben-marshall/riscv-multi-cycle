@@ -117,17 +117,25 @@ end
 initial begin
     #10000
     
-    send_byte(8'b0011_0000);
+    // Set the address register
+    #100 send_byte(8'b0011_0000);
     
-    send_byte(8'b0000_0000);
-    send_byte(8'b0000_0000);
-    send_byte(8'h10       );
-    send_byte(8'h00       );
-
-    send_byte(8'b0000_0000);
-    send_byte(8'b0000_0000);
-    send_byte(8'b0000_0000);
-    send_byte(8'hFF       );
+    #100 send_byte(8'hAB       );
+    #100 send_byte(8'hCD       );
+    #100 send_byte(8'hEF       );
+    #100 send_byte(8'hAB       );
+   
+    // Set the length register.
+    #100 send_byte(8'b0011_0001);
+  
+    #100 send_byte(8'hAB       );
+    #100 send_byte(8'hCD       );
+    #100 send_byte(8'hEF       );
+    #100 send_byte(8'hAB       );
+    
+    #20000
+    $finish(0);
+    
 
 end
 
@@ -137,7 +145,7 @@ task send_byte;
     input [7:0] to_send;
     integer i;
     begin
-        $display("Sending byte: %d at time %d", to_send, $time);
+        $display("Sending byte: %h at time %d", to_send, $time);
 
         #3520;  uart_rxd = 1'b0;
         for(i=0; i < 8; i = i+1) begin
