@@ -120,18 +120,25 @@ initial begin
     // Set the address register
     #100 send_byte(8'b0011_0000);
     
-    #100 send_byte(8'hAB       );
-    #100 send_byte(8'hCD       );
-    #100 send_byte(8'hEF       );
-    #100 send_byte(8'hAB       );
+    #100 send_byte(8'h00       );
+    #100 send_byte(8'h00       );
+    #100 send_byte(8'h10       );
+    #100 send_byte(8'h00       );
    
     // Set the length register.
     #100 send_byte(8'b0011_0001);
   
-    #100 send_byte(8'hAB       );
-    #100 send_byte(8'hCD       );
-    #100 send_byte(8'hEF       );
-    #100 send_byte(8'hAB       );
+    #100 send_byte(8'h00       );
+    #100 send_byte(8'h00       );
+    #100 send_byte(8'h00       );
+    #100 send_byte(8'hFF       );
+    
+    // Send 255 bytes to store.
+    #100 send_byte(8'b0011_0010);
+    
+    repeat(255) begin
+        #100 send_byte(8'hAB       );
+    end
     
     #20000
     $finish(0);
