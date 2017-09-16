@@ -122,43 +122,4 @@ always @(posedge clk) begin
 
 end
 
-// Memory bus signals
-wire [3 :0] mem_ben  ; // Instruction memory byte enable.
-wire        mem_wen  ; // Instruction memory write enable.
-wire        mem_err  ; // Instruction memory error.
-wire        mem_stall; // Instruction memory stall.
-wire [31:0] mem_wdata; // Instruction memory write data.
-wire [31:0] mem_rdata; // Instruction memory read data.
-wire [31:0] mem_addr ; // Instruction memory address.
-
-// Shifted memory address.
-wire [31:0] mod_addr = mem_addr & 32'h0FFF_FFFF;
-
-// The core instance.
-rvm_core i_dut(
-.clk        (clk        ), // The core level clock for sequential logic.
-.resetn     (resetn     ), // Active low asynchronous reset signal.
-.mem_addr   (mem_addr   ), // Memory address lines
-.mem_rdata  (mem_rdata  ), // Memory read data
-.mem_wdata  (mem_wdata  ), // Memory write data
-.mem_c_en   (mem_c_en   ), // Memory chip enable
-.mem_w_en   (mem_wen    ), // Memory write enable
-.mem_b_en   (mem_ben    ), // Memory byte enable
-.mem_error  (mem_err    ), // Memory error indicator
-.mem_stall  (mem_stall  )  // Memory stall indicator
-);
-
-sram #(.size(16384)) i_memory(
-.memfile(imem_file) ,
-.gclk   (clk      ) ,  // Global clock signal
-.resetn (resetn   ) ,  // Asynchronous active low reset.
-.addr   (mod_addr ) ,  // Address lines
-.rdata  (mem_rdata) ,  // Read data lines
-.wdata  (mem_wdata) ,  // Write data lines
-.b_en   (mem_ben  ) ,  // Chip Enable
-.w_en   (mem_wen  ) ,  // write enable
-.stall  (mem_stall) ,  // Stall signal
-.error  (mem_err  )    // error signal
-);
-
 endmodule
