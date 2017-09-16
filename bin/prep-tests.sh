@@ -17,6 +17,7 @@ build_riscv_tests()
     autoconf
     ./configure
     make
+    cd $RVM_HOME
     echo "Building RISCV Test programs [DONE]"
 }
 
