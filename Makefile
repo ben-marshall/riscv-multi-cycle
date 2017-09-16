@@ -61,7 +61,7 @@ regress-isa: build
 	python2.7 $(RVM_HOME)/bin/regression.py $(RVM_HOME)/sim/regression-list-isa-tests.txt
 
 
-coverage: regress-isa
+coverage:
 	python3 $(RVM_HOME)/bin/coverage.py --covergroups $(COVGROUPS) ./work/*.vcd
 	
 clean:

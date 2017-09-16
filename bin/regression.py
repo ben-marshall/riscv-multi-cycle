@@ -122,10 +122,10 @@ def run_regressions(to_run):
                 test.passed(output)
             elif("TEST FAIL" in output):
                 test.failed(output)
-                vcd_name = os.path.basename(test.hex_file).split(".")[0]+".vcd"
-                shutil.copyfile("./work/waves.vcd", "./work/%s" % vcd_name)
             else:
                 test.failed(output)
+            vcd_name = os.path.basename(test.hex_file).split(".")[0]+".vcd"
+            shutil.copyfile("./work/waves.vcd", "./work/%s" % vcd_name)
         
         except subprocess.CalledProcessError as e:
             test.errored(e)
