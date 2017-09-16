@@ -1,0 +1,3 @@
+[submodule "verif/riscv-tests"]
+	path = verif/riscv-tests
+	url = https://github.com/riscv/riscv-tests.git

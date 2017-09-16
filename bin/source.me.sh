@@ -12,6 +12,7 @@ echo "PATH      = $PATH"
 
 # Copy the (hopefully) pre-compiled hex test files from the riscv tools folder.
 source $RVM_HOME/bin/prep-tests.sh
+build_riscv_tests
 source_riscv_tests
 
 echo "Workspace setup complete."

@@ -10,16 +10,26 @@ ELF2HEX=$RISCV/bin/elf2hex
 OBJCPY=$RISCV/bin/riscv64-unknown-elf-objcopy
 OBJDMP=$RISCV/bin/riscv64-unknown-elf-objdump
 
+build_riscv_tests()
+{
+    echo "Building RISCV Test programs..."
+    cd $RVM_HOME/verif/riscv-tests
+    autoconf
+    ./configure
+    make
+    echo "Building RISCV Test programs [DONE]"
+}
+
 source_riscv_tests()
 {
     echo -n "Setting up ISA test programs..."
     WIDTH=4
     DEPTH=1024
-    TEST_HEX_FILES=$RISCV/riscv64-unknown-elf/share/riscv-tests/isa
+    TEST_HEX_FILES=$RVM_HOME/verif/riscv-tests/isa
     
-    HEX=$RVM_HOME/verif/riscv-tests/hex
-    DIS=$RVM_HOME/verif/riscv-tests/dis
-    ELF=$RVM_HOME/verif/riscv-tests/elf
+    HEX=$RVM_HOME/verif/riscv-tests/build/hex
+    DIS=$RVM_HOME/verif/riscv-tests/build/dis
+    ELF=$RVM_HOME/verif/riscv-tests/build/elf
 
     rm -rf $HEX $DIS $ELF
     

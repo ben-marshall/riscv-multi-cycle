@@ -9,5 +9,3 @@ random-tests/*.dis
 random-tests/*.hex
 random-tests/*.log
 random-tests/*.in
-
-riscv-tests/
