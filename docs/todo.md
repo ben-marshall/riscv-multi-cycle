@@ -3,7 +3,7 @@
 
 ## Specs
  
-- [ ] Check all RISCV specsare up to date.
+- [X] Check all RISCV specs are up to date.
 - [ ] Write a feature list which the core supports.
 
 ## Verification
