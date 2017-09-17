@@ -1,32 +1,9 @@
----
-layout: default
-title: Documentation | RISCV Multi Cycle
----
-
 
 # RISCV Multi-cycle CPU implementation
 
-This is the top level for the project documentation. It is broken into three
-main sections:
+This is the top level for the project documentation.
 
-## [Architecture](./arch/arch.html)
-
-Describes the instruction set the core implements.
-- Instruction set architecture documentation.
-- Privilidged resource architecture documentation.
-- Notes on implementation specific details.
-
-
-## [Micro-Architecture](./uarch/uarch.html)
-
-Describes the implementation details of the core.
-- Module hierarchy.
-- Interface descriptions.
-
-## [Flow](./flow/flow.html)
-
-Describes how to build, simulate and synthesise the core.
-- Makefile documentation.
-- EDA tools.
-- Simulation steps & testbench information.
-- Synthesis steps.
+- [Features](features.md) - An overview of what the core implements.
+- [Architecture](arch.md) - Details of the RISCV architecture.
+- [Micro-Architecture](uarch.md) - Details of the implementation.
+- [Flow](flow.md) - How to build, simulate and implement the core.
