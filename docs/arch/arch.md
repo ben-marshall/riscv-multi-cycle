@@ -12,9 +12,8 @@ This page details all ISA specific information which the core implements.
 This documentation is supplied by the [RISC-V Foundation](https://riscv.org/).
 The most recent coppies can be found [here](https://riscv.org/specifications/).
 
-- RISCV ISA Specification V2.1 [PDF](../arch/riscv-spec-v2.1.pdf)]
-- RISCV Privileged Resource Architecture V1.9-1 [PDF](../arch/riscv-privileged-v1.9-1.pdf)
-- RISCV Opcodes Specification [PDF](../arch/riscv-opcodes.pdf)
+- RISCV ISA Specification V2.1 [PDF](../arch/riscv-spec-v2.2.pdf)]
+- RISCV Privileged Resource Architecture V1.9-1 [PDF](../arch/riscv-privileged-v1.10.pdf)
 
 A concise description of all RV32UI instructions can be found 
 [here](actions.html). Quirks in the current version of the RISCV toolchain
