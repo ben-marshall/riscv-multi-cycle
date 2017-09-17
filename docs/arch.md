@@ -16,10 +16,10 @@ The most recent coppies can be found [here](https://riscv.org/specifications/).
 - RISCV Privileged Resource Architecture [PDF](../arch/riscv-privileged-v1.10.pdf)
 
 A concise description of all RV32UI instructions can be found 
-[here](actions.html). Quirks in the current version of the RISCV toolchain
+[here](actions.md). Quirks in the current version of the RISCV toolchain
 can also make it difficult to work out exactly which register an instruction
 is addressing when viewing dissassembly. A mapping table to make debugging
-easier is listed [here](registers.html).
+easier is listed [here](registers.md).
 
 # Implementation Notes
 
