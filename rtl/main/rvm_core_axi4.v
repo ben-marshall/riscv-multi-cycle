@@ -51,6 +51,22 @@ wire [ 3:0]  mem_b_en;           // Memory byte enable
 wire         mem_error;          // Memory error indicator
 wire         mem_stall;           // Memory stall indicator
 
+// ----- AXI4 <-> SRAM Bridge Logic -----------------------------------
+
+// Reads
+assign M_AXI_ARADDR     = mem_addr;
+assign M_AXI_ARSIZE     = 3'b010;   // 4-bytes
+assign M_AXI_ARVALID    = mem_c_en && !mem_w_en;
+assign mem_stall        = mem_c_en && !M_AXI_ARREADY;
+
+// Write Requests
+
+
+// Write Responses
+
+
+// ----- CORE Instantiation -------------------------------------------
+
 //
 // Top level instantiation of the core.
 //
