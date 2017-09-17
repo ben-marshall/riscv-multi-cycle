@@ -13,18 +13,11 @@ micro-architecture.
 These are the signals which must be connected in order to use and implement
 the core. 
 
-Direction | Width  | Name        | Description
-----------|--------|-------------|--------------------------------------------
-input     |        | `clk`       | System level clock.
-input     |        | `resetn`    | Asynchronous active low reset.
-output    | [31:0] | `mem_addr`  | Memory address lines
-input     | [31:0] | `mem_rdata` | Memory read data
-output    | [31:0] | `mem_wdata` | Memory write data
-output    |        | `mem_c_en`  | Memory chip enable
-output    |        | `mem_w_en`  | Memory write enable
-output    | [ 3:0] | `mem_b_en`  | Memory byte enable
-input     |        | `mem_error` | Memory error indicator
-input     |        | `mem_stall  | Memory stall indicator
+```
+
+    TBD
+
+```
 
 # Module Hierarchy
 
