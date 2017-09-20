@@ -10,3 +10,4 @@ $(RVM_HOME)/rtl/main/rvm_gprs.v
 $(RVM_HOME)/rtl/main/rvm_pcu.v
 $(RVM_HOME)/rtl/main/rvm_scu.v
 $(RVM_HOME)/rtl/main/rvm_shift.v
+$(RVM_HOME)/rtl/main/rvm_core_axi4.v

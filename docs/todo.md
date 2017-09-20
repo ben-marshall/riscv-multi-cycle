@@ -15,7 +15,7 @@
 
 ## RTL
 
-- [ ] SRAM <-> AXIv4 Bridge.
+- [X] SRAM <-> AXIv4 Bridge.
 - [ ] Interrupt support.
 
 ## Flow

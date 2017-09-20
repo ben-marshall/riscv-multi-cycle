@@ -10,6 +10,8 @@
 `timescale 1ns/1ns
 `include "rvm_constants.v"
 
+`define CORE_PATH i_dut.i_rvm_core
+
 module rvm_core_tb();
 
 reg                 timeout;        // Finish due to timeout.
@@ -27,6 +29,26 @@ reg                 fail_hit ;      //
 reg clk;
 reg resetn =1'b0;
 wire clk_req;
+
+wire       [31:0] M_AXI_ARADDR;     // 
+wire              M_AXI_ARREADY;    // 
+wire       [ 2:0] M_AXI_ARSIZE;     // 
+wire              M_AXI_ARVALID;    // 
+wire       [31:0] M_AXI_AWADDR;     // 
+wire              M_AXI_AWREADY;    // 
+wire       [ 2:0] M_AXI_AWSIZE;     // 
+wire              M_AXI_AWVALID;    // 
+wire              M_AXI_BREADY;     // 
+wire       [ 1:0] M_AXI_BRESP;      // 
+wire              M_AXI_BVALID;     // 
+wire       [31:0] M_AXI_RDATA;      // 
+wire              M_AXI_RREADY;     // 
+wire       [ 1:0] M_AXI_RRESP;      // 
+wire              M_AXI_RVALID;     // 
+wire       [31:0] M_AXI_WDATA;      // 
+wire              M_AXI_WREADY;     // 
+wire       [ 3:0] M_AXI_WSTRB;      // 
+wire              M_AXI_WVALID;     // 
 
 initial begin
     #16 assign resetn = 1'b1;  // Take DUT out of reset after 5 ticks
@@ -74,17 +96,17 @@ always @(posedge clk) begin
     timeout       = 0;
     fail_hit      = 0;
 
-    if(mem_addr == halt_addr) begin
+    if(M_AXI_ARADDR == halt_addr) begin
         test_finished = 1;
         test_pass     = 0;
         timeout       = 0;
     
-    end else if(mem_addr == pass_addr) begin
+    end else if(M_AXI_ARADDR == pass_addr) begin
         test_finished = 1;
         test_pass     = 1;
         timeout       = 0;
     
-    end else if(mem_addr == fail_addr) begin
+    end else if(M_AXI_ARADDR == fail_addr) begin
         test_finished = 1;
         test_pass     = 0;
         fail_hit      = 1;
@@ -101,10 +123,10 @@ always @(posedge clk) begin
         
         $display("Register file values after %d cycles:", cycle_count);
         for (i = 0; i < 32; i = i + 1) begin
-            $display("\t%d\t: 0x%h", i, i_dut.i_rvm_gprs.registers[i]);
+            $display("\t%d\t: 0x%h", i, `CORE_PATH.i_rvm_gprs.registers[i]);
         end
 
-        $display("Program Counter:     %h", i_dut.s_pc);
+        $display("Program Counter:     %h", `CORE_PATH.s_pc);
         $display("Processor Cycles:    %d", cycle_count);
 
         if(test_pass) begin
@@ -121,5 +143,67 @@ always @(posedge clk) begin
     end
 
 end
+
+// ------------------------------------------------------------------------
+
+//
+// DUT instance
+//
+rvm_core_axi4 i_dut(
+.ACLK          (clk           ) , // Master clock for the AXI interface.
+.ARESETn       (resetn        ) , // Active low asynchronous reset.
+.M_AXI_ARADDR  (M_AXI_ARADDR  ) , 
+.M_AXI_ARREADY (M_AXI_ARREADY ) , 
+.M_AXI_ARSIZE  (M_AXI_ARSIZE  ) , 
+.M_AXI_ARVALID (M_AXI_ARVALID ) , 
+.M_AXI_AWADDR  (M_AXI_AWADDR  ) , 
+.M_AXI_AWREADY (M_AXI_AWREADY ) , 
+.M_AXI_AWSIZE  (M_AXI_AWSIZE  ) , 
+.M_AXI_AWVALID (M_AXI_AWVALID ) , 
+.M_AXI_BREADY  (M_AXI_BREADY  ) , 
+.M_AXI_BRESP   (M_AXI_BRESP   ) , 
+.M_AXI_BVALID  (M_AXI_BVALID  ) , 
+.M_AXI_RDATA   (M_AXI_RDATA   ) , 
+.M_AXI_RREADY  (M_AXI_RREADY  ) , 
+.M_AXI_RRESP   (M_AXI_RRESP   ) , 
+.M_AXI_RVALID  (M_AXI_RVALID  ) , 
+.M_AXI_WDATA   (M_AXI_WDATA   ) , 
+.M_AXI_WREADY  (M_AXI_WREADY  ) , 
+.M_AXI_WSTRB   (M_AXI_WSTRB   ) , 
+.M_AXI_WVALID  (M_AXI_WVALID  )   
+);
+
+
+//
+// Test memory
+//
+axi_sram #(
+ .addr_w(32),
+ .data_w(32),
+ .size(8192)
+) i_ram(
+.memfile       (imem_file     ),
+.ACLK          (clk           ) , // Master clock for the AXI interface.
+.ARESETn       (resetn        ) , // Active low asynchronous reset.
+.M_AXI_ARADDR  (M_AXI_ARADDR  ) , 
+.M_AXI_ARREADY (M_AXI_ARREADY ) , 
+.M_AXI_ARSIZE  (M_AXI_ARSIZE  ) , 
+.M_AXI_ARVALID (M_AXI_ARVALID ) , 
+.M_AXI_AWADDR  (M_AXI_AWADDR  ) , 
+.M_AXI_AWREADY (M_AXI_AWREADY ) , 
+.M_AXI_AWSIZE  (M_AXI_AWSIZE  ) , 
+.M_AXI_AWVALID (M_AXI_AWVALID ) , 
+.M_AXI_BREADY  (M_AXI_BREADY  ) , 
+.M_AXI_BRESP   (M_AXI_BRESP   ) , 
+.M_AXI_BVALID  (M_AXI_BVALID  ) , 
+.M_AXI_RDATA   (M_AXI_RDATA   ) , 
+.M_AXI_RREADY  (M_AXI_RREADY  ) , 
+.M_AXI_RRESP   (M_AXI_RRESP   ) , 
+.M_AXI_RVALID  (M_AXI_RVALID  ) , 
+.M_AXI_WDATA   (M_AXI_WDATA   ) , 
+.M_AXI_WREADY  (M_AXI_WREADY  ) , 
+.M_AXI_WSTRB   (M_AXI_WSTRB   ) , 
+.M_AXI_WVALID  (M_AXI_WVALID  )   
+);
 
 endmodule
