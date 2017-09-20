@@ -14,6 +14,8 @@
 
 module rvm_core_tb();
 
+parameter SRAM_SIZE = 16384;
+
 reg                 timeout;        // Finish due to timeout.
 integer             cycle_count;    // Current cycle count.
 integer             max_cycle_count;// Max cycles before timeout.
@@ -180,7 +182,7 @@ rvm_core_axi4 i_dut(
 axi_sram #(
  .addr_w(32),
  .data_w(32),
- .size(8192)
+ .size(SRAM_SIZE)
 ) i_ram(
 .memfile       (imem_file     ),
 .ACLK          (clk           ) , // Master clock for the AXI interface.

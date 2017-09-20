@@ -48,8 +48,9 @@ always @(*) begin
 
     if(addr < size) begin
         n_output_data = memory[addr_idx];
-    end else begin
+    end else if(resetn) begin
         // This address is out of range!
+        $display("ERROR: Requested read addr %h out of range.", addr);
         error = 1'b1;
     end
 end
@@ -61,8 +62,9 @@ if(|b_en && w_en == 1'b1) begin
     memory[addr_idx][23:16] = b_en[2] ? wdata[23:16] : memory[addr_idx][23:16];
     memory[addr_idx][15: 8] = b_en[1] ? wdata[15: 8] : memory[addr_idx][15: 8];
     memory[addr_idx][ 7: 0] = b_en[0] ? wdata[ 7: 0] : memory[addr_idx][ 7: 0];
-  end else begin
+  end else if(resetn) begin
       // This address is out of range!
+      $display("ERROR: Requested write addr %h out of range.", addr);
       error = 1'b1;
   end
 end

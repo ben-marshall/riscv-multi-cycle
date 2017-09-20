@@ -113,11 +113,11 @@ assign mem_rdata        = M_AXI_RDATA;
 // Write Requests
 assign M_AXI_AWADDR     = mem_addr;
 assign M_AXI_AWSIZE     = 3'b010;   // 4-bytes
-assign M_AXI_AWVALID    = mem_c_en && !mem_w_en && !aw_ready;
+assign M_AXI_AWVALID    = mem_c_en &&  mem_w_en && !aw_ready;
 
 assign M_AXI_WSTRB      = mem_b_en;
 assign M_AXI_WDATA      = mem_wdata;
-assign M_AXI_WVALID     = mem_c_en && !mem_w_en && !wd_ready;
+assign M_AXI_WVALID     = mem_c_en &&  mem_w_en && !wd_ready;
 
 
 
