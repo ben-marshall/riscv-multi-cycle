@@ -42,9 +42,11 @@ reg  [data_w-1:0] n_output_data;
 assign stall = 1'b0;
 
 // Continously extract the requested data
-always @(*) begin
+always @(posedge gclk) begin
     
-    error = 1'b0;
+  error = 1'b0;
+    
+  if(b_en) begin
 
     if(addr < size) begin
         n_output_data = memory[addr_idx];
@@ -53,6 +55,8 @@ always @(*) begin
         $display("ERROR: Requested read addr %h out of range.", addr);
         error = 1'b1;
     end
+
+  end
 end
 
 always @(posedge gclk) begin : do_writes
