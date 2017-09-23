@@ -167,7 +167,7 @@ always @(posedge clk or negedge resetn) begin : p_scu_minstret
     end else if(csr_write & csr_address == `RVM_SCU_ADDR_MINSTRETH) begin
         reg_minstret <= {csr_wdata, reg_minstret[31: 0]};
     end else if(!reg_minstret_stall) begin
-        reg_minstret = reg_minstret + 1;
+        reg_minstret <= reg_minstret + 1;
     end
 end
 

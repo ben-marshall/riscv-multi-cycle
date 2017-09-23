@@ -107,9 +107,9 @@ endcase end
 //
 always @(posedge clk, negedge resetn) begin : p_ctrl_progress_state
     if(!resetn) begin
-        {{state_var}} = {{default_next_state}};
+        {{state_var}} <= {{default_next_state}};
     end else begin
-        {{state_var}} = n_{{state_var}};
+        {{state_var}} <= n_{{state_var}};
     end
 end
 
