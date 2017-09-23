@@ -5,8 +5,8 @@ VVP_FLAGS=-l work/sim.log
 VCC=iverilog
 VCC_TARGET=vvp
 VCC_OUTPUT=$(RVM_HOME)/work/sim.bin
-VCC_SCRIPT=$(RVM_HOME)/sim/manifest-iverilog.cmd
-VCC_RAND_SCRIPT=$(RVM_HOME)/sim/manifest-iverilog-crt.cmd
+VCC_SCRIPT=$(RVM_HOME)/sim/icarus/manifest-iverilog.cmd
+VCC_RAND_SCRIPT=$(RVM_HOME)/sim/icarus/manifest-iverilog-crt.cmd
 VCC_FLAGS=-v -g2005 -t $(VCC_TARGET) -o $(VCC_OUTPUT)
 
 COVGROUPS=$(RVM_HOME)/verif/coverage/coverpoints.json
