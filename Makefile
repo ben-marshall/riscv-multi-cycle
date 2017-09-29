@@ -25,10 +25,7 @@ WAVE_FILE=waves.vcd
 
 .PHONY: docs
 
-all: build docs
-
-docs:
-	$(MAKE) -C $(RVM_HOME)/docs all
+all: build
 
 # Force a re-build of the RTL source simulation.
 build: control-fsm
