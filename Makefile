@@ -25,10 +25,10 @@ WAVE_FILE=waves.vcd
 
 .PHONY: docs
 
-all: build
+all: verilate
 
 # Force a re-build of the RTL source simulation.
-build: control-fsm
+icarus : control-fsm
 	$(MAKE) -B $(VCC_OUTPUT)
 
 verilate: control-fsm

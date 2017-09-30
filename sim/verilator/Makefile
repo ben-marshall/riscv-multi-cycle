@@ -1,6 +1,5 @@
 
-VERILATE=/opt/verilator/verilator-3.912/verilator_bin
-
+VERILATE=$(RVM_VERILATOR_BIN)
 VL_TOP=rvm_core_axi4
 
 VERILOG_RTL_CTR=$(RVM_HOME)/work/fsm.v
