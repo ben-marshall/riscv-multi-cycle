@@ -1,6 +1,9 @@
 
-#include "Vrvm_core_axi4.h"
+
 #include "verilated.h"
+#include "verilated_vcd_c.h"
+
+#include "Vrvm_core_axi4.h"
 
 #include "axi_device.h"
 #include "axi_memory.h"
@@ -18,6 +21,13 @@ class verilator_sim {
 
         verilator_sim();
         ~verilator_sim();
+        
+        /*!
+        @brief If called, wave dumping is turned on and sent to the supplied
+               file path.
+        @param in filepath - The file to write waves to.
+        */
+        void dump_waves_to(const char * filepath);
         
         /*!
         @brief Run the simulation to completion.
@@ -41,6 +51,15 @@ class verilator_sim {
 
         //! Period of the system clock in simulation ticks.
         vluint64_t      clk_period  = 20;
+    
+        //! Should wave tracing be turned on for the simulation?
+        bool            wave_tracing = false;
+
+        //! Given wave_tracing == true, dump waves to this file.
+        const char *    wave_trace_file;
+
+        //! Verilator wave tracer instance
+        VerilatedVcdC * wave_dump;
 };
 
 #endif

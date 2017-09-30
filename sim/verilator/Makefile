@@ -18,7 +18,8 @@ SIM=$(OBJ_DIR)/V$(VL_TOP)
 VERILATE_FLAGS= -Wno-fatal \
                 --exe $(C_SRC) \
                 --top-module $(VL_TOP) \
-                --Mdir $(OBJ_DIR) 
+                --Mdir $(OBJ_DIR) \
+                --trace
 
 
 all: $(SIM)

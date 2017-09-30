@@ -1,4 +1,6 @@
 
+#include <iostream>
+
 #include "verilator_sim.hpp"
 
 
@@ -15,12 +17,35 @@ verilator_sim::verilator_sim() {
 }
 
 
+/*!
+@brief If called, wave dumping is turned on and sent to the supplied
+       file path.
+@param in filepath - The file to write waves to.
+*/
+void verilator_sim::dump_waves_to(const char * filepath){
+    
+    this -> wave_tracing    = true;
+    this -> wave_trace_file = filepath;
+}
+
         
 /*!
 @brief Run the simulation to completion.
 @returns True if the sim succeded or False if it failed.
 */
 bool verilator_sim::run_sim(){
+
+    Verilated::traceEverOn(this -> wave_tracing);
+
+    if(this -> wave_tracing) {
+        this -> wave_dump = new VerilatedVcdC;
+        this -> dut -> trace(this->wave_dump, 99);
+        this -> wave_dump -> open(this -> wave_trace_file);
+
+        std::cout << "Waves will be dumped to: " 
+                  << this->wave_trace_file 
+                  << std::endl;
+    }
     
     // Initial input signal values.
     dut -> ARESETn  = 0;
@@ -38,9 +63,19 @@ bool verilator_sim::run_sim(){
 
         // Re-evaluate the simulation module.
         dut->eval();
+        
+        // Update the wavedump file.
+        if(this -> wave_tracing) {
+            this -> wave_dump -> dump(this -> sim_time);
+        }
 
         // Increment simulation time.
         sim_time ++;
+    }
+    
+    // Close the wave tracer if need be.
+    if(this -> wave_tracing) {
+        this -> wave_dump -> close();
     }
     
     

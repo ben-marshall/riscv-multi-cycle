@@ -15,6 +15,8 @@ int main(int argc, char **argv, char **env) {
 
     verilator_sim * sim = new verilator_sim;
 
+    sim -> dump_waves_to("vl_waves.vcd");
+
     bool result = sim -> run_sim();
     
     delete sim;
