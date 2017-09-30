@@ -33,8 +33,6 @@ int main(int argc, char **argv, char **env) {
         // Re-evaluate the simulation module.
         top->eval();
 
-        printf("%d\n",  top -> M_AXI_ARVALID);
-
         // Increment simulation time.
         sim_time ++;
     }
