@@ -15,5 +15,7 @@ source $RVM_HOME/bin/prep-tests.sh
 build_riscv_tests
 source_riscv_tests
 
+export RVM_VERILATOR_ROOT=/opt/verilator/verilator-3.912
+
 echo "Workspace setup complete."
 

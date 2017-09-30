@@ -31,6 +31,9 @@ all: build
 build: control-fsm
 	$(MAKE) -B $(VCC_OUTPUT)
 
+verilate: control-fsm
+	$(MAKE) -C $(RVM_HOME)/sim/verilator all
+
 $(VCC_OUTPUT) : $(VCC_SCRIPT)
 	$(VCC) $(VCC_FLAGS) -c $(VCC_SCRIPT)
 
@@ -63,5 +66,4 @@ coverage:
 	
 clean:
 	rm -rf $(RVM_HOME)/work/*
-	$(MAKE) -C $(RVM_HOME)/verif/directed-tests clean
-	$(MAKE) -C $(RVM_HOME)/verif/random-tests clean
+	$(MAKE) -C $(RVM_HOME)/sim/verilator clean
