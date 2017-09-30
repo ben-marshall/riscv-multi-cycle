@@ -37,6 +37,10 @@ verilate: control-fsm
 $(VCC_OUTPUT) : $(VCC_SCRIPT)
 	$(VCC) $(VCC_FLAGS) -c $(VCC_SCRIPT)
 
+run-vl :
+	./work/obj_dir/Vrvm_core_axi4 $(RVM_HOME)/work/vl_waves.vcd \
+                                  $(TEST_HEX) $(PASS_ADDR) $(FAIL_ADDR)
+
 run-test: $(VCC_OUTPUT)
 	echo "Running simulator hex file: $(TEST_HEX)"
 	$(VVP) $(VVP_FLAGS) $(VCC_OUTPUT) +IMEM=$(TEST_HEX) \

@@ -23,7 +23,7 @@ axi_memory::axi_memory ( vluint32_t hi_addr,
 */
 vluint32_t axi_memory::load(vluint32_t address) {
     if(address_hit(address)) {
-
+        return mem[address & 0xFFFFFFFC];
     } else {
         std::cerr << "ERROR: address "<<address<< " is not in the mapped range of this device: <" << this->device_addr_lo <<","<<this->device_addr_hi<<">"<<std::endl;
     }
@@ -39,7 +39,7 @@ vluint32_t axi_memory::load(vluint32_t address) {
 */
 void axi_memory::store(vluint32_t address, vluint32_t data) {
     if(address_hit(address)) {
-
+        mem[address & 0xFFFFFFFC] = data;
     } else {
         std::cerr << "ERROR: address "<<address<< " is not in the mapped range of this device: <" << this->device_addr_lo <<","<<this->device_addr_hi<<">"<<std::endl;
     }

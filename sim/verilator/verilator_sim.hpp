@@ -36,12 +36,30 @@ class verilator_sim {
         void preload_main_memory(const char *filepath, vluint32_t offset);
         
         /*!
+        @brief Set the pass and fail addresses for determining the success
+               of the simulation.
+        */
+        void set_pass_fail_addrs(vluint32_t pass, vluint32_t fail);
+        
+        /*!
         @brief Run the simulation to completion.
         @returns True if the sim succeded or False if it failed.
         */
         bool run_sim();
 
     private:
+        
+        //! If set, we exit the simulation loop at the next iteration
+        bool            break_sim_loop = false;
+        
+        //! Did the simulation pass? Otherwise assume failure.
+        bool            sim_passed     = false;
+
+        //! If this address is seen then pass the test and stop the simulation.
+        vluint32_t        pass_address = 0xFFFFFFFF;
+
+        //! If this address is seen then fail the test and stop the simulation.
+        vluint32_t        fail_address = 0xFFFFFFFF;
         
         //! Acts as a complete memory space for the test.
     	axi_memory      * main_memory;
@@ -53,7 +71,7 @@ class verilator_sim {
         vluint64_t      sim_time;
         
         //! Maximum number of simulation ticks before we quit.
-        vluint64_t      max_sim_time = 10000;
+        vluint64_t      max_sim_time = 100000;
 
         //! Period of the system clock in simulation ticks.
         vluint64_t      clk_period  = 20;
@@ -66,6 +84,19 @@ class verilator_sim {
 
         //! Verilator wave tracer instance
         VerilatedVcdC * wave_dump;
+
+        /*!
+        @brief Responsible for handling all DUT input / output pins.
+        @return void
+        @details Called on every *rising* edge of the system clock.
+        */
+        void            handle_dut_io();
+        
+        /*!
+        @brief Check if the pass/fail addresses are present in the DUT.
+        @return void
+        */
+        void            check_pass_fail();
 };
 
 #endif
