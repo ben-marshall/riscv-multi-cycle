@@ -41,10 +41,10 @@ int main(int argc, char **argv, char **env) {
     std::cout << "Finished with code " << result << std::endl;
     
     if(result) {
-        std::cout << "Simulation Passed." << std::endl;
+        std::cout << "TEST PASS" << std::endl;
         exit(0);
     } else {
-        std::cout << "Simulation Failed." << std::endl;
+        std::cout << "TEST FAIL" << std::endl;
         exit(1);
     }
 }

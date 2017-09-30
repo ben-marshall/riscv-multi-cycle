@@ -38,7 +38,7 @@ $(VCC_OUTPUT) : $(VCC_SCRIPT)
 	$(VCC) $(VCC_FLAGS) -c $(VCC_SCRIPT)
 
 run-vl :
-	./work/obj_dir/Vrvm_core_axi4 $(RVM_HOME)/work/vl_waves.vcd \
+	./work/obj_dir/Vrvm_core_axi4 $(RVM_HOME)/work/waves.vcd \
                                   $(TEST_HEX) $(PASS_ADDR) $(FAIL_ADDR)
 
 run-test: $(VCC_OUTPUT)
@@ -61,7 +61,7 @@ view-waves:
             $(RVM_HOME)/work/$(WAVE_FILE) \
             $(RVM_HOME)/sim/waves.gtkw &
 
-regress-isa: icarus
+regress-isa: icarus verilate
 	python2.7 $(RVM_HOME)/bin/regression.py $(RVM_HOME)/sim/regression-list-isa-tests.txt
 
 

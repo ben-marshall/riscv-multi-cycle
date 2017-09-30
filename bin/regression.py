@@ -110,7 +110,7 @@ def run_regressions(to_run):
     i = 0
     for test in to_run:
 
-        cmd = ["make", "run-test",
+        cmd = ["make", "run-vl",
                 "TEST_HEX=%s"   % test.hex_file,
                 "HALT_ADDR=%s"  % test.halt_addr,
                 "PASS_ADDR=%s"  % test.pass_addr,
