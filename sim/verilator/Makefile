@@ -19,7 +19,8 @@ VERILATE_FLAGS= -Wno-fatal \
                 --exe $(C_SRC) \
                 --top-module $(VL_TOP) \
                 --Mdir $(OBJ_DIR) \
-                --trace
+                --trace \
+                --coverage
 
 
 all: $(SIM)

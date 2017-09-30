@@ -143,6 +143,9 @@ bool verilator_sim::run_sim(){
     }
 
     dut -> final();
+
+    //std::cout << "Writing Coverage Data..." << std::endl;
+    //VerilatedCov::write("work/coverage.dat");
     
     if(sim_time >= max_sim_time){
         std::cerr << "TIMEOUT" << std::endl;
