@@ -9,9 +9,10 @@ VERILOG_INCLUDE=$(RVM_HOME)/rtl/main
 
 OBJ_DIR=$(RVM_HOME)/work/obj_dir
 
-C_SRC=$(RVM_HOME)/sim/verilator/verilator_main.cpp
+C_SRC=$(RVM_HOME)/sim/verilator/verilator_main.cpp \
+      $(RVM_HOME)/sim/verilator/axi_memory.cpp
 
-SIM=$(RVM_HOME)/work/vl_sim.bin
+SIM=$(OBJ_DIR)/V$(VL_TOP)
 
 VERILATE_FLAGS= -Wno-fatal \
                 --exe $(C_SRC) \

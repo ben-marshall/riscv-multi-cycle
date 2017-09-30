@@ -5,6 +5,8 @@
 #include "Vrvm_core_axi4.h"
 #include "verilated.h"
 
+#include "axi_memory.h"
+
 int main(int argc, char **argv, char **env) {
     
     // Current simulation time.
@@ -12,6 +14,9 @@ int main(int argc, char **argv, char **env) {
     const vluint64_t    max_time = 1000;
 
     std::cout << "Starting Verilator Simulation..." << std::endl;
+
+    // Create the main memory.
+    axi_memory main_memory(2^32-1, 0, 0xdeadc0de);
 
     Verilated::commandArgs(argc, argv);
     Vrvm_core_axi4 * top = new Vrvm_core_axi4;
