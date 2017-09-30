@@ -10,6 +10,7 @@ VERILOG_INCLUDE=$(RVM_HOME)/rtl/main
 OBJ_DIR=$(RVM_HOME)/work/obj_dir
 
 C_SRC=$(RVM_HOME)/sim/verilator/verilator_main.cpp \
+      $(RVM_HOME)/sim/verilator/verilator_sim.cpp \
       $(RVM_HOME)/sim/verilator/axi_memory.cpp
 
 SIM=$(OBJ_DIR)/V$(VL_TOP)

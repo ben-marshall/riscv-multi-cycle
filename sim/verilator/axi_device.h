@@ -1,6 +1,9 @@
 
 #include "verilated.h"
 
+#ifndef H_AXI_DEVICE
+#define H_AXI_DEVICE
+
 /*!
 @brief A generic interface class which can model an AXI4 device.
 @details Models a generic AXI device and is designed to be used as part of an
@@ -54,3 +57,5 @@ class axi_device {
         //! Bottom address for this device.
         vluint32_t  device_addr_lo;
 };
+
+#endif

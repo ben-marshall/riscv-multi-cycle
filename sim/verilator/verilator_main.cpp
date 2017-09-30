@@ -5,49 +5,24 @@
 #include "Vrvm_core_axi4.h"
 #include "verilated.h"
 
-#include "axi_memory.h"
+#include "verilator_sim.hpp"
 
 int main(int argc, char **argv, char **env) {
-    
-    // Current simulation time.
-    vluint64_t          sim_time = 0;
-    const vluint64_t    max_time = 1000;
 
     std::cout << "Starting Verilator Simulation..." << std::endl;
 
-    // Create the main memory.
-    axi_memory main_memory(2^32-1, 0, 0xdeadc0de);
-
     Verilated::commandArgs(argc, argv);
-    Vrvm_core_axi4 * top = new Vrvm_core_axi4;
 
-    // Initial input signal values.
-    top -> ARESETn  = 0;
-    top -> ACLK     = 0;
+    verilator_sim * sim = new verilator_sim;
 
-    while (!Verilated::gotFinish() && sim_time < max_time) {
-        
-        if(sim_time > 40) {
-            top -> ARESETn = 1;
-        }
-
-        if(sim_time % 10 == 1) {
-            top -> ACLK = ~top -> ACLK;
-        }
-
-        // Re-evaluate the simulation module.
-        top->eval();
-
-        // Increment simulation time.
-        sim_time ++;
-    }
+    bool result = sim -> run_sim();
     
-    if(sim_time >= max_time){
-        std::cout << "Simulation Complete. TIMEOUT" << std::endl;
-    } else {
-        std::cout << "Simulation Complete." << std::endl;
-    }
+    delete sim;
     
-    delete top;
-    exit(0);
+    std::cout << "Finished with code " << result << std::endl;
+
+    if(result)
+        exit(0);
+    else
+        exit(1);
 }

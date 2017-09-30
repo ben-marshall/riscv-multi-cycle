@@ -5,6 +5,8 @@
 
 #include "axi_device.h"
 
+#ifndef H_AXI_MEMORY
+#define H_AXI_MEMORY
 
 class axi_memory : public axi_device {
 
@@ -45,3 +47,5 @@ class axi_memory : public axi_device {
         vluint32_t  default_return_value;
 
 };
+
+#endif
