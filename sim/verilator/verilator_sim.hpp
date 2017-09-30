@@ -28,6 +28,12 @@ class verilator_sim {
         @param in filepath - The file to write waves to.
         */
         void dump_waves_to(const char * filepath);
+
+        /*!
+        @brief Load a hex file into main memory at the supplied offset.
+        @note This should be done before simulation is started.
+        */
+        void preload_main_memory(const char *filepath, vluint32_t offset);
         
         /*!
         @brief Run the simulation to completion.

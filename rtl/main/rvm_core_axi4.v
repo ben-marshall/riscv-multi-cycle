@@ -93,7 +93,7 @@ end
 //
 // Memory stall & error signals.
 assign mem_stall        = mem_c_en && (( mem_w_en && !M_AXI_BVALID) ||
-                                       (!mem_w_en &&  M_AXI_RVALID)) ;
+                                       (!mem_w_en && !M_AXI_RVALID)) ;
 
 assign mem_error        = M_AXI_BVALID && M_AXI_BRESP != 2'b0 ||
                           M_AXI_RVALID && M_AXI_RRESP != 2'b0  ;

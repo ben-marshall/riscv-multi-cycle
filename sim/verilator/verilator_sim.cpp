@@ -27,6 +27,15 @@ void verilator_sim::dump_waves_to(const char * filepath){
     this -> wave_tracing    = true;
     this -> wave_trace_file = filepath;
 }
+        
+        
+/*!
+@brief Load a hex file into main memory at the supplied offset.
+@note This should be done before simulation is started.
+*/
+void preload_main_memory(const char *filepath, vluint32_t offset){
+    
+}
 
         
 /*!
