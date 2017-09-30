@@ -44,7 +44,8 @@ wire [31:0] f_add_lhs   ; // Left hand side of the adder operand.
 wire [31:0] f_add_rhs   ; // Right hand side of the adder operand.
 wire [ 2:0] f_add_op    ; // Adder operation to perform.
 wire        f_add_valid ; // Adder has finished computing.
-wire [32:0] f_add_result; // Result of the adder operation.
+wire [31:0] f_add_result; // Result of the adder operation.
+wire        f_add_overflow; // Adder result overflowed.
 
 wire [31:0] f_bit_lhs   ; // Left hand side of the bitwise operand.
 wire [31:0] f_bit_rhs   ; // Right hand side of the bitwise operand.
@@ -144,7 +145,8 @@ rvm_adder i_rvm_add(
 .rhs   (f_add_rhs   ), // Value on right-hand side of operator
 .op    (f_add_op    ), // What to do?
 .valid (f_add_valid ), // Asserts that the result is complete.
-.result(f_add_result)  // The result of the addition / subtraction
+.result(f_add_result),  // The result of the addition / subtraction
+.overflow(f_add_overflow)
 );
 
 rvm_bitwise i_rvm_bitwise(
