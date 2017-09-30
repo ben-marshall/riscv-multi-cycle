@@ -57,7 +57,7 @@ view-waves:
             $(RVM_HOME)/work/$(WAVE_FILE) \
             $(RVM_HOME)/sim/waves.gtkw &
 
-regress-isa: build
+regress-isa: icarus
 	python2.7 $(RVM_HOME)/bin/regression.py $(RVM_HOME)/sim/regression-list-isa-tests.txt
 
 

@@ -55,7 +55,32 @@ reg          aw_ready;          // State for checking aw_ready has been seen.
 reg          wd_ready;          // State for checking w_ready has been seen.
 reg          ar_ready;          // State for checking ar_ready has been seen.
 
+reg          rd_out;            // There is an outstanding read request.
+wire         n_rd_out;          // There is an outstanding read request.
+
+reg          wr_out;            // There is an outstanding write request.
+wire         n_wr_out;          // There is an outstanding write request.
+
 // ----- AXI4 <-> SRAM Bridge Logic -----------------------------------
+
+assign n_rd_out = rd_out && !M_AXI_RVALID || (mem_c_en && !mem_w_en) ;
+assign n_wr_out = wr_out && !M_AXI_BVALID || (mem_c_en &&  mem_w_en) ;
+
+always @(posedge ACLK, negedge ARESETn) begin
+    if(!ARESETn) begin
+        rd_out <= 1'b0;
+    end else begin
+        rd_out <= n_rd_out;
+    end
+end
+
+always @(posedge ACLK, negedge ARESETn) begin
+    if(!ARESETn) begin
+        wr_out <= 1'b0;
+    end else begin
+        wr_out <= n_wr_out;
+    end
+end
 
 //
 // Data read request channel protocol signalling.
@@ -92,8 +117,8 @@ end
 
 //
 // Memory stall & error signals.
-assign mem_stall        = mem_c_en && (( mem_w_en && !M_AXI_BVALID) ||
-                                       (!mem_w_en && !M_AXI_RVALID)) ;
+assign mem_stall        = (wr_out && !M_AXI_BVALID) ||
+                          (rd_out && !M_AXI_RVALID) ;
 
 assign mem_error        = M_AXI_BVALID && M_AXI_BRESP != 2'b0 ||
                           M_AXI_RVALID && M_AXI_RRESP != 2'b0  ;
@@ -106,18 +131,18 @@ assign M_AXI_RREADY     = 1'b1;
 // Reads
 assign M_AXI_ARADDR     = mem_addr;
 assign M_AXI_ARSIZE     = 3'b010;   // 4-bytes
-assign M_AXI_ARVALID    = mem_c_en && !mem_w_en && !ar_ready;
+assign M_AXI_ARVALID    = n_rd_out;
 
 assign mem_rdata        = M_AXI_RDATA;
 
 // Write Requests
 assign M_AXI_AWADDR     = mem_addr;
 assign M_AXI_AWSIZE     = 3'b010;   // 4-bytes
-assign M_AXI_AWVALID    = mem_c_en &&  mem_w_en && !aw_ready;
+assign M_AXI_AWVALID    = n_wr_out && !aw_ready;
 
 assign M_AXI_WSTRB      = mem_b_en;
 assign M_AXI_WDATA      = mem_wdata;
-assign M_AXI_WVALID     = mem_c_en &&  mem_w_en && !wd_ready;
+assign M_AXI_WVALID     = n_wr_out && !wd_ready;
 
 
 

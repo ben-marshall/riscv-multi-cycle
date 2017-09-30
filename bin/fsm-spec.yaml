@@ -78,8 +78,8 @@ states:
   encoding: 0
 
 - name: InstructionFetch
-  wait: [mem_stall != 0]
-  next: InstructionDecode
+  next: [{if: "!mem_stall", then: InstructionDecode},
+         {if:  "mem_stall", then: InstructionFetch} ]
   set:
   - ExternalMemory:
     - mem_addr: s_pc
@@ -138,6 +138,7 @@ states:
     {if: "i_instr == `RVM_INSTR_SW"    , then: EX_SW  },
     {if: "i_instr == `RVM_INSTR_SH"    , then: EX_SH  },
     {if: "i_instr == `RVM_INSTR_SB"    , then: EX_SB  },
+    {if: "mem_stall"                   , then: InstructionDecode} 
   ]
 
 - name: EX_LB
