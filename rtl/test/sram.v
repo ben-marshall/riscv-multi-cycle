@@ -97,7 +97,7 @@ initial begin
 end
 
 // Load the memory file coming out of reset.
-initial begin
+always @(posedge resetn) begin
     if(memfile != "") begin
         $display("In Reset -> Loading memory file: %s", memfile);
         $readmemh(memfile, memory, 0, size-1);
