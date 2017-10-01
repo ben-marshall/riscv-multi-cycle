@@ -6,7 +6,6 @@
 *.vim
 
 work/
-verif/coverage/*.html
 *__pycache__*
 
 xilinx/

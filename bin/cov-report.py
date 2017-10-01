@@ -51,6 +51,22 @@ class AnnotatedFile(object):
             else:
                 self.splitlines.append(("",line[:-1]))
 
+    def getscore(self):
+        """
+        Return the number of covered lines as a percentage.
+        """
+        num_hits = 0.0
+        num_miss = 0.0
+
+        for line in self.splitlines:
+            if(line[0] == 0):
+                num_miss += 1.0
+            if(line[0] != None):
+                num_hits += 1.0
+
+        total = num_hits + num_miss
+        return (num_hits / total) * 100.0
+
 
     def writeout(self, to_file):
         """
@@ -87,12 +103,29 @@ def parseargs():
     return args
 
 
+def writeOverview(scores, path):
+    """
+    Writes an overview of the coverage scores for each file.
+    """
+    ld  = jinja2.FileSystemLoader(
+        os.path.expandvars("$RVM_HOME/verif/coverage"))
+    env = jinja2.Environment(loader = ld)
+
+    template = env.get_template("overview-template.html")
+    
+    result = template.render(scores = scores)
+    
+    with open(path, "w") as fh:
+        fh.write(result)
+
 
 def main():
     """
     Main entry point for using the script
     """
     args = parseargs()
+
+    scores = []
 
     for inputfile in args.input:
         
@@ -103,8 +136,9 @@ def main():
         print("Writing to %s" % outputfile)
 
         af.writeout(outputfile)
+        scores.append((af.filename,af.getscore()))
 
-        
+    writeOverview(scores,os.path.join(args.output,"overview.html"))
     
     sys.exit(0)
 

@@ -1,0 +1,54 @@
+<!DOCTYPE html >
+<html>
+<head>
+<title>Overview | Line / Toggle Coverage</title>
+
+<style type="text/css">
+    .overview-table{
+        border-collapse: collapse;
+    }
+    .fscore{
+        padding: 5px;
+        padding-right: 20px;
+        border-right: 2px solid grey;
+        border-left: 2px solid grey;
+    }
+    .flink{
+        padding: 5px;
+    }
+    .fname{
+        padding: 5px;
+        padding-right: 20px;
+    }
+    th {
+        border-bottom: 2px solid black;
+    }
+</style>
+
+</head>
+<body>
+
+<h1>Overview</h1>
+
+<hr/>
+
+<table class="overview-table">
+    <tr>
+        <th class="fname">File</th>
+        <th class="fscore">Coverage Score</th>
+        <th class="flink">Annotated Source</th>
+    </tr>
+    {% for pair in scores %}
+    <tr>
+        <td class="fname">{{pair[0]}}</td>
+        <td class="fscore">
+            <progress max="100" value="{{"%04.2f" % pair[1]}}"></progress>
+            - {{"%04.2f" % pair[1]}}%
+        </td>
+        <td class="flink"><a href="{{pair[0]}}.html">View</a></td>
+    </tr>
+    {%endfor %}
+</table>
+
+</body>
+</html>
