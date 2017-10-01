@@ -13,12 +13,32 @@ verilator_sim::verilator_sim() {
     
     // Create a new instance of the dut.
     this -> dut = new Vrvm_core_axi4;
+
+    const unsigned int mem_hi   = 0x800FFFFF;
+    const unsigned int mem_lo   = 0x80000000;
+    const unsigned int mem_size = mem_hi - mem_lo;
     
-    // Create a new main memory image.
-    this -> main_memory = new axi_memory(0xA0000000, 0x80000000, 0xdeadc0de);
+    // Create a new main memory image. This is used by the RTL
+    // simulation, not by the SPIKE sim model.
+    this -> main_memory = new axi_memory(mem_hi, mem_lo, 0xdeadc0de);
+
+    this -> spike_mems.push_back(
+        std::make_pair(
+            reg_t(mem_lo),
+            new mem_t(mem_size)
+        )
+    );
+  
+    std::vector<std::string> htif_args;
 
     // Create the golden reference model.
-    //this -> model = new ("rv32ui",1,0x80000000,
+    this -> model = new sim_t(VL_SPIKE_ISA,
+                              VL_SPIKE_NPROCS,
+                              false,             // halted
+                              VL_SPIKE_PC,
+                              this -> spike_mems,
+                              htif_args);
+                         
 }
 
 
@@ -253,4 +273,5 @@ verilator_sim::~verilator_sim() {
     
     delete this -> dut;
     delete this -> main_memory;
+    delete this -> model;
 }

@@ -1,17 +1,29 @@
 
-#include "sim.h"
+#include <vector>
+#include <utility>
 
+// Spike ISA Sim includes
+#include "sim.h"
+#include "decode.h"
+#include "devices.h"
+
+// Verilator
 #include "verilated.h"
 #include "verilated_vcd_c.h"
 
+// Generated module.
 #include "Vrvm_core_axi4.h"
 
+// Verilator testbench classes.
 #include "axi_device.h"
 #include "axi_memory.h"
 
 #ifndef H_VERILATOR_SIM
 #define H_VERILATOR_SIM
 
+#define VL_SPIKE_ISA    "RV32I"
+#define VL_SPIKE_NPROCS 1
+#define VL_SPIKE_PC     0x80000000
 
 /*
 @brief Contains everything needed to run a simple verilator simulation.
@@ -58,6 +70,9 @@ class verilator_sim {
 
         //! A SPIKE ISA simulation to run with the RTL model for checking.
         sim_t *         model;
+        
+        //! Memories used by the SPIKE model.
+        std::vector<std::pair<reg_t, mem_t*>> spike_mems;
         
         //! If set, we exit the simulation loop at the next iteration
         bool            break_sim_loop = false;
