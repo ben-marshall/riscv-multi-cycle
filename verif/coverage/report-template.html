@@ -1,0 +1,73 @@
+<!DOCTYPE html >
+<html>
+<head>
+<title>{{filename}} Line / Toggle Coverage</title>
+
+<style type="text/css">
+    .src_table {
+        border-collapse: collapse;
+        background-color: #EEE;
+        margin: 0px;
+        padding: 5px;
+        width: 100%;
+    }
+    pre {
+        margin: 0px;
+        padding: 0px;
+    }
+    .src_row{
+        margin: 0px;
+        padding: 0px;
+    }
+    .line_no {
+        font-size: small;
+        margin: 0px;
+        padding: 0px;
+    }
+    .hit_count {
+        font-size: small;
+        margin: 0px;
+        padding: 0px;
+    }
+    .line_content{
+        font-size: normal;
+        margin: 0px;
+        padding: 0px;
+    }
+
+    .hit {
+        background-color: rgba(0,255,0,50);
+    }
+
+    .miss {
+        background-color: rgba(255,0,0,50);
+    }
+</style>
+
+</head>
+<body>
+
+<h1>{{filename}}</h1>
+
+<hr/>
+
+<table class="src_table">
+
+{% for line in lines %}
+    {% if line[0] == 0 %}
+    <tr class="src_row miss">
+    {% elif line[0] == "" %}
+    <tr class="src_row">
+    {% else %}
+    <tr class="src_row hit">
+    {% endif %}
+        <td class="line_no">{{loop.index}}</td>
+        <td class="hit_count">{{line[0]}}</td>
+        <td class="line_content"><pre>{{line[1]}}</pre></td>
+    </tr>
+{% endfor %}
+
+</table>
+
+</body>
+</html>
