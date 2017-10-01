@@ -74,6 +74,7 @@ merge-coverage:
 
 report-coverage: merge-coverage
 	$(RVM_VERILATOR_COV) --annotate-all --annotate $(COV_RPT) $(COV_MERGED)
+	./bin/cov-report.py -o ./work/cov-rpt/ -i ./work/cov-rpt/*.v
 	
 clean:
 	rm -rf $(RVM_HOME)/work/*
