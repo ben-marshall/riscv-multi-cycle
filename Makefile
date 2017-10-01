@@ -9,7 +9,11 @@ VCC_SCRIPT=$(RVM_HOME)/sim/icarus/manifest-iverilog.cmd
 VCC_RAND_SCRIPT=$(RVM_HOME)/sim/icarus/manifest-iverilog-crt.cmd
 VCC_FLAGS=-v -g2005 -t $(VCC_TARGET) -o $(VCC_OUTPUT)
 
-COVGROUPS=$(RVM_HOME)/verif/coverage/coverpoints.json
+COVGROUPS   = $(RVM_HOME)/verif/coverage/coverpoints.json
+COV_DIR     = $(RVM_HOME)/work/cov-db
+COV_RPT     = $(RVM_HOME)/work/cov-rpt
+COV_DB      = $(COV_DIR)/cov.db
+COV_MERGED  = $(RVM_HOME)/work/cov-merged.db
 
 ISA_TESTS=$(RVM_HOME)/verif/riscv-tests/build/hex
 TEST=rv32ui-p-sh
@@ -39,7 +43,8 @@ $(VCC_OUTPUT) : $(VCC_SCRIPT)
 
 run-vl :
 	./work/obj_dir/Vrvm_core_axi4 $(RVM_HOME)/work/waves.vcd \
-                                  $(TEST_HEX) $(PASS_ADDR) $(FAIL_ADDR)
+                                  $(TEST_HEX) $(PASS_ADDR) $(FAIL_ADDR) \
+                                  $(COV_DB)
 
 run-test: $(VCC_OUTPUT)
 	echo "Running simulator hex file: $(TEST_HEX)"
@@ -64,9 +69,11 @@ view-waves:
 regress-isa: icarus verilate
 	python2.7 $(RVM_HOME)/bin/regression.py $(RVM_HOME)/sim/regression-list-isa-tests.txt
 
+merge-coverage: 
+	$(RVM_VERILATOR_COV) --write $(COV_MERGED) $(COV_DIR)/*.cov
 
-coverage:
-	python3 $(RVM_HOME)/bin/coverage.py --covergroups $(COVGROUPS) ./work/*.vcd
+report-coverage: merge-coverage
+	$(RVM_VERILATOR_COV) --annotate-all --annotate $(COV_RPT) $(COV_MERGED)
 	
 clean:
 	rm -rf $(RVM_HOME)/work/*

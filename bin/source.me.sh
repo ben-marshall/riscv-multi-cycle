@@ -17,6 +17,7 @@ source_riscv_tests
 
 export RVM_VERILATOR_ROOT=/opt/verilator/verilator-3.912
 export RVM_VERILATOR_BIN=$RVM_VERILATOR_ROOT/verilator_bin
+export RVM_VERILATOR_COV=$RVM_VERILATOR_ROOT/bin/verilator_coverage
 
 
 echo "Workspace setup complete."

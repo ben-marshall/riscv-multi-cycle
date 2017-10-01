@@ -37,6 +37,8 @@ class RegressionTest(object):
         self.pass_addr   = pass_addr
         self.fail_addr   = fail_addr
         self.halt_addr   = halt_addr
+        self.cov_db      = os.path.join("work","cov-db",
+                                        os.path.basename(self.hex_file)+".cov")
 
         self.result      = None
         self.result_str  = "      "
@@ -104,6 +106,15 @@ def run_regressions(to_run):
     """
     Takes a list of RegressionTest objects and runs them in order.
     """
+    
+    vcd_dir = os.path.join("work","vcd")
+    cov_dir = os.path.join("work","cov-db")
+
+    if(not os.path.isdir(vcd_dir)):
+        os.makedirs(vcd_dir)
+
+    if(not os.path.isdir(cov_dir)):
+        os.makedirs(cov_dir)
 
     print("RESULT | PASS       | FAIL       | HALT       | TEST")
     print("-------|------------|------------|------------|--------------------")
@@ -114,7 +125,8 @@ def run_regressions(to_run):
                 "TEST_HEX=%s"   % test.hex_file,
                 "HALT_ADDR=%s"  % test.halt_addr,
                 "PASS_ADDR=%s"  % test.pass_addr,
-                "FAIL_ADDR=%s"  % test.fail_addr]
+                "FAIL_ADDR=%s"  % test.fail_addr,
+                "COV_DB=%s"     % test.cov_db]
         try:
             output = subprocess.check_output(cmd)
 
@@ -125,7 +137,8 @@ def run_regressions(to_run):
             else:
                 test.failed(output)
             vcd_name = os.path.basename(test.hex_file).split(".")[0]+".vcd"
-            shutil.copyfile("./work/waves.vcd", "./work/%s" % vcd_name)
+            shutil.copyfile(os.path.join("work","waves.vcd"),
+                            os.path.join(vcd_dir, vcd_name))
         
         except subprocess.CalledProcessError as e:
             test.errored(e)

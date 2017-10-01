@@ -30,6 +30,15 @@ void verilator_sim::dump_waves_to(const char * filepath){
     this -> wave_trace_file = filepath;
 }
         
+
+/*!
+@brief Set the name of the file coverage data is written to.
+@param in filepath - The file to write coverage data to.
+*/
+void verilator_sim::dump_coverage_to(const char * filepath){
+    this -> cov_data_file = filepath;
+}
+        
         
 /*!
 @brief Load a hex file into main memory at the supplied offset.
@@ -144,8 +153,10 @@ bool verilator_sim::run_sim(){
 
     dut -> final();
 
-    //std::cout << "Writing Coverage Data..." << std::endl;
-    //VerilatedCov::write("work/coverage.dat");
+    if(this -> cov_data_file) {
+        std::cout << "Writing Coverage Data: "<<this->cov_data_file<< std::endl;
+        VerilatedCov::write(this -> cov_data_file);
+    }
     
     if(sim_time >= max_sim_time){
         std::cerr << "TIMEOUT" << std::endl;

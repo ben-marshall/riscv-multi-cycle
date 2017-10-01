@@ -28,6 +28,12 @@ class verilator_sim {
         @param in filepath - The file to write waves to.
         */
         void dump_waves_to(const char * filepath);
+        
+        /*!
+        @brief Set the name of the file coverage data is written to.
+        @param in filepath - The file to write coverage data to.
+        */
+        void dump_coverage_to(const char * filepath);
 
         /*!
         @brief Load a hex file into main memory at the supplied offset.
@@ -80,7 +86,10 @@ class verilator_sim {
         bool            wave_tracing = false;
 
         //! Given wave_tracing == true, dump waves to this file.
-        const char *    wave_trace_file;
+        const char *    wave_trace_file = nullptr;
+
+        //! Where we write coverage database information to.
+        const char *    cov_data_file = nullptr;
 
         //! Verilator wave tracer instance
         VerilatedVcdC * wave_dump;
