@@ -16,6 +16,9 @@ verilator_sim::verilator_sim() {
     
     // Create a new main memory image.
     this -> main_memory = new axi_memory(0xA0000000, 0x80000000, 0xdeadc0de);
+
+    // Create the golden reference model.
+    //this -> model = new ("rv32ui",1,0x80000000,
 }
 
 

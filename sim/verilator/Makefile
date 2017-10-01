@@ -13,12 +13,22 @@ C_SRC=$(RVM_HOME)/sim/verilator/verilator_main.cpp \
       $(RVM_HOME)/sim/verilator/verilator_sim.cpp \
       $(RVM_HOME)/sim/verilator/axi_memory.cpp
 
+SPIKE_TOP = $(RVM_HOME)/verif/riscv-isa-sim
+SPIKE_INC = -I$(SPIKE_TOP)/riscv \
+            -I$(SPIKE_TOP)/build \
+            -I$(SPIKE_TOP)/debug_rom \
+            -I$(SPIKE_TOP)/softfloat \
+            -I$(SPIKE_TOP) \
+            -I$(RISCV)/include
+SPIKE_LIB = $(RVM_HOME)/verif/riscv-isa-sim/build/libriscv.so
+
 SIM=$(OBJ_DIR)/V$(VL_TOP)
 
 VERILATE_FLAGS= -Wno-fatal \
                 --exe $(C_SRC) \
                 --top-module $(VL_TOP) \
                 --Mdir $(OBJ_DIR) \
+                -CFLAGS "$(SPIKE_INC)" \
                 --trace \
                 --coverage
 
@@ -27,7 +37,7 @@ all: $(SIM)
 
 $(SIM) : $(VERILOG_RTL_SRC) $(VERILOG_TST_SRC)
 	$(VERILATE) $(VERILATE_FLAGS) \
-        --cc $(VERILOG_RTL_SRC) \
+        --cc $(VERILOG_RTL_SRC) $(SPIKE_LIB) \
         -I$(VERILOG_INCLUDE)
 	$(MAKE) -j -C $(OBJ_DIR) -f V$(VL_TOP).mk V$(VL_TOP) \
 	    VERILATOR_ROOT=$(RVM_VERILATOR_ROOT)

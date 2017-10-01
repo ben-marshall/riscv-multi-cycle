@@ -1,4 +1,5 @@
 
+#include "sim.h"
 
 #include "verilated.h"
 #include "verilated_vcd_c.h"
@@ -54,6 +55,9 @@ class verilator_sim {
         bool run_sim();
 
     private:
+
+        //! A SPIKE ISA simulation to run with the RTL model for checking.
+        sim_t *         model;
         
         //! If set, we exit the simulation loop at the next iteration
         bool            break_sim_loop = false;
